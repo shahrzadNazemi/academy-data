@@ -100,8 +100,7 @@ module.exports.deleteLevel = (loginInfo, cb)=> {
     })
 };
 
-module.exports.getLvlById = (loginInfo, cb)=> {
-    var query = {$and: [{adm_password:loginInfo.password} , {adm_username:loginInfo.username}] }
+module.exports.getLvlById = (lvlID, cb)=> {
     MongoClient.connect(config.mongoURL,{ useNewUrlParser: true }, (err, db)=> {
         if (err) {
             console.log("Err" , err)
@@ -109,7 +108,7 @@ module.exports.getLvlById = (loginInfo, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("admins").find({password:loginInfo.password ,adm_username:loginInfo.username }).toArray((err, result) => {
+            con.collection("level").find({_id:`ObjectId(${lvlID})`}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }

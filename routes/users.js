@@ -5,6 +5,7 @@ let logger = require('../util/logger');
 
 
 router.post('/admin/login', (req, res) => {
+    console.log(req.body)
 database.loginForAdmin(req.body , (result)=>{
     if(result == -1){
         res.status(500).end('')
