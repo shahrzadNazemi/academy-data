@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MongoConfiguration">
+    <option name="serverConfigurations">
+      <list>
+        <ServerConfiguration>
+          <option name="serverUrls">
+            <list>
+              <option value="185.94.99.69:27017" />
+            </list>
+          </option>
+          <option name="sshTunnelingConfiguration">
+            <SshTunnelingConfiguration />
+          </option>
+        </ServerConfiguration>
+        <ServerConfiguration>
+          <option name="authenticationDatabase" value="englishAcademy" />
+          <option name="authenticationMechanism" value="SCRAM-SHA-1" />
+          <option name="password" value="secretPassword" />
+          <option name="serverUrls">
+            <list>
+              <option value="185.94.99.69:27017" />
+            </list>
+          </option>
+          <option name="sshTunnelingConfiguration">
+            <SshTunnelingConfiguration />
+          </option>
+          <option name="userDatabase" value="admin" />
+          <option name="username" value="admin" />
+        </ServerConfiguration>
+      </list>
+    </option>
+  </component>
+</project>
