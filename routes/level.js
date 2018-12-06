@@ -3,63 +3,62 @@ var router = express.Router();
 var database = require('../database/database');
 let logger = require('../util/logger');
 
-router.post('/' , (req , res)=>{
-    database.addLevel(req.body , (addResult)=>{
-        if(addResult == -1){
+router.post('/', (req, res)=> {
+    database.addLevel(req.body, (addResult)=> {
+        if (addResult == -1) {
             res.status(500).end('')
         }
-        else{
-            res.json({lvlID :addResult})
+        else {
+            res.json({lvlID: addResult})
         }
     })
 })
 
-router.put('/:lvlId' , (req , res)=>{
-    database.updateLevel(req.body ,req.params.lvlID, (updateResult)=>{
-        if(updateResult == -1){
+router.put('/:lvlId', (req, res)=> {
+    database.updateLevel(req.body, req.params.lvlId, (updateResult)=> {
+        if (updateResult == -1) {
             res.status(500).end('')
         }
-        else{
-            res.json({affectedRows :updateResult})
+        else {
+            res.json({affectedRows: updateResult})
         }
     })
 })
 
-router.delete('/:lvlId' , (req , res)=>{
-    database.delLevel(req.params.lvlID , (delResult)=>{
-        if(delResult == -1){
+router.delete('/:lvlId', (req, res)=> {
+    database.delLevel(req.params.lvlId, (delResult)=> {
+        if (delResult == -1) {
             res.status(500).end('')
         }
-        else{
-            res.json({affectedRows :delResult})
+        else {
+            res.json({affectedRows: delResult})
         }
     })
 })
 
-router.get('/:lvlId' , (req , res)=>{
-    database.getLevelById(req.params.lvlId , (level)=>{
-        if(level == -1){
+router.get('/:lvlId', (req, res)=> {
+    database.getLevelById(req.params.lvlId, (level)=> {
+        if (level == -1) {
             res.status(500).end('')
         }
-            else if(level == 0){
+        else if (level == 0) {
             res.status(404).end('')
         }
-        else{
+        else {
             res.json(level)
         }
     })
 })
 
-router.get('/' , (req , res)=>{
-    database.getLevels(req.body , (addResult)=>{
-        if(addResult == -1){
+router.get('/', (req, res)=> {
+    database.getLevels((getResult)=> {
+        if (getResult == -1) {
             res.status(500).end('')
         }
-        else{
-            res.json({lvlID :addResult})
+        else {
+            res.json(getResult)
         }
     })
-    // res.json({"status":"success"})
 })
 
 

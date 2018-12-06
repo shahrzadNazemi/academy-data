@@ -5,18 +5,82 @@ let logger = require('../util/logger');
 
 
 router.post('/admin/login', (req, res) => {
-    console.log(req.body)
-database.loginForAdmin(req.body , (result)=>{
-    if(result == -1){
-        res.status(500).end('')
-    }
-    else if(result == 0){
-        res.status(404).end('')
-    }
-    else{
-        res.json(result)
-    }
-})
+    database.loginForAdmin(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.put('/admin/:admId', (req, res) => {
+    database.updateAdmin(req.body, req.params.admId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.get('/admin', (req, res) => {
+    database.getAdmins((result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.delete('/admin/:admId', (req, res) => {
+    database.delAdmin(req.params.admId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.post('/admin', (req, res)=> {
+    database.addAdmin(req.body, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addedAdmin)
+        }
+    })
+});
+
+
+router.post('/student' , (req, res)=>{
+    database.addStudent(req.body , (result)=>{
+        if(result == -1){
+            res.status(500).end('')
+        }
+        else{
+            res.json(result)
+        }
+    })
 })
 
 
