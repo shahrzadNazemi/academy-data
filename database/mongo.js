@@ -12,8 +12,8 @@ module.exports.adminLogin = (loginInfo, cb)=> {
         else {
             var con = db.db('englishAcademy')
             con.collection("admins").find({
-                adm_password: loginInfo.password,
-                adm_username: loginInfo.username
+                adm_password: loginInfo.adm_password,
+                adm_username: loginInfo.adm_username
             }).toArray((err, result) => {
                 if (err) {
                     cb(-1)
