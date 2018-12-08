@@ -30,6 +30,33 @@ module.exports.adminLogin = (loginInfo, cb)=> {
     })
 };
 
+module.exports.studentLogin = (loginInfo, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            throw err
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("student").find({
+                stu_password: loginInfo.stu_password,
+                stu_username: loginInfo.stu_username
+            }).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result[0])
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.postLevel = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {

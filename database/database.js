@@ -15,6 +15,20 @@ module.exports.loginForAdmin = (loginInfo, cb)=> {
     })
 };
 
+module.exports.loginForStudent = (loginInfo, cb)=> {
+    mongo.studentLogin(loginInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.addLevel = (levelInfo, cb)=> {
     mongo.postLevel(levelInfo, (result)=> {
         if (result == -1) {
