@@ -98,7 +98,7 @@ router.post('/student/login', (req, res) => {
 });
 
 router.put('/student/:stuId', (req, res) => {
-    database.updateAdmin(req.body, req.params.admId, (result)=> {
+    database.updateStudent(req.body, req.params.stuId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -124,6 +124,36 @@ router.get('/student', (req, res) => {
         }
     })
 });
+
+router.get('/student/best', (req, res) => {
+    database.getAllStu((result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
+router.get('/student/:stdId', (req, res) => {
+    database.getStuById(req.params.stdId , (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
 
 router.delete('/student/:stuId', (req, res) => {
     database.delAdmin(req.params.admId, (result)=> {

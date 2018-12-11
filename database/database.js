@@ -1,4 +1,5 @@
 let mongo = require('./mongo')
+let mongoose = require('./mongoose')
 
 
 module.exports.loginForAdmin = (loginInfo, cb)=> {
@@ -16,7 +17,7 @@ module.exports.loginForAdmin = (loginInfo, cb)=> {
 };
 
 module.exports.loginForStudent = (loginInfo, cb)=> {
-    mongo.studentLogin(loginInfo, (result)=> {
+    mongoose.studentLogin(loginInfo, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -361,6 +362,49 @@ module.exports.addStudent = (stuData, cb)=> {
         }
     })
 };
+
+module.exports.getStuById = (stdId, cb)=> {
+    mongo.getStudentById(stdId ,(result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getAllStu = (cb)=> {
+    mongo.getAllStudents((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.updateStudent = (updateInfo, stdId, cb)=> {
+    mongo.editStudent(updateInfo, stdId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 
 
 

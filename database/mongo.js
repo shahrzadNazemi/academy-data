@@ -97,6 +97,8 @@ module.exports.editLevel = (info, lvlId, cb)=> {
                     "lvl_title": info.lvl_title,
                     "lvl_description": info.lvl_description
                 }
+            } , (err , result)=>{
+                console.log("result")
             })
             setTimeout(() => {
                 cb(info)
@@ -655,10 +657,16 @@ module.exports.postStudent = (stuInfo, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("users").insertOne({
-                "adm_name": adminInfo.adm_name,
-                "adm_username": adminInfo.adm_username,
-                "adm_password": adminInfo.adm_password
+            con.collection("student").insertOne({
+                "stu_name": stuInfo.stu_name,
+                "stu_username": stuInfo.stu_username,
+                "stu_password": stuInfo.stu_password,
+                "stu_fname" : stuInfo.stu_fname,
+                "stu_lname" : stuInfo.stu_lname,
+                "stu_mobile" : stuInfo.stu_mobile,
+                "stu_avatarUrl" : stuInfo.stu_avatarUrl,
+                "stu_score" : stuInfo.stu_score,
+                "stu_lastPassedLesson" : stuInfo.stu_lastPassedLesson
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -674,6 +682,86 @@ module.exports.postStudent = (stuInfo, cb)=> {
         }
     })
 };
+
+module.exports.getStudentById = (stdId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if(typeof stdId == 'number'){
+                stdId = parseInt(stdId)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("student").findOne({"_id": new ObjectID(`${stdId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getAllStudents = (cb)=> {
+    console.log("here")
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+
+            var con = db.db('englishAcademy')
+            con.collection("student").find().sort( { stu_score: 1 } ).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.editStudent = (stuInfo, stdId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("student").updateOne({"_id": new ObjectID(stdId)}, {
+                $set: {
+                    "vd_title": videoInfo.vd_title,
+                    "vd_type": videoInfo.vd_type,
+                    "vd_url": videoInfo.vd_url,
+                    "vd_lsnId": videoInfo.vd_lsnId,
+                    "vd_order": videoInfo.vd_order,
+                    "vd_lvlId": videoInfo.vd_lvlId
+                }
+            })
+            setTimeout(() => {
+                cb(videoInfo)
+            }, 1)
+        }
+    })
+};
+
+
 
 
 
