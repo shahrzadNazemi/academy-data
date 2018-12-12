@@ -99,10 +99,14 @@ module.exports.editLevel = (info, lvlId, cb)=> {
                 }
             } , (err , result)=>{
                 console.log("result")
+                if(err){
+                    cb(-1)
+                }
+                else{
+                    cb(info)
+                }
             })
-            setTimeout(() => {
-                cb(info)
-            }, 1)
+
 
         }
     })
@@ -288,6 +292,7 @@ module.exports.getAllAdmins = (cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+
             con.collection("admins").find().toArray((err, result) => {
                 if (err) {
                     cb(-1)
@@ -319,8 +324,7 @@ module.exports.editAdmin = (info, admId, cb)=> {
             }
             con.collection("admins").updateOne({"_id": new ObjectID(admId)}, {
                 $set: infor
-            })
-            setTimeout(()=> {
+            }, (err , result)=>{
                 if (err) {
                     console.log(err)
                     cb(-1)
@@ -329,8 +333,7 @@ module.exports.editAdmin = (info, admId, cb)=> {
 
                     cb(info)
                 }
-            }, 1)
-
+            })
         }
     })
 };
@@ -343,11 +346,28 @@ module.exports.deleteAdmin = (admId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("admins").findOneAndDelete({"_id": new ObjectID(`${admId}`)})
-            setTimeout(() => {
-                let result = "row deleted"
-                cb(result)
-            }, 1)
+            module.exports.getAllAdmins((admins)=>{
+                if(admins == -1){
+                    cb(-1)
+                }
+                else{
+                    let count = admins.length
+                    if(count<=1){
+                        cb(-4)
+                    }
+                    else{
+                        con.collection("admins").findOneAndDelete({"_id": new ObjectID(`${admId}`)}, ()=>{
+                            if(err){
+                                cb(-1)
+                            }
+                            else{
+                                let result = "row deleted"
+                                cb(result)
+                            }
+                        })
+                    }
+                }
+            })
 
         }
     })
@@ -658,7 +678,6 @@ module.exports.postStudent = (stuInfo, cb)=> {
         else {
             var con = db.db('englishAcademy')
             con.collection("student").insertOne({
-                "stu_name": stuInfo.stu_name,
                 "stu_username": stuInfo.stu_username,
                 "stu_password": stuInfo.stu_password,
                 "stu_fname" : stuInfo.stu_fname,
@@ -746,20 +765,21 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
             var con = db.db('englishAcademy')
             con.collection("student").updateOne({"_id": new ObjectID(stdId)}, {
                 $set: {
-                    "vd_title": videoInfo.vd_title,
-                    "vd_type": videoInfo.vd_type,
-                    "vd_url": videoInfo.vd_url,
-                    "vd_lsnId": videoInfo.vd_lsnId,
-                    "vd_order": videoInfo.vd_order,
-                    "vd_lvlId": videoInfo.vd_lvlId
+                   stu_password:stuInfo.stu_password
+                }
+            } , (err , result)=>{
+                if(err){
+                    cb(-1)
+                }
+                else{
+                    cb(stuInfo)
                 }
             })
-            setTimeout(() => {
-                cb(videoInfo)
-            }, 1)
         }
     })
 };
+
+
 
 
 

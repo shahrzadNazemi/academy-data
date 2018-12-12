@@ -220,6 +220,9 @@ module.exports.delAdmin = (admId, cb)=> {
         else if (result == 0) {
             cb(0)
         }
+            else if(result == -4){
+            cb(-4)
+        }
         else {
             cb(result)
         }

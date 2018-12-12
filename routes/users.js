@@ -54,6 +54,9 @@ router.delete('/admin/:admId', (req, res) => {
         else if (result == 0) {
             res.status(404).end('')
         }
+            else if(result == -4){
+            res.status(403).end('')
+        }
         else {
             res.json(result)
         }

@@ -12,7 +12,7 @@ router.post('/', (req, res)=> {
             res.json({lvlID: addResult})
         }
     })
-})
+});
 
 router.put('/:lvlId', (req, res)=> {
     database.updateLevel(req.body, req.params.lvlId, (updateResult)=> {
@@ -23,7 +23,7 @@ router.put('/:lvlId', (req, res)=> {
             res.json(updateResult)
         }
     })
-})
+});
 
 router.delete('/:lvlId', (req, res)=> {
     database.delLevel(req.params.lvlId, (delResult)=> {
@@ -34,7 +34,7 @@ router.delete('/:lvlId', (req, res)=> {
             res.json({affectedRows: delResult})
         }
     })
-})
+});
 
 router.get('/:lvlId', (req, res)=> {
     database.getLevelById(req.params.lvlId, (level)=> {
@@ -48,7 +48,7 @@ router.get('/:lvlId', (req, res)=> {
             res.json(level)
         }
     })
-})
+});
 
 router.get('/', (req, res)=> {
     database.getLevels((getResult)=> {
@@ -59,7 +59,7 @@ router.get('/', (req, res)=> {
             res.json(getResult)
         }
     })
-})
+});
 
 
 module.exports = router
