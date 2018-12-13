@@ -408,6 +408,21 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     })
 };
 
+module.exports.getAdminById = (admId, cb)=> {
+    mongo.getAdmById(admId ,(result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+
 
 
 

@@ -74,6 +74,21 @@ router.post('/admin', (req, res)=> {
     })
 });
 
+router.get('/admin/:admId', (req, res) => {
+    database.getAdminById(req.params.admId , (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
 
 router.post('/student' , (req, res)=>{
     database.addStudent(req.body , (result)=>{

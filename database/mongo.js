@@ -806,6 +806,35 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
     }
 };
 
+module.exports.getAdmById = (admId, cb)=> {
+    console.log(admId)
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if(typeof admId == 'number'){
+                admId = JSON.stringify(admId)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("admins").findOne({"_id": new ObjectID(`${admId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 
 
 
