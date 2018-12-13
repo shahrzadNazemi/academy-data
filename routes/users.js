@@ -101,6 +101,7 @@ router.post('/student/login', (req, res) => {
 });
 
 router.put('/student/:stuId', (req, res) => {
+    console.log(req.params.stuId)
     database.updateStudent(req.body, req.params.stuId, (result)=> {
         if (result == -1) {
             res.status(500).end('')

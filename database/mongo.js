@@ -756,27 +756,54 @@ module.exports.getAllStudents = (cb)=> {
 };
 
 module.exports.editStudent = (stuInfo, stdId, cb)=> {
-    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
-        if (err) {
-            console.log("Err", err)
-            cb(-1)
-        }
-        else {
-            var con = db.db('englishAcademy')
-            con.collection("student").updateOne({"_id": new ObjectID(stdId)}, {
-                $set: {
-                   stu_password:stuInfo.stu_password
-                }
-            } , (err , result)=>{
-                if(err){
-                    cb(-1)
-                }
-                else{
-                    cb(stuInfo)
-                }
-            })
-        }
-    })
+    if(stuInfo.setAvatar == true){
+        MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+            if (err) {
+                console.log("Err", err)
+                cb(-1)
+            }
+            else {
+                var con = db.db('englishAcademy')
+                con.collection("student").updateOne({"_id": new ObjectID(stdId)}, {
+                    $set: {
+                        stu_avatarUrl:stuInfo.stu_avatarUrl
+                    }
+                } , (err , result)=>{
+                    if(err){
+                        cb(-1)
+                    }
+                    else{
+                        cb(stuInfo)
+                    }
+                })
+            }
+        })
+
+    }
+    else{
+        MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+            if (err) {
+                console.log("Err", err)
+                cb(-1)
+            }
+            else {
+                var con = db.db('englishAcademy')
+                con.collection("student").updateOne({"_id": new ObjectID(stdId)}, {
+                    $set: {
+                        stu_password:stuInfo.stu_password
+                    }
+                } , (err , result)=>{
+                    if(err){
+                        cb(-1)
+                    }
+                    else{
+                        cb(stuInfo)
+                    }
+                })
+            }
+        })
+
+    }
 };
 
 
