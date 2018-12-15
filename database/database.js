@@ -17,7 +17,7 @@ module.exports.loginForAdmin = (loginInfo, cb)=> {
 };
 
 module.exports.loginForStudent = (loginInfo, cb)=> {
-    mongoose.studentLogin(loginInfo, (result)=> {
+    mongo.studentLogin(loginInfo, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -229,6 +229,23 @@ module.exports.delAdmin = (admId, cb)=> {
     })
 };
 
+module.exports.delStudent = (stuId, cb)=> {
+    mongo.deleteStudent(stuId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else if(result == -4){
+            cb(-4)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.addLesson = (lsnInfo, cb)=> {
     mongo.postLesson(lsnInfo, (result)=> {
         if (result == -1) {
@@ -328,7 +345,7 @@ module.exports.delLesson = (lsnId, cb)=> {
 };
 
 module.exports.delVideo = (vdId, cb)=> {
-    mongo.deleteAdmin(vdId, (result)=> {
+    mongo.deleteVideo(vdId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -342,7 +359,7 @@ module.exports.delVideo = (vdId, cb)=> {
 };
 
 module.exports.delSound = (sndId, cb)=> {
-    mongo.deleteAdmin(sndId, (result)=> {
+    mongo.deleteSound(sndId, (result)=> {
         if (result == -1) {
             cb(-1)
         }

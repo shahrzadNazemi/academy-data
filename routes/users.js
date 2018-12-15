@@ -175,7 +175,8 @@ router.get('/student/:stdId', (req, res) => {
 
 
 router.delete('/student/:stuId', (req, res) => {
-    database.delAdmin(req.params.admId, (result)=> {
+    console.log(req.params.stuId)
+    database.delStudent(req.params.stuId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
