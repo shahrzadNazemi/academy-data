@@ -430,6 +430,8 @@ module.exports.postLesson = (lessonInfo, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+
+            lessonInfo.lvlId = new ObjectID(`${lessonInfo.lvlId}`)
             con.collection("lesson").insertOne({
                 "title": lessonInfo.title,
                 "lvlId": lessonInfo.lvlId,
@@ -912,6 +914,39 @@ module.exports.deleteSound = (sndId, cb)=> {
         }
     })
 };
+
+module.exports.getAllLess = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("lesson").aggregate([{
+                    $lookup: {
+                        from: "level",
+                        localField: "lvlId",
+                        foreignField: "_id",
+                        as: "level"
+                    }
+                }]).toArray((err, result) => {
+                    if (err) {
+                        cb(-1)
+                    }
+                    else if (result.length == 0) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result)
+                    }
+                })
+
+        }
+    })
+};
+
 
 
 

@@ -439,6 +439,19 @@ module.exports.getAdminById = (admId, cb)=> {
     })
 };
 
+module.exports.getAllLessons = (cb)=> {
+    mongo.getAllLess((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
 
 
 

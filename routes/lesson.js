@@ -188,6 +188,21 @@ router.get('/sound/:sndId', (req, res) => {
     })
 });
 
+router.get('/' , (req , res)=>{
+    database.getAllLessons((lessons)=>{
+        if(lessons == -1){
+           res.status(500).end()
+        }
+        else if(lessons == 0){
+            res.status(404).end()
+        }
+        else{
+            // console.log(lessons)
+            res.json(lessons)
+        }
+    })
+})
+
 
 
 router.delete('/:lsnId', (req, res) => {
