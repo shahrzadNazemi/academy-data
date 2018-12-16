@@ -54,7 +54,7 @@ router.delete('/admin/:admId', (req, res) => {
         else if (result == 0) {
             res.status(404).end('')
         }
-            else if(result == -4){
+        else if (result == -4) {
             res.status(403).end('')
         }
         else {
@@ -75,7 +75,7 @@ router.post('/admin', (req, res)=> {
 });
 
 router.get('/admin/:admId', (req, res) => {
-    database.getAdminById(req.params.admId , (result)=> {
+    database.getAdminById(req.params.admId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -89,13 +89,15 @@ router.get('/admin/:admId', (req, res) => {
 });
 
 
-
-router.post('/student' , (req, res)=>{
-    database.addStudent(req.body , (result)=>{
-        if(result == -1){
+router.post('/student', (req, res)=> {
+    database.addStudent(req.body, (result)=> {
+        if (result == -1) {
             res.status(500).end('')
         }
-        else{
+        else if (result == -2) {
+            res.status(403).end('')
+        }
+        else {
             res.json(result)
         }
     })
@@ -160,7 +162,7 @@ router.get('/student/best', (req, res) => {
 
 
 router.get('/student/:stdId', (req, res) => {
-    database.getStuById(req.params.stdId , (result)=> {
+    database.getStuById(req.params.stdId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }

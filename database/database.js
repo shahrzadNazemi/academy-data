@@ -447,6 +447,9 @@ module.exports.getAllLessons = (cb)=> {
         else if (result == 0) {
             cb(0)
         }
+            else if(result == -2){
+            cb(-2)
+        }
         else {
             cb(result)
         }
