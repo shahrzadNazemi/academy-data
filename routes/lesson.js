@@ -197,8 +197,11 @@ router.get('/' , (req , res)=>{
             res.status(404).end()
         }
         else{
-            // console.log(lessons)
+            for(var i =0;i<lessons.length;i++){
+                lessons[i].level = lessons[i].level[0]
+            }
             res.json(lessons)
+
         }
     })
 })
