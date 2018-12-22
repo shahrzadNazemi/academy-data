@@ -30,6 +30,9 @@ router.delete('/:lvlId', (req, res)=> {
         if (delResult == -1) {
             res.status(500).end('')
         }
+            else if(delResult == 0){
+            res.status(404).end('')
+        }
             else if(delResult == -3){
             res.status(403).end('')
         }

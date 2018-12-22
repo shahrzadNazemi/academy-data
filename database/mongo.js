@@ -122,13 +122,17 @@ module.exports.deleteLevel = (lvlId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("level").findOneAndDelete({"_id": new ObjectID(`${lvlId}`)} , (result)=>{
-                if(result == -1){
+            con.collection("level").findOneAndDelete({"_id": new ObjectID(`${lvlId}`)} , (err , result)=>{
+                console.log(result.lastErrorObject.n)
+                if(err){
                     cb(-1)
                 }
-                else{
+                    else if(result.lastErrorObject.n != 0){
                     let result1= "row deleted"
                     cb(result1)
+                }
+                else{
+                   cb(0)
                 }
             })
 
@@ -552,6 +556,7 @@ module.exports.postSound = (soundInfo, cb)=> {
 };
 
 module.exports.editLesson = (info, lsnId, cb)=> {
+    console.log(lsnId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -559,19 +564,25 @@ module.exports.editLesson = (info, lsnId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+            info.lvlId = new ObjectID(`${info.lvlId}`)
             con.collection("lesson").updateOne({"_id": new ObjectID(lsnId)}, {
                 $set: {
                     "title": info.title,
                     "deadline": info.deadline,
                     "lvlId": info.lvlId,
-
+                }
+            } , (err , result)=>{
+                console.log(result)
+                if(err){
+                    cb(-1)
+                }
+                    else if (result.result.ok == 1){
+                    cb(info)
+                }
+                else{
+                    cb(0)
                 }
             })
-            setTimeout(() => {
-                cb(info)
-            }, 1)
-
-
         }
     })
 };
