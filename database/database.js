@@ -99,6 +99,22 @@ module.exports.getLevelById = (lvlId, cb)=> {
 
 };
 
+module.exports.getLessonById = (lsnId, cb)=> {
+    mongo.getLsnById(lsnId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+
+};
+
+
 module.exports.getLessonByLvlId = (lvlId, cb)=> {
     mongo.getLsnLvlById(lvlId, (result)=> {
         if (result == -1) {

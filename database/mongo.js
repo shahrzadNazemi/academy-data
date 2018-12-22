@@ -161,6 +161,31 @@ module.exports.getLvlById = (lvlID, cb)=> {
     })
 };
 
+module.exports.getLsnById = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("lesson").findOne({"_id": new ObjectID(`${lsnId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.getLsnLvlById = (lvlID, cb)=> {
     console.log(lvlID)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
