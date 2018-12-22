@@ -60,17 +60,28 @@ module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
 };
 
 module.exports.delLevel = (lvlId, cb)=> {
-    mongo.deleteLevel(lvlId, (result)=> {
-        if (result == -1) {
+    module.exports.getLessonByLvlId(lvlId , (lesson)=>{
+        if(lesson == -1){
             cb(-1)
         }
-        else if (result == 0) {
-            cb(0)
+        else if(lesson == 0){
+            mongo.deleteLevel(lvlId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
         }
         else {
-            cb(result)
+            cb(-3)
         }
     })
+   
 };
 
 module.exports.getLevelById = (lvlId, cb)=> {

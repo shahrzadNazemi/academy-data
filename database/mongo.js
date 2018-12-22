@@ -121,14 +121,16 @@ module.exports.deleteLevel = (lvlId, cb)=> {
             cb(-1)
         }
         else {
-            console.log(lvlId)
             var con = db.db('englishAcademy')
-            con.collection("level").findOneAndDelete({"_id": new ObjectID(`${lvlId}`)})
-            setTimeout(() => {
-                let result = "row deleted"
-                cb(result)
-
-            }, 1)
+            con.collection("level").findOneAndDelete({"_id": new ObjectID(`${lvlId}`)} , (result)=>{
+                if(result == -1){
+                    cb(-1)
+                }
+                else{
+                    let result1= "row deleted"
+                    cb(result1)
+                }
+            })
 
         }
     })
@@ -160,6 +162,7 @@ module.exports.getLvlById = (lvlID, cb)=> {
 };
 
 module.exports.getLsnLvlById = (lvlID, cb)=> {
+    console.log(lvlID)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -167,10 +170,10 @@ module.exports.getLsnLvlById = (lvlID, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if (typeof lvlID == 'string') {
-                lvlID = parseInt(lvlID)
+            if (typeof lvlID == 'number') {
+                lvlID = lvlID + ''
             }
-            con.collection("lesson").find({"lvlId": lvlID}).toArray((err, result) => {
+            con.collection("lesson").find({"lvlId": new ObjectID(`${lvlID}`)}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -460,6 +463,8 @@ module.exports.postVideo = (videoInfo, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+            videoInfo.lvlId = new ObjectID(`${videoInfo.lvlId}`)
+            videoInfo.lsnId = new ObjectID(`${videoInfo.lsnId}`)
             con.collection("video").insertOne({
                 "title": videoInfo.title,
                 "type": videoInfo.type,
@@ -493,6 +498,9 @@ module.exports.postSound = (soundInfo, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+            soundInfo.lvlId = new ObjectID(`${soundInfo.lvlId}`)
+            soundInfo.lsnId = new ObjectID(`${soundInfo.lsnId}`)
+
             con.collection("sound").insertOne({
                 "title": soundInfo.title,
                 "type": soundInfo.type,
@@ -551,6 +559,8 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+            videoInfo.lvlId = new ObjectID(`${videoInfo.lvlId}`)
+            videoInfo.lsnId = new ObjectID(`${videoInfo.lsnId}`)
             con.collection("video").updateOne({"_id": new ObjectID(vdId)}, {
                 $set: {
                     "title": videoInfo.title,
@@ -560,10 +570,14 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
                     "order": videoInfo.order,
                     "lvlId": videoInfo.lvlId
                 }
+            }, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else {
+                    cb(videoInfo)
+                }
             })
-            setTimeout(() => {
-                cb(videoInfo)
-            }, 1)
         }
     })
 };
@@ -576,6 +590,8 @@ module.exports.editSound = (info, sndId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+            info.lvlId = new ObjectID(`${info.lvlId}`)
+            info.lsnId = new ObjectID(`${info.lsnId}`)
             con.collection("sound").updateOne({"_id": new ObjectID(sndId)}, {
                 $set: {
                     "title": info.title,
@@ -585,10 +601,14 @@ module.exports.editSound = (info, sndId, cb)=> {
                     "lvlId": info.lvlId,
                     "order": info.order
                 }
+            } , (result)=>{
+                if(result == -1){
+                    cb(-1)
+                }
+                else{
+                    cb(result)
+                }
             })
-            setTimeout(() => {
-                cb(info)
-            }, 1)
         }
     })
 };
@@ -661,8 +681,7 @@ module.exports.getVDByLVLLSN = (lvlID, lsnId, cb)=> {
             if (typeof lsnId == 'number') {
                 lsnId = (lsnId) + ''
             }
-
-            con.collection("video").find({"lvlId": lvlID, "lsnId": lsnId}).toArray((err, result) => {
+            con.collection("video").find({"lvlId": new ObjectID(`${lvlID}`), "lsnId": new ObjectID(`${lsnId}`)}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -686,7 +705,7 @@ module.exports.getSNDByLVLLSN = (lvlID, lsnId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("sound").find({"lvlId": lvlID, "lsnId": lsnId}).toArray((err, result) => {
+            con.collection("sound").find({"lvlId": new ObjectID(`${lvlID}`), "lsnId": new ObjectID(`${lsnId}`)}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -720,8 +739,8 @@ module.exports.postStudent = (stuInfo, cb)=> {
                 "score": stuInfo.score,
                 "lastPassedLesson": stuInfo.lastPassedLesson
             }, (err, result) => {
-                if(err !=null){
-                    if(err.code == 11000){
+                if (err != null) {
+                    if (err.code == 11000) {
                         cb(-2)
                     }
                 }
@@ -847,7 +866,6 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
 };
 
 module.exports.getAdmById = (admId, cb)=> {
-    console.log(admId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -932,23 +950,23 @@ module.exports.getAllLess = (cb)=> {
             var con = db.db('englishAcademy')
 
             con.collection("lesson").aggregate([{
-                    $lookup: {
-                        from: "level",
-                        localField: "lvlId",
-                        foreignField: "_id",
-                        as: "level"
-                    }
-                }]).toArray((err, result) => {
-                    if (err) {
-                        cb(-1)
-                    }
-                    else if (result.length == 0) {
-                        cb(0)
-                    }
-                    else {
-                        cb(result)
-                    }
-                })
+                $lookup: {
+                    from: "level",
+                    localField: "lvlId",
+                    foreignField: "_id",
+                    as: "level"
+                }
+            }]).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
 
         }
     })
