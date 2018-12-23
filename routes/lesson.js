@@ -46,6 +46,21 @@ router.post('/sound', (req, res) => {
     })
 });
 
+router.post('/type', (req, res) => {
+    database.addType(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
 
 router.put('/:lsnId', (req, res) => {
     database.updateLesson(req.body, req.params.lsnId, (result)=> {

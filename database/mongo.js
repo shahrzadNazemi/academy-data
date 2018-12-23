@@ -86,7 +86,34 @@ module.exports.postLevel = (info, cb)=> {
     })
 };
 
+module.exports.postType = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("type").insertOne({
+                "title": info.title
+            }, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.editLevel = (info, lvlId, cb)=> {
+    console.log(lvlId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -100,16 +127,18 @@ module.exports.editLevel = (info, lvlId, cb)=> {
                     "description": info.description
                 }
             }, (err, result)=> {
-                console.log("result")
+                console.log(result.result.n)
                 if (err) {
                     cb(-1)
                 }
-                else {
+                else if (result.result.n == 1) {
                     cb(info)
+
+                }
+                else {
+                    cb(0)
                 }
             })
-
-
         }
     })
 };
@@ -122,17 +151,17 @@ module.exports.deleteLevel = (lvlId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("level").findOneAndDelete({"_id": new ObjectID(`${lvlId}`)} , (err , result)=>{
+            con.collection("level").findOneAndDelete({"_id": new ObjectID(`${lvlId}`)}, (err, result)=> {
                 console.log(result.lastErrorObject.n)
-                if(err){
+                if (err) {
                     cb(-1)
                 }
-                    else if(result.lastErrorObject.n != 0){
-                    let result1= "row deleted"
+                else if (result.lastErrorObject.n != 0) {
+                    let result1 = "row deleted"
                     cb(result1)
                 }
-                else{
-                   cb(0)
+                else {
+                    cb(0)
                 }
             })
 
@@ -494,9 +523,11 @@ module.exports.postVideo = (videoInfo, cb)=> {
             var con = db.db('englishAcademy')
             videoInfo.lvlId = new ObjectID(`${videoInfo.lvlId}`)
             videoInfo.lsnId = new ObjectID(`${videoInfo.lsnId}`)
+            videoInfo.typeId = new ObjectID(`${videoInfo.typeId}`)
+
             con.collection("video").insertOne({
                 "title": videoInfo.title,
-                "type": videoInfo.type,
+                "typeId": videoInfo.typeId,
                 "url": videoInfo.url,
                 "lsnId": videoInfo.lsnId,
                 "order": videoInfo.order,
@@ -556,7 +587,6 @@ module.exports.postSound = (soundInfo, cb)=> {
 };
 
 module.exports.editLesson = (info, lsnId, cb)=> {
-    console.log(lsnId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -571,15 +601,14 @@ module.exports.editLesson = (info, lsnId, cb)=> {
                     "deadline": info.deadline,
                     "lvlId": info.lvlId,
                 }
-            } , (err , result)=>{
-                console.log(result)
-                if(err){
+            }, (err, result)=> {
+                if (err) {
                     cb(-1)
                 }
-                    else if (result.result.ok == 1){
+                else if (result.result.n == 1) {
                     cb(info)
                 }
-                else{
+                else {
                     cb(0)
                 }
             })
@@ -637,11 +666,11 @@ module.exports.editSound = (info, sndId, cb)=> {
                     "lvlId": info.lvlId,
                     "order": info.order
                 }
-            } , (result)=>{
-                if(result == -1){
+            }, (result)=> {
+                if (result == -1) {
                     cb(-1)
                 }
-                else{
+                else {
                     cb(result)
                 }
             })
@@ -717,7 +746,10 @@ module.exports.getVDByLVLLSN = (lvlID, lsnId, cb)=> {
             if (typeof lsnId == 'number') {
                 lsnId = (lsnId) + ''
             }
-            con.collection("video").find({"lvlId": new ObjectID(`${lvlID}`), "lsnId": new ObjectID(`${lsnId}`)}).toArray((err, result) => {
+            con.collection("video").find({
+                "lvlId": new ObjectID(`${lvlID}`),
+                "lsnId": new ObjectID(`${lsnId}`)
+            }).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -741,7 +773,10 @@ module.exports.getSNDByLVLLSN = (lvlID, lsnId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("sound").find({"lvlId": new ObjectID(`${lvlID}`), "lsnId": new ObjectID(`${lsnId}`)}).toArray((err, result) => {
+            con.collection("sound").find({
+                "lvlId": new ObjectID(`${lvlID}`),
+                "lsnId": new ObjectID(`${lsnId}`)
+            }).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }

@@ -44,8 +44,21 @@ module.exports.addLevel = (levelInfo, cb)=> {
     })
 };
 
+module.exports.addType = (typeInfo, cb)=> {
+    mongo.postType(typeInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
-    console.log("data")
     mongo.editLevel(updateInfo, lvlId, (result)=> {
         if (result == -1) {
             cb(-1)

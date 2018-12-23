@@ -19,6 +19,9 @@ router.put('/:lvlId', (req, res)=> {
         if (updateResult == -1) {
             res.status(500).end('')
         }
+        else if (updateResult == 0) {
+            res.status(404).end('')
+        }
         else {
             res.json(updateResult)
         }
@@ -30,10 +33,10 @@ router.delete('/:lvlId', (req, res)=> {
         if (delResult == -1) {
             res.status(500).end('')
         }
-            else if(delResult == 0){
+        else if (delResult == 0) {
             res.status(404).end('')
         }
-            else if(delResult == -3){
+        else if (delResult == -3) {
             res.status(403).end('')
         }
         else {
