@@ -9,6 +9,9 @@ router.post('/', (req, res) => {
         if (result == -1) {
             res.status(500).end('')
         }
+        else if (result == -2) {
+            res.status(403).end('')
+        }
         else if (result == 0) {
             res.status(404).end('')
         }
@@ -51,7 +54,7 @@ router.post('/type', (req, res) => {
         if (result == -1) {
             res.status(500).end('')
         }
-            else if(result == -2){
+        else if (result == -2) {
             res.status(403).end('')
         }
         else if (result == 0) {
@@ -62,7 +65,6 @@ router.post('/type', (req, res) => {
         }
     })
 });
-
 
 
 router.put('/:lsnId', (req, res) => {
@@ -109,7 +111,7 @@ router.put('/sound/:sndId', (req, res) => {
 
 
 router.get('/level/:lvlId', (req, res) => {
-    database.getLessonByLvlId(req.params.lvlId , (result)=> {
+    database.getLessonByLvlId(req.params.lvlId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -136,8 +138,23 @@ router.get('/:lsnId/video', (req, res) => {
     })
 });
 
+router.get('/type', (req, res)=> {
+    database.getAllTpe((types)=> {
+        if (types == -1) {
+            res.status(500).end()
+        }
+        else if (types == 0) {
+            res.status(404).end()
+        }
+        else {
+            res.json(types)
+
+        }
+    })
+})
+
 router.get('/:lsnId', (req, res) => {
-    database.getLessonById(req.params.lsnId , (result)=> {
+    database.getLessonById(req.params.lsnId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -166,7 +183,7 @@ router.get('/:lsnId/sound', (req, res) => {
 });
 
 router.get('/:lsnId/video/:lvlId', (req, res) => {
-    database.getVideoByLVLLSN(req.params.lvlId , req.params.lsnId , (result)=> {
+    database.getVideoByLVLLSN(req.params.lvlId, req.params.lsnId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -180,7 +197,7 @@ router.get('/:lsnId/video/:lvlId', (req, res) => {
 });
 
 router.get('/:lsnId/sound/:lvlId', (req, res) => {
-    database.getSoundByLVLLSN(req.params.lvlId , req.params.lsnId , (result)=> {
+    database.getSoundByLVLLSN(req.params.lvlId, req.params.lsnId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -194,7 +211,7 @@ router.get('/:lsnId/sound/:lvlId', (req, res) => {
 });
 
 router.get('/video/:vdId', (req, res) => {
-    database.getVdById(req.params.vdId , (result)=> {
+    database.getVdById(req.params.vdId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -208,7 +225,7 @@ router.get('/video/:vdId', (req, res) => {
 });
 
 router.get('/sound/:sndId', (req, res) => {
-    database.getSndById(req.params.sndId , (result)=> {
+    database.getSndById(req.params.sndId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -221,16 +238,16 @@ router.get('/sound/:sndId', (req, res) => {
     })
 });
 
-router.get('/' , (req , res)=>{
-    database.getAllLessons((lessons)=>{
-        if(lessons == -1){
-           res.status(500).end()
+router.get('/', (req, res)=> {
+    database.getAllLessons((lessons)=> {
+        if (lessons == -1) {
+            res.status(500).end()
         }
-        else if(lessons == 0){
+        else if (lessons == 0) {
             res.status(404).end()
         }
-        else{
-            for(var i =0;i<lessons.length;i++){
+        else {
+            for (var i = 0; i < lessons.length; i++) {
                 lessons[i].level = lessons[i].level[0]
             }
             res.json(lessons)
@@ -282,8 +299,6 @@ router.delete('/sound/:sndId', (req, res) => {
         }
     })
 });
-
-
 
 
 module.exports = router

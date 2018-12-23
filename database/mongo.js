@@ -506,7 +506,13 @@ module.exports.postLesson = (lessonInfo, cb)=> {
                 "lvlId": lessonInfo.lvlId,
                 "deadline": lessonInfo.deadline
             }, (err, result) => {
-                if (err) {
+                if (err != null) {
+                    if (err.code == 11000) {
+                        cb(-2)
+                    }
+                }
+                else if (err) {
+                    console.log(err)
                     cb(-1)
                 }
                 else if (result.length == 0) {
@@ -1036,6 +1042,31 @@ module.exports.getAllLess = (cb)=> {
                     as: "level"
                 }
             }]).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getAllTypes = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("type").find({}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }

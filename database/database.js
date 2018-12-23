@@ -73,11 +73,11 @@ module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
 };
 
 module.exports.delLevel = (lvlId, cb)=> {
-    module.exports.getLessonByLvlId(lvlId , (lesson)=>{
-        if(lesson == -1){
+    module.exports.getLessonByLvlId(lvlId, (lesson)=> {
+        if (lesson == -1) {
             cb(-1)
         }
-        else if(lesson == 0){
+        else if (lesson == 0) {
             mongo.deleteLevel(lvlId, (result)=> {
                 if (result == -1) {
                     cb(-1)
@@ -94,7 +94,7 @@ module.exports.delLevel = (lvlId, cb)=> {
             cb(-3)
         }
     })
-   
+
 };
 
 module.exports.getLevelById = (lvlId, cb)=> {
@@ -182,8 +182,8 @@ module.exports.getAdmins = (cb)=> {
     })
 };
 
-module.exports.getVideoByLVLLSN = (lvlId , lsnId , cb)=> {
-    mongo.getVDByLVLLSN(lvlId , lsnId , (result)=> {
+module.exports.getVideoByLVLLSN = (lvlId, lsnId, cb)=> {
+    mongo.getVDByLVLLSN(lvlId, lsnId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -196,8 +196,8 @@ module.exports.getVideoByLVLLSN = (lvlId , lsnId , cb)=> {
     })
 };
 
-module.exports.getSoundByLVLLSN = (lvlId , lsnId , cb)=> {
-    mongo.getSNDByLVLLSN(lvlId , lsnId ,(result)=> {
+module.exports.getSoundByLVLLSN = (lvlId, lsnId, cb)=> {
+    mongo.getSNDByLVLLSN(lvlId, lsnId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -211,7 +211,7 @@ module.exports.getSoundByLVLLSN = (lvlId , lsnId , cb)=> {
 };
 
 module.exports.getVdById = (vdId, cb)=> {
-    mongo.getVideoById(vdId ,(result)=> {
+    mongo.getVideoById(vdId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -225,7 +225,7 @@ module.exports.getVdById = (vdId, cb)=> {
 };
 
 module.exports.getSndById = (sndId, cb)=> {
-    mongo.getSoundById(sndId ,(result)=> {
+    mongo.getSoundById(sndId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -260,7 +260,7 @@ module.exports.delAdmin = (admId, cb)=> {
         else if (result == 0) {
             cb(0)
         }
-            else if(result == -4){
+        else if (result == -4) {
             cb(-4)
         }
         else {
@@ -277,7 +277,7 @@ module.exports.delStudent = (stuId, cb)=> {
         else if (result == 0) {
             cb(0)
         }
-        else if(result == -4){
+        else if (result == -4) {
             cb(-4)
         }
         else {
@@ -290,6 +290,9 @@ module.exports.addLesson = (lsnInfo, cb)=> {
     mongo.postLesson(lsnInfo, (result)=> {
         if (result == -1) {
             cb(-1)
+        }
+        else if (result == -2) {
+            cb(-2)
         }
         else if (result == 0) {
             cb(0)
@@ -424,7 +427,7 @@ module.exports.addStudent = (stuData, cb)=> {
 };
 
 module.exports.getStuById = (stdId, cb)=> {
-    mongo.getStudentById(stdId ,(result)=> {
+    mongo.getStudentById(stdId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -466,7 +469,7 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
 };
 
 module.exports.getAdminById = (admId, cb)=> {
-    mongo.getAdmById(admId ,(result)=> {
+    mongo.getAdmById(admId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -487,8 +490,22 @@ module.exports.getAllLessons = (cb)=> {
         else if (result == 0) {
             cb(0)
         }
-            else if(result == -2){
+        else if (result == -2) {
             cb(-2)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getAllTpe = (cb)=> {
+    mongo.getAllTypes((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
         }
         else {
             cb(result)
