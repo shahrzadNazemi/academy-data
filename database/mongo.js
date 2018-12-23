@@ -97,15 +97,23 @@ module.exports.postType = (info, cb)=> {
             con.collection("type").insertOne({
                 "title": info.title
             }, (err, result) => {
-                if (err) {
-                    cb(-1)
+                if (err != null) {
+                    if (err.code == 11000) {
+                        cb(-2)
+                    }
                 }
-                else if (result.length == 0) {
-                    cb(0)
+else{
+                    if (err) {
+                        cb(-1)
+                    }
+                    else if (result.length == 0) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result.insertedId)
+                    }     
                 }
-                else {
-                    cb(result.insertedId)
-                }
+               
             })
 
         }

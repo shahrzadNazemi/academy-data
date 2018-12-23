@@ -51,6 +51,9 @@ router.post('/type', (req, res) => {
         if (result == -1) {
             res.status(500).end('')
         }
+            else if(result == -2){
+            res.status(403).end('')
+        }
         else if (result == 0) {
             res.status(404).end('')
         }
