@@ -543,6 +543,7 @@ module.exports.postVideo = (videoInfo, cb)=> {
                 "title": videoInfo.title,
                 "typeId": videoInfo.typeId,
                 "url": videoInfo.url,
+                "thumbUrl":videoInfo.thumbUrl,
                 "lsnId": videoInfo.lsnId,
                 "order": videoInfo.order,
                 "lvlId": videoInfo.lvlId,
@@ -640,11 +641,14 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
             var con = db.db('englishAcademy')
             videoInfo.lvlId = new ObjectID(`${videoInfo.lvlId}`)
             videoInfo.lsnId = new ObjectID(`${videoInfo.lsnId}`)
+            videoInfo.typeId = new ObjectID(`${videoInfo.typeId}`)
+
             con.collection("video").updateOne({"_id": new ObjectID(vdId)}, {
                 $set: {
                     "title": videoInfo.title,
-                    "type": videoInfo.type,
+                    "typeId": videoInfo.typeId,
                     "url": videoInfo.url,
+                    "thumbUrl":videoInfo.thumbUrl,
                     "lsnId": videoInfo.lsnId,
                     "order": videoInfo.order,
                     "lvlId": videoInfo.lvlId
