@@ -577,10 +577,11 @@ module.exports.postSound = (soundInfo, cb)=> {
             var con = db.db('englishAcademy')
             soundInfo.lvlId = new ObjectID(`${soundInfo.lvlId}`)
             soundInfo.lsnId = new ObjectID(`${soundInfo.lsnId}`)
+            soundInfo.typeId = new ObjectID(`${soundInfo.typeId}`)
 
             con.collection("sound").insertOne({
                 "title": soundInfo.title,
-                "type": soundInfo.type,
+                "typeId": soundInfo.typeId,
                 "url": soundInfo.url,
                 "lsnId": soundInfo.lsnId,
                 "order": soundInfo.order,
@@ -659,8 +660,11 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
                 if (result == -1) {
                     cb(-1)
                 }
-                else {
+                else if (result.result.n == 1) {
                     cb(videoInfo)
+                }
+                else {
+                    cb(0)
                 }
             })
         }
@@ -677,21 +681,26 @@ module.exports.editSound = (info, sndId, cb)=> {
             var con = db.db('englishAcademy')
             info.lvlId = new ObjectID(`${info.lvlId}`)
             info.lsnId = new ObjectID(`${info.lsnId}`)
+            info.typeId = new ObjectID(`${info.typeId}`)
+
             con.collection("sound").updateOne({"_id": new ObjectID(sndId)}, {
                 $set: {
                     "title": info.title,
-                    "type": info.type,
+                    "typeId": info.typeId,
                     "url": info.url,
                     "lsnId": info.lsnId,
                     "lvlId": info.lvlId,
                     "order": info.order
                 }
-            }, (result)=> {
-                if (result == -1) {
+            }, (err , result)=> {
+                if (err) {
                     cb(-1)
                 }
+                else if (result.result.n == 1) {
+                    cb(info)
+                }
                 else {
-                    cb(result)
+                    cb(0)
                 }
             })
         }
