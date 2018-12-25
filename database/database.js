@@ -499,6 +499,23 @@ module.exports.getAllLessons = (cb)=> {
     })
 };
 
+module.exports.getAllVideos = (cb)=> {
+    mongo.getAllVids((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else if (result == -2) {
+            cb(-2)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.getAllTpe = (cb)=> {
     mongo.getAllTypes((result)=> {
         if (result == -1) {

@@ -528,6 +528,8 @@ module.exports.postLesson = (lessonInfo, cb)=> {
 };
 
 module.exports.postVideo = (videoInfo, cb)=> {
+    console.log(videoInfo)
+
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -1086,6 +1088,37 @@ module.exports.getAllTypes = (cb)=> {
     })
 };
 
+module.exports.getAllVids = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("video").aggregate([{
+                $lookup: {
+                    from: "lesson",
+                    localField: "lsnId",
+                    foreignField: "_id",
+                    as: "lesson"
+                }
+            }]).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
 
 
 

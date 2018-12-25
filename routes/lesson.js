@@ -153,6 +153,25 @@ router.get('/type', (req, res)=> {
     })
 })
 
+router.get('/video', (req, res)=> {
+    database.getAllVideos((videos)=> {
+        if (videos == -1) {
+            res.status(500).end()
+        }
+        else if (videos == 0) {
+            res.status(404).end()
+        }
+        else {
+            for (var i = 0; i < videos.length; i++) {
+                videos[i].lesson = videos[i].lesson[0]
+            }
+            res.json(videos)
+
+        }
+    })
+})
+
+
 router.get('/:lsnId', (req, res) => {
     database.getLessonById(req.params.lsnId, (result)=> {
         if (result == -1) {
@@ -166,7 +185,6 @@ router.get('/:lsnId', (req, res) => {
         }
     })
 });
-
 
 router.get('/:lsnId/sound', (req, res) => {
     database.getAdmins((result)=> {
