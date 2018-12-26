@@ -1016,9 +1016,12 @@ module.exports.deleteVideo = (vdId, cb)=> {
                     console.log(err)
                     cb(-1)
                 }
+                else if (result.lastErrorObject.n != 0) {
+                    let result1 = "row deleted"
+                    cb(result1)
+                }
                 else {
-                    let result = "row deleted";
-                    cb(result)
+                    cb(0)
                 }
             })
 
