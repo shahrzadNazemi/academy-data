@@ -71,7 +71,8 @@ module.exports.postLevel = (info, cb)=> {
             con.collection("level").insertOne({
                 "title": info.title,
                 "description": info.description,
-                "avatarUrl":info.avatarUrl
+                "avatarUrl":info.avatarUrl,
+                "order":info.order
             }, (err, result) => {
                 if (err != null) {
                     if (err.code == 11000) {
@@ -142,7 +143,8 @@ module.exports.editLevel = (info, lvlId, cb)=> {
                 $set: {
                     "title": info.title,
                     "description": info.description,
-                    "avatarUrl":info.avatarUrl
+                    "avatarUrl":info.avatarUrl,
+                    "order":info.order
                 }
             }, (err, result)=> {
                 if (err) {
@@ -1123,7 +1125,7 @@ module.exports.getAllVids = (cb)=> {
                     as: "lesson"
                 }
             },
-               
+
                 {
                 $lookup: {
                     from: "type",
