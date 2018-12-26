@@ -656,8 +656,8 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
                     "order": videoInfo.order,
                     "lvlId": videoInfo.lvlId
                 }
-            }, (result)=> {
-                if (result == -1) {
+            }, (err , result)=> {
+                if (err) {
                     cb(-1)
                 }
                 else if (result.result.n == 1) {
@@ -1129,6 +1129,37 @@ module.exports.getAllVids = (cb)=> {
     })
 };
 
+module.exports.getStudentByLevel = (lvlId , cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("student").aggregate([{
+                $lookup: {
+                    from: "level",
+                    localField: "lvlId",
+                    foreignField: "_id",
+                    as: "level"
+                }
+            }]).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
 
 
 
