@@ -35,6 +35,9 @@ module.exports.addLevel = (levelInfo, cb)=> {
         if (result == -1) {
             cb(-1)
         }
+            else if(result == -2){
+            cb(-2)
+        }
         else if (result == 0) {
             cb(0)
         }

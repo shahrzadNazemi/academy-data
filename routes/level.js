@@ -8,6 +8,9 @@ router.post('/', (req, res)=> {
         if (addResult == -1) {
             res.status(500).end('')
         }
+            else if(addResult == -2){
+            res.status(403).end('')
+        }
         else {
             res.json({lvlID: addResult})
         }

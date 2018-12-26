@@ -67,10 +67,17 @@ module.exports.postLevel = (info, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+            console.log(info)
             con.collection("level").insertOne({
                 "title": info.title,
-                "description": info.description
+                "description": info.description,
+                "avatarUrl":info.avatarUrl
             }, (err, result) => {
+                if (err != null) {
+                    if (err.code == 11000) {
+                        cb(-2)
+                    }
+                }
                 if (err) {
                     cb(-1)
                 }
@@ -129,13 +136,15 @@ module.exports.editLevel = (info, lvlId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+            console.log(info)
+
             con.collection("level").updateOne({"_id": new ObjectID(lvlId)}, {
                 $set: {
                     "title": info.title,
-                    "description": info.description
+                    "description": info.description,
+                    "avatarUrl":info.avatarUrl
                 }
             }, (err, result)=> {
-                console.log(result.result.n)
                 if (err) {
                     cb(-1)
                 }
