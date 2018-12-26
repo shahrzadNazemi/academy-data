@@ -1122,6 +1122,16 @@ module.exports.getAllVids = (cb)=> {
                     foreignField: "_id",
                     as: "lesson"
                 }
+            },
+               
+                {
+                $lookup: {
+                    from: "type",
+                    localField: "typeId",
+                    foreignField: "_id",
+                    as: "type"
+                }
+
             }]).toArray((err, result) => {
                 if (err) {
                     cb(-1)

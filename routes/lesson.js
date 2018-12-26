@@ -164,6 +164,7 @@ router.get('/video', (req, res)=> {
         else {
             for (var i = 0; i < videos.length; i++) {
                 videos[i].lesson = videos[i].lesson[0]
+                videos[i].type = videos[i].type[0]
             }
             res.json(videos)
 
