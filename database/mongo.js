@@ -278,7 +278,7 @@ module.exports.getVideoById = (vdId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
