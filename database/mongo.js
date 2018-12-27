@@ -201,7 +201,7 @@ module.exports.getLvlById = (lvlID, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -225,7 +225,7 @@ module.exports.getLsnById = (lsnId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -254,7 +254,7 @@ module.exports.getLsnLvlById = (lvlID, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -274,7 +274,26 @@ module.exports.getVideoById = (vdId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("video").findOne({"_id": new ObjectID(`${vdId}`)}, (err, result) => {
+            con.collection("video").aggregate([
+                { $match: {"_id": new ObjectID(`${vdId}`)} },
+                {
+                $lookup: {
+                    from: "lesson",
+                    localField: "lsnId",
+                    foreignField: "_id",
+                    as: "lesson"
+                }
+            },
+
+                {
+                    $lookup: {
+                        from: "type",
+                        localField: "typeId",
+                        foreignField: "_id",
+                        as: "type"
+                    }
+
+                }]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -285,7 +304,6 @@ module.exports.getVideoById = (vdId, cb)=> {
                     cb(result)
                 }
             })
-
         }
     })
 };
@@ -326,7 +344,7 @@ module.exports.getAllLevels = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -379,7 +397,7 @@ module.exports.getAllAdmins = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -438,9 +456,12 @@ module.exports.deleteAdmin = (admId, cb)=> {
                         cb(-4)
                     }
                     else {
-                        con.collection("admins").findOneAndDelete({"_id": new ObjectID(`${admId}`)}, ()=> {
+                        con.collection("admins").findOneAndDelete({"_id": new ObjectID(`${admId}`)}, (err , result)=> {
                             if (err) {
                                 cb(-1)
+                            }
+                                else if(result == null){
+                                cb(0)
                             }
                             else {
                                 let result = "row deleted"
@@ -793,7 +814,7 @@ module.exports.getVDByLVLLSN = (lvlID, lsnId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -820,7 +841,7 @@ module.exports.getSNDByLVLLSN = (lvlID, lsnId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -1074,7 +1095,7 @@ module.exports.getAllLess = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -1099,7 +1120,7 @@ module.exports.getAllTypes = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -1141,7 +1162,7 @@ module.exports.getAllVids = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -1173,7 +1194,7 @@ module.exports.getStudentByLevel = (lvlId , cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
