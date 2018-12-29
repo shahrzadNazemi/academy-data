@@ -80,10 +80,10 @@ router.put('/:lsnId', (req, res) => {
         else if (result == 0) {
             res.status(404).end('')
         }
-        else if (result == -2) {
+        else if (result == -3) {
             res.status(403).end('')
         }
-        else if (result == -3) {
+        else if (result == -2) {
             res.status(402).end('')
         }
 
