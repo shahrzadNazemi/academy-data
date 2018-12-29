@@ -617,21 +617,8 @@ module.exports.postLesson = (lessonInfo, cb)=> {
                 "order": lessonInfo.order,
                 "avatarUrl": lessonInfo.avatarUrl
             }, (err, result) => {
-                if (err != null) {
-                    if (err.code == 11000) {
-                        var field = err.errmsg.split('index:')[1]
-// now we have `title_1 dup key`
-                        field = field.split(' dup key')[0]
-                        field = field.substring(0, field.lastIndexOf('_'))
-                        if (field == " title") {
-                            cb(-2)
-                        }
-                        else {
-                            cb(-3)
-                        }
-                    }
-                }
-                else if (err) {
+
+                 if (err) {
                     console.log(err)
                     cb(-1)
                 }

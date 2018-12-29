@@ -307,31 +307,43 @@ module.exports.addLesson = (lsnInfo, cb)=> {
             cb(0)
         }
         else {
-            console.log(lesson)
+            let forbidden = false
+            let forbidden1 = false
             for (var i = 0; i < lesson.length; i++) {
                 if (lesson[i].order == lsnInfo.order) {
-                    cb(-3)
+                    forbidden = true
                 }
-                else {
-                    mongo.postLesson(lsnInfo, (result)=> {
-                        if (result == -1) {
-                            cb(-1)
-                        }
-                        else if (result == -2) {
-                            cb(-2)
-                        }
-                        else if (result == -3) {
-                            cb(-3)
-                        }
-                        else if (result == 0) {
-                            cb(0)
-                        }
-                        else {
-                            cb(result)
-                        }
-                    });
+                else if (lesson[i].title == lsnInfo.title) {
+                    forbidden1 = true
                 }
+
             }
+            if (forbidden) {
+                cb(-3)
+            }
+            else if (forbidden1) {
+                cb(-2)
+            }
+            else {
+                mongo.postLesson(lsnInfo, (result)=> {
+                    if (result == -1) {
+                        cb(-1)
+                    }
+                    else if (result == -2) {
+                        cb(-2)
+                    }
+                    else if (result == -3) {
+                        cb(-3)
+                    }
+                    else if (result == 0) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result)
+                    }
+                });
+            }
+
         }
     })
 };
@@ -381,7 +393,7 @@ module.exports.updateLesson = (updateInfo, lsnId, cb)=> {
                     if (lesson[i]._id != lsnId)
                         forbidden1 = true
                 }
-                else if(lesson[i].title == updateInfo.title){
+                else if (lesson[i].title == updateInfo.title) {
                     if (lesson[i]._id != lsnId)
                         forbidden = true
                 }
@@ -389,7 +401,7 @@ module.exports.updateLesson = (updateInfo, lsnId, cb)=> {
             if (forbidden1) {
                 cb(-3)
             }
-                else if(forbidden){
+            else if (forbidden) {
                 cb(-2)
             }
             else {
