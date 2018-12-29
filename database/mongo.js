@@ -169,10 +169,10 @@ module.exports.editLevel = (info, lvlId, cb)=> {
                         if (field == " title") {
                             con.collection("level").updateOne({"_id": new ObjectID(lvlId)}, {
                                 $set: {
-                                    "title": info.title,
+                                    // "title": info.title,
                                     "description": info.description,
                                     "avatarUrl": info.avatarUrl,
-                                    // "order": info.order
+                                    "order": info.order
                                 }
                             })
                             cb(-2)
@@ -771,9 +771,27 @@ module.exports.editLesson = (info, lsnId, cb)=> {
                         field = field.split(' dup key')[0]
                         field = field.substring(0, field.lastIndexOf('_'))
                         if (field == " title") {
+                            con.collection("lesson").updateOne({"_id": new ObjectID(lsnId)}, {
+                                $set: {
+                                    // "title": info.title,
+                                    "deadline": info.deadline,
+                                    "lvlId": info.lvlId,
+                                    "order": info.order,
+                                    "avatarUrl": info.avatarUrl
+                                }
+                            })
                             cb(-2)
                         }
                         else {
+                            con.collection("lesson").updateOne({"_id": new ObjectID(lsnId)}, {
+                                $set: {
+                                    "title": info.title,
+                                    "deadline": info.deadline,
+                                    "lvlId": info.lvlId,
+                                    // "order": info.order,
+                                    "avatarUrl": info.avatarUrl
+                                }
+                            })
                             cb(-3)
                         }
                     }
