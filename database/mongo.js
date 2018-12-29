@@ -457,7 +457,7 @@ module.exports.editAdmin = (info, admId, cb)=> {
                 }
                 else {
 
-                    cb(info)
+                    cb(result)
                 }
             })
         }
