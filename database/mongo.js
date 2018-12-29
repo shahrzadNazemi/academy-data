@@ -167,9 +167,25 @@ module.exports.editLevel = (info, lvlId, cb)=> {
                         field = field.substring(0, field.lastIndexOf('_'))
                         console.log(field)
                         if (field == " title") {
+                            con.collection("level").updateOne({"_id": new ObjectID(lvlId)}, {
+                                $set: {
+                                    "title": info.title,
+                                    "description": info.description,
+                                    "avatarUrl": info.avatarUrl,
+                                    // "order": info.order
+                                }
+                            })
                             cb(-2)
                         }
                         else {
+                            con.collection("level").updateOne({"_id": new ObjectID(lvlId)}, {
+                                $set: {
+                                    "title": info.title,
+                                    "description": info.description,
+                                    "avatarUrl": info.avatarUrl,
+                                    // "order": info.order
+                                }
+                            })
                             cb(-3)
                         }
                     }
