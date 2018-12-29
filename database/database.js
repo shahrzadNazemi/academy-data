@@ -304,7 +304,24 @@ module.exports.addLesson = (lsnInfo, cb)=> {
             cb(-1)
         }
         else if (lesson == 0) {
-            cb(0)
+            mongo.postLesson(lsnInfo, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == -2) {
+                    cb(-2)
+                }
+                else if (result == -3) {
+                    cb(-3)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            });
+
         }
         else {
             let forbidden = false
