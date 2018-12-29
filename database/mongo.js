@@ -280,7 +280,7 @@ module.exports.getLsnLvlById = (lvlID, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result == null) {
+                else if (result.length==0) {
                     cb(0)
                 }
                 else {
@@ -358,6 +358,56 @@ module.exports.getSoundById = (sndId, cb)=> {
     })
 };
 
+module.exports.getSoundByLsn = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("sound").find({"lsnId": new ObjectID(`${lsnId}`)}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+
+        }
+    })
+};
+
+module.exports.getVideoByLsn = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("video").find({"lsnId": new ObjectID(`${lsnId}`)}).toArray((err, result) => {
+                console.log("result", result)
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.getAllLevels = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -370,7 +420,7 @@ module.exports.getAllLevels = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result == null) {
+                else if (result.length == 0) {
                     cb(0)
                 }
                 else {
@@ -423,7 +473,7 @@ module.exports.getAllAdmins = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result == null) {
+                else if (result.length == 0) {
                     cb(0)
                 }
                 else {
@@ -566,7 +616,7 @@ module.exports.postLesson = (lessonInfo, cb)=> {
                 "lvlId": lessonInfo.lvlId,
                 "deadline": lessonInfo.deadline,
                 "order": lessonInfo.order,
-                "avatarUrl":lessonInfo.avatarUrl
+                "avatarUrl": lessonInfo.avatarUrl
             }, (err, result) => {
                 if (err != null) {
                     if (err.code == 11000) {
@@ -693,13 +743,13 @@ module.exports.editLesson = (info, lsnId, cb)=> {
                     "deadline": info.deadline,
                     "lvlId": info.lvlId,
                     "order": info.order,
-                    "avatarUrl":info.avatarUrl
+                    "avatarUrl": info.avatarUrl
 
                 }
             }, (err, result)=> {
                 if (err) {
                     console.log("inErr")
-                    if(err.code == 11000){
+                    if (err.code == 11000) {
                         var field = err.errmsg.split('index:')[1]
 // now we have `title_1 dup key`
                         field = field.split(' dup key')[0]
@@ -711,7 +761,7 @@ module.exports.editLesson = (info, lsnId, cb)=> {
                             cb(-3)
                         }
                     }
-                    else{
+                    else {
                         cb(-1)
                     }
                 }
@@ -875,7 +925,7 @@ module.exports.getVDByLVLLSN = (lvlID, lsnId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result == null) {
+                else if (result.length == 0) {
                     cb(0)
                 }
                 else {
@@ -902,7 +952,7 @@ module.exports.getSNDByLVLLSN = (lvlID, lsnId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result == null) {
+                else if (result.length == 0) {
                     cb(0)
                 }
                 else {
@@ -995,7 +1045,7 @@ module.exports.getAllStudents = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result == null) {
+                else if (result.length==0) {
                     cb(0)
                 }
                 else {
@@ -1181,7 +1231,7 @@ module.exports.getAllTypes = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result == null) {
+                else if (result.length==0) {
                     cb(0)
                 }
                 else {
