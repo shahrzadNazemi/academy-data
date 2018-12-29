@@ -35,8 +35,11 @@ module.exports.addLevel = (levelInfo, cb)=> {
         if (result == -1) {
             cb(-1)
         }
-            else if(result == -2){
+        else if (result == -2) {
             cb(-2)
+        }
+        else if (result == -3) {
+            cb(-3)
         }
         else if (result == 0) {
             cb(0)
@@ -65,6 +68,12 @@ module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
     mongo.editLevel(updateInfo, lvlId, (result)=> {
         if (result == -1) {
             cb(-1)
+        }
+        else if (result == -2) {
+            cb(-2)
+        }
+        else if (result == -3) {
+            cb(-3)
         }
         else if (result == 0) {
             cb(0)
@@ -290,18 +299,39 @@ module.exports.delStudent = (stuId, cb)=> {
 };
 
 module.exports.addLesson = (lsnInfo, cb)=> {
-    mongo.postLesson(lsnInfo, (result)=> {
-        if (result == -1) {
+    module.exports.getLessonByLvlId(lsnInfo.lvlId, (lesson)=> {
+        if (lesson == -1) {
             cb(-1)
         }
-        else if (result == -2) {
-            cb(-2)
-        }
-        else if (result == 0) {
+        else if (lesson == 0) {
             cb(0)
         }
         else {
-            cb(result)
+            console.log(lesson)
+            for (var i = 0; i < lesson.length; i++) {
+                if (lesson[i].order == lsnInfo.order) {
+                    cb(-3)
+                }
+                else {
+                    mongo.postLesson(lsnInfo, (result)=> {
+                        if (result == -1) {
+                            cb(-1)
+                        }
+                        else if (result == -2) {
+                            cb(-2)
+                        }
+                        else if (result == -3) {
+                            cb(-3)
+                        }
+                        else if (result == 0) {
+                            cb(0)
+                        }
+                        else {
+                            cb(result)
+                        }
+                    });
+                }
+            }
         }
     })
 };
@@ -335,15 +365,45 @@ module.exports.addSound = (soundInfo, cb)=> {
 };
 
 module.exports.updateLesson = (updateInfo, lsnId, cb)=> {
-    mongo.editLesson(updateInfo, lsnId, (result)=> {
-        if (result == -1) {
+    module.exports.getLessonByLvlId(updateInfo.lvlId, (lesson)=> {
+        if (lesson == -1) {
             cb(-1)
         }
-        else if (result == 0) {
+        else if (lesson == 0) {
             cb(0)
         }
         else {
-            cb(result)
+            let forbidden = false
+            console.log(lesson)
+            for (var i = 0; i < lesson.length; i++) {
+                if (lesson[i].order == updateInfo.order) {
+                    if (lesson[i]._id != lsnId)
+                        forbidden = true
+                }
+            }
+            if (forbidden) {
+                cb(-3)
+            }
+            else {
+                mongo.editLesson(updateInfo, lsnId, (result)=> {
+                    if (result == -1) {
+                        cb(-1)
+                    }
+                    else if (result == -2) {
+                        cb(-2)
+                    }
+                    else if (result == -3) {
+                        cb(-3)
+                    }
+                    else if (result == 0) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result)
+                    }
+                });
+            }
+
         }
     })
 };
@@ -377,6 +437,21 @@ module.exports.updateSound = (updateInfo, sndId, cb)=> {
 };
 
 module.exports.delLesson = (lsnId, cb)=> {
+    module.exports.getViDByLsnId(lsnId , (vd)=>{
+        if(vd == -1){
+            cb(-1)
+        }
+        else if(vd == 0){
+            module.exports.getSndByLsnId(lsnId , (snd)=>{
+                if(snd == -1){
+
+                }
+            })
+        }
+        else{
+            cb(-5)
+        }
+    })
     mongo.deleteLesson(lsnId, (result)=> {
         if (result == -1) {
             cb(-1)

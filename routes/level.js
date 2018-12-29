@@ -11,6 +11,9 @@ router.post('/', (req, res)=> {
             else if(addResult == -2){
             res.status(403).end('')
         }
+        else if(addResult == -3){
+            res.status(402).end('')
+        }
         else {
             res.json({lvlID: addResult})
         }
@@ -21,6 +24,12 @@ router.put('/:lvlId', (req, res)=> {
     database.updateLevel(req.body, req.params.lvlId, (updateResult)=> {
         if (updateResult == -1) {
             res.status(500).end('')
+        }
+        else if(updateResult == -2){
+            res.status(403).end('')
+        }
+        else if(updateResult == -3){
+            res.status(402).end('')
         }
         else if (updateResult == 0) {
             res.status(404).end('')

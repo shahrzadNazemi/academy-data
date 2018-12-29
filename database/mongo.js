@@ -66,17 +66,28 @@ module.exports.postLevel = (info, cb)=> {
             cb(-1)
         }
         else {
+            if (typeof info.order == "string") {
+                info.order = parseInt(info.order)
+            }
             var con = db.db('englishAcademy')
-            console.log(info)
             con.collection("level").insertOne({
                 "title": info.title,
                 "description": info.description,
-                "avatarUrl":info.avatarUrl,
-                "order":info.order
+                "avatarUrl": info.avatarUrl,
+                "order": info.order
             }, (err, result) => {
                 if (err != null) {
                     if (err.code == 11000) {
-                        cb(-2)
+                        var field = err.errmsg.split('index:')[1]
+// now we have `title_1 dup key`
+                        field = field.split(' dup key')[0]
+                        field = field.substring(0, field.lastIndexOf('_'))
+                        if (field == " title") {
+                            cb(-2)
+                        }
+                        else {
+                            cb(-3)
+                        }
                     }
                 }
                 if (err) {
@@ -110,7 +121,7 @@ module.exports.postType = (info, cb)=> {
                         cb(-2)
                     }
                 }
-else{
+                else {
                     if (err) {
                         cb(-1)
                     }
@@ -119,9 +130,9 @@ else{
                     }
                     else {
                         cb(result.insertedId)
-                    }     
+                    }
                 }
-               
+
             })
 
         }
@@ -129,25 +140,41 @@ else{
 };
 
 module.exports.editLevel = (info, lvlId, cb)=> {
-    console.log(lvlId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
             cb(-1)
         }
         else {
+            if (typeof info.order == "string") {
+                info.order = parseInt(info.order)
+            }
             var con = db.db('englishAcademy')
-            console.log(info)
 
             con.collection("level").updateOne({"_id": new ObjectID(lvlId)}, {
                 $set: {
                     "title": info.title,
                     "description": info.description,
-                    "avatarUrl":info.avatarUrl,
-                    "order":info.order
+                    "avatarUrl": info.avatarUrl,
+                    "order": info.order
                 }
             }, (err, result)=> {
-                if (err) {
+                if (err != null) {
+                    if (err.code == 11000) {
+                        var field = err.errmsg.split('index:')[1]
+// now we have `title_1 dup key`
+                        field = field.split(' dup key')[0]
+                        field = field.substring(0, field.lastIndexOf('_'))
+                        console.log(field)
+                        if (field == " title") {
+                            cb(-2)
+                        }
+                        else {
+                            cb(-3)
+                        }
+                    }
+                }
+                else if (err) {
                     cb(-1)
                 }
                 else if (result.result.n == 1) {
@@ -239,7 +266,6 @@ module.exports.getLsnById = (lsnId, cb)=> {
 
 
 module.exports.getLsnLvlById = (lvlID, cb)=> {
-    console.log(lvlID)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -275,15 +301,15 @@ module.exports.getVideoById = (vdId, cb)=> {
         else {
             var con = db.db('englishAcademy')
             con.collection("video").aggregate([
-                { $match: {"_id": new ObjectID(`${vdId}`)} },
+                {$match: {"_id": new ObjectID(`${vdId}`)}},
                 {
-                $lookup: {
-                    from: "lesson",
-                    localField: "lsnId",
-                    foreignField: "_id",
-                    as: "lesson"
-                }
-            },
+                    $lookup: {
+                        from: "lesson",
+                        localField: "lsnId",
+                        foreignField: "_id",
+                        as: "lesson"
+                    }
+                },
 
                 {
                     $lookup: {
@@ -456,16 +482,16 @@ module.exports.deleteAdmin = (admId, cb)=> {
                         cb(-4)
                     }
                     else {
-                        con.collection("admins").findOneAndDelete({"_id": new ObjectID(`${admId}`)}, (err , result)=> {
+                        con.collection("admins").findOneAndDelete({"_id": new ObjectID(`${admId}`)}, (err, result)=> {
                             if (err) {
                                 cb(-1)
                             }
-                                else if(result == null){
-                                cb(0)
-                            }
-                            else {
+                            else if (result.lastErrorObject.n != 0) {
                                 let result = "row deleted"
                                 cb(result)
+                            }
+                            else {
+                                cb(0)
                             }
                         })
                     }
@@ -530,17 +556,30 @@ module.exports.postLesson = (lessonInfo, cb)=> {
             cb(-1)
         }
         else {
+            if (typeof lessonInfo.order == "string") {
+                lessonInfo.order = parseInt(lessonInfo.order)
+            }
             var con = db.db('englishAcademy')
-
             lessonInfo.lvlId = new ObjectID(`${lessonInfo.lvlId}`)
             con.collection("lesson").insertOne({
                 "title": lessonInfo.title,
                 "lvlId": lessonInfo.lvlId,
-                "deadline": lessonInfo.deadline
+                "deadline": lessonInfo.deadline,
+                "order": lessonInfo.order,
+                "avatarUrl":lessonInfo.avatarUrl
             }, (err, result) => {
                 if (err != null) {
                     if (err.code == 11000) {
-                        cb(-2)
+                        var field = err.errmsg.split('index:')[1]
+// now we have `title_1 dup key`
+                        field = field.split(' dup key')[0]
+                        field = field.substring(0, field.lastIndexOf('_'))
+                        if (field == " title") {
+                            cb(-2)
+                        }
+                        else {
+                            cb(-3)
+                        }
                     }
                 }
                 else if (err) {
@@ -577,7 +616,7 @@ module.exports.postVideo = (videoInfo, cb)=> {
                 "title": videoInfo.title,
                 "typeId": videoInfo.typeId,
                 "url": videoInfo.url,
-                "thumbUrl":videoInfo.thumbUrl,
+                "thumbUrl": videoInfo.thumbUrl,
                 "lsnId": videoInfo.lsnId,
                 "order": videoInfo.order,
                 "lvlId": videoInfo.lvlId,
@@ -643,6 +682,9 @@ module.exports.editLesson = (info, lsnId, cb)=> {
             cb(-1)
         }
         else {
+            if (typeof info.order == "string") {
+                info.order = parseInt(info.order)
+            }
             var con = db.db('englishAcademy')
             info.lvlId = new ObjectID(`${info.lvlId}`)
             con.collection("lesson").updateOne({"_id": new ObjectID(lsnId)}, {
@@ -650,12 +692,31 @@ module.exports.editLesson = (info, lsnId, cb)=> {
                     "title": info.title,
                     "deadline": info.deadline,
                     "lvlId": info.lvlId,
+                    "order": info.order,
+                    "avatarUrl":info.avatarUrl
+
                 }
             }, (err, result)=> {
                 if (err) {
-                    cb(-1)
+                    console.log("inErr")
+                    if(err.code == 11000){
+                        var field = err.errmsg.split('index:')[1]
+// now we have `title_1 dup key`
+                        field = field.split(' dup key')[0]
+                        field = field.substring(0, field.lastIndexOf('_'))
+                        if (field == " title") {
+                            cb(-2)
+                        }
+                        else {
+                            cb(-3)
+                        }
+                    }
+                    else{
+                        cb(-1)
+                    }
                 }
                 else if (result.result.n == 1) {
+                    console.log("updated")
                     cb(info)
                 }
                 else {
@@ -683,12 +744,12 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
                     "title": videoInfo.title,
                     "typeId": videoInfo.typeId,
                     "url": videoInfo.url,
-                    "thumbUrl":videoInfo.thumbUrl,
+                    "thumbUrl": videoInfo.thumbUrl,
                     "lsnId": videoInfo.lsnId,
                     "order": videoInfo.order,
                     "lvlId": videoInfo.lvlId
                 }
-            }, (err , result)=> {
+            }, (err, result)=> {
                 if (err) {
                     cb(-1)
                 }
@@ -724,7 +785,7 @@ module.exports.editSound = (info, sndId, cb)=> {
                     "lvlId": info.lvlId,
                     "order": info.order
                 }
-            }, (err , result)=> {
+            }, (err, result)=> {
                 if (err) {
                     cb(-1)
                 }
@@ -1151,14 +1212,14 @@ module.exports.getAllVids = (cb)=> {
             },
 
                 {
-                $lookup: {
-                    from: "type",
-                    localField: "typeId",
-                    foreignField: "_id",
-                    as: "type"
-                }
+                    $lookup: {
+                        from: "type",
+                        localField: "typeId",
+                        foreignField: "_id",
+                        as: "type"
+                    }
 
-            }]).toArray((err, result) => {
+                }]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -1174,7 +1235,7 @@ module.exports.getAllVids = (cb)=> {
     })
 };
 
-module.exports.getStudentByLevel = (lvlId , cb)=> {
+module.exports.getStudentByLevel = (lvlId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
