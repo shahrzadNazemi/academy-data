@@ -382,7 +382,26 @@ module.exports.updateLesson = (updateInfo, lsnId, cb)=> {
                 }
             }
             if (forbidden) {
-                cb(-3)
+                delete  updateInfo.order
+                updateInfo.Forbidden = true
+                mongo.editLesson(updateInfo, lsnId, (result)=> {
+                    if (result == -1) {
+                        cb(-1)
+                    }
+                    else if (result == -2) {
+                        cb(-2)
+                    }
+                    else if (result == -3) {
+                        cb(-3)
+                    }
+                    else if (result == 0) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result)
+                    }
+                });
+                // cb(-3)
             }
             else {
                 mongo.editLesson(updateInfo, lsnId, (result)=> {
@@ -447,7 +466,7 @@ module.exports.delLesson = (lsnId, cb)=> {
                 if (snd == -1) {
                     cb(-1)
                 }
-                else if(snd == 0){
+                else if (snd == 0) {
                     mongo.deleteLesson(lsnId, (result)=> {
                         if (result == -1) {
                             cb(-1)
@@ -460,7 +479,7 @@ module.exports.delLesson = (lsnId, cb)=> {
                         }
                     })
                 }
-                else{
+                else {
                     cb(-2)
                 }
             })
@@ -469,32 +488,32 @@ module.exports.delLesson = (lsnId, cb)=> {
             cb(-3)
         }
     })
-   
+
 };
 
-module.exports.getViDByLsnId = (lsnId , cb)=>{
-    mongo.getVideoByLsn(lsnId , (videos)=>{
-        if(videos == -1){
+module.exports.getViDByLsnId = (lsnId, cb)=> {
+    mongo.getVideoByLsn(lsnId, (videos)=> {
+        if (videos == -1) {
             cb(-1)
         }
-        else if(videos ==0){
+        else if (videos == 0) {
             cb(0)
         }
-        else{
+        else {
             cb(videos)
         }
     })
 }
 
-module.exports.getSndByLsnId = (lsnId , cb)=>{
-    mongo.getSoundByLsn(lsnId , (sounds)=>{
-        if(sounds == -1){
+module.exports.getSndByLsnId = (lsnId, cb)=> {
+    mongo.getSoundByLsn(lsnId, (sounds)=> {
+        if (sounds == -1) {
             cb(-1)
         }
-        else if(sounds ==0){
+        else if (sounds == 0) {
             cb(0)
         }
-        else{
+        else {
             cb(sounds)
         }
     })
