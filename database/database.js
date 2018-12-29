@@ -374,34 +374,23 @@ module.exports.updateLesson = (updateInfo, lsnId, cb)=> {
         }
         else {
             let forbidden = false
+            let forbidden1 = false
             console.log(lesson)
             for (var i = 0; i < lesson.length; i++) {
                 if (lesson[i].order == updateInfo.order) {
                     if (lesson[i]._id != lsnId)
+                        forbidden1 = true
+                }
+                else if(lesson[i].title == updateInfo.title){
+                    if (lesson[i]._id != lsnId)
                         forbidden = true
                 }
             }
-            if (forbidden) {
-                delete  updateInfo.order
-                updateInfo.Forbidden = true
-                mongo.editLesson(updateInfo, lsnId, (result)=> {
-                    if (result == -1) {
-                        cb(-1)
-                    }
-                    else if (result == -2) {
-                        cb(-2)
-                    }
-                    else if (result == -3) {
-                        cb(-3)
-                    }
-                    else if (result == 0) {
-                        cb(0)
-                    }
-                    else {
-                        cb(result)
-                    }
-                });
-                // cb(-3)
+            if (forbidden1) {
+                cb(-3)
+            }
+                else if(forbidden){
+                cb(-2)
             }
             else {
                 mongo.editLesson(updateInfo, lsnId, (result)=> {

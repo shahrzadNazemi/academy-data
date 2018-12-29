@@ -747,40 +747,7 @@ module.exports.editLesson = (info, lsnId, cb)=> {
                 }
             }, (err, result)=> {
                 if (err) {
-                    console.log("inErr")
-                    if (err.code == 11000) {
-                        var field = err.errmsg.split('index:')[1]
-// now we have `title_1 dup key`
-                        field = field.split(' dup key')[0]
-                        field = field.substring(0, field.lastIndexOf('_'))
-                        if (field == " title") {
-                            con.collection("lesson").updateOne({"_id": new ObjectID(lsnId)}, {
-                                $set: {
-                                    // "title": info.title,
-                                    "deadline": info.deadline,
-                                    "lvlId": info.lvlId,
-                                    "order": info.order,
-                                    "avatarUrl": info.avatarUrl
-                                }
-                            })
-                            cb(-2)
-                        }
-                        else {
-                            con.collection("lesson").updateOne({"_id": new ObjectID(lsnId)}, {
-                                $set: {
-                                    "title": info.title,
-                                    "deadline": info.deadline,
-                                    "lvlId": info.lvlId,
-                                    // "order": info.order,
-                                    "avatarUrl": info.avatarUrl
-                                }
-                            })
-                            cb(-3)
-                        }
-                    }
-                    else {
                         cb(-1)
-                    }
                 }
                 else if (result.result.n == 1) {
                     console.log("updated")
