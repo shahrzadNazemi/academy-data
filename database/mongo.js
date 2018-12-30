@@ -614,6 +614,7 @@ module.exports.postLesson = (lessonInfo, cb)=> {
                 "title": lessonInfo.title,
                 "lvlId": lessonInfo.lvlId,
                 "deadline": lessonInfo.deadline,
+                "description":lessonInfo.description,
                 "order": lessonInfo.order,
                 "avatarUrl": lessonInfo.avatarUrl
             }, (err, result) => {

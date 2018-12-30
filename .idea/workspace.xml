@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f0bf0fa1-bb0c-4322-86b6-038bccef4534" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/mongo.js" afterPath="$PROJECT_DIR$/database/mongo.js" />
     </list>
     <ignored path="analyze.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -42,11 +43,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="database.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="database.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database/database.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="103">
-              <caret line="298" column="2" selection-start-line="298" selection-start-column="2" selection-end-line="298" selection-end-column="2" />
+            <state relative-caret-position="237">
+              <caret line="306" column="25" selection-start-line="306" selection-start-column="25" selection-end-line="306" selection-end-column="25" />
               <folding>
                 <element signature="e#119#339#0" expanded="false" />
                 <element signature="e#164#336#0" expanded="false" />
@@ -232,17 +233,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mongo.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="mongo.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/database/mongo.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="13440">
-              <caret line="676" column="18" selection-start-line="676" selection-start-column="15" selection-end-line="676" selection-end-column="18" />
+            <state relative-caret-position="192">
+              <caret line="614" column="42" selection-start-line="614" selection-start-column="42" selection-end-line="614" selection-end-column="42" />
               <folding>
                 <element signature="e#10630#10676#0" expanded="false" />
                 <element signature="e#10718#10763#0" expanded="false" />
-                <element signature="e#25939#25985#0" expanded="false" />
-                <element signature="e#26031#26076#0" expanded="false" />
-                <element signature="e#26098#26148#0" expanded="false" />
+                <element signature="e#25993#26039#0" expanded="false" />
+                <element signature="e#26085#26130#0" expanded="false" />
+                <element signature="e#26152#26202#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -422,8 +423,8 @@
         <option value="$PROJECT_DIR$/routes/users.js" />
         <option value="$PROJECT_DIR$/routes/level.js" />
         <option value="$PROJECT_DIR$/routes/lesson.js" />
-        <option value="$PROJECT_DIR$/database/mongo.js" />
         <option value="$PROJECT_DIR$/database/database.js" />
+        <option value="$PROJECT_DIR$/database/mongo.js" />
       </list>
     </option>
   </component>
@@ -996,16 +997,16 @@
       <workItem from="1545803970266" duration="11529000" />
       <workItem from="1545889552998" duration="13379000" />
       <workItem from="1546063235691" duration="17052000" />
-      <workItem from="1546148592622" duration="788000" />
+      <workItem from="1546148592622" duration="1597000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="410237000" />
+    <option name="totallyTimeSpent" value="411046000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1013,9 +1014,9 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37435898" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37435898" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290469" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35042736" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35042736" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12254161" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1283,24 +1284,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database/mongo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13440">
-          <caret line="676" column="18" selection-start-line="676" selection-start-column="15" selection-end-line="676" selection-end-column="18" />
-          <folding>
-            <element signature="e#10630#10676#0" expanded="false" />
-            <element signature="e#10718#10763#0" expanded="false" />
-            <element signature="e#25939#25985#0" expanded="false" />
-            <element signature="e#26031#26076#0" expanded="false" />
-            <element signature="e#26098#26148#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/database/database.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="298" column="2" selection-start-line="298" selection-start-column="2" selection-end-line="298" selection-end-column="2" />
+        <state relative-caret-position="237">
+          <caret line="306" column="25" selection-start-line="306" selection-start-column="25" selection-end-line="306" selection-end-column="25" />
           <folding>
             <element signature="e#119#339#0" expanded="false" />
             <element signature="e#164#336#0" expanded="false" />
@@ -1481,6 +1468,20 @@
             <element signature="e#14419#14449#0" expanded="false" />
             <element signature="e#14480#14509#0" expanded="false" />
             <element signature="e#14523#14557#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/mongo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="614" column="42" selection-start-line="614" selection-start-column="42" selection-end-line="614" selection-end-column="42" />
+          <folding>
+            <element signature="e#10630#10676#0" expanded="false" />
+            <element signature="e#10718#10763#0" expanded="false" />
+            <element signature="e#25993#26039#0" expanded="false" />
+            <element signature="e#26085#26130#0" expanded="false" />
+            <element signature="e#26152#26202#0" expanded="false" />
           </folding>
         </state>
       </provider>
