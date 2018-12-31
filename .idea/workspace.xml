@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0bf0fa1-bb0c-4322-86b6-038bccef4534" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/database.js" afterPath="$PROJECT_DIR$/database/database.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/mongo.js" afterPath="$PROJECT_DIR$/database/mongo.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/lesson.js" afterPath="$PROJECT_DIR$/routes/lesson.js" />
     </list>
     <ignored path="analyze.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -47,8 +46,8 @@
       <file leaf-file-name="database.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database/database.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="127">
-              <caret line="683" column="20" selection-start-line="683" selection-start-column="10" selection-end-line="683" selection-end-column="20" />
+            <state relative-caret-position="43">
+              <caret line="225" column="17" selection-start-line="225" selection-start-column="17" selection-end-line="225" selection-end-column="17" />
               <folding>
                 <element signature="e#119#339#0" expanded="false" />
                 <element signature="e#164#336#0" expanded="false" />
@@ -130,7 +129,6 @@
                 <element signature="e#4428#4458#0" expanded="false" />
                 <element signature="e#4489#4518#0" expanded="false" />
                 <element signature="e#4532#4566#0" expanded="false" />
-                <element signature="e#4620#4838#0" expanded="false" />
                 <element signature="e#4663#4835#0" expanded="false" />
                 <element signature="e#4691#4721#0" expanded="false" />
                 <element signature="e#4752#4781#0" expanded="false" />
@@ -346,9 +344,10 @@
         <entry file="file://$PROJECT_DIR$/database/mongo.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="20">
-              <caret line="1448" column="26" selection-start-line="1448" selection-start-column="26" selection-end-line="1448" selection-end-column="26" />
+              <caret line="555" column="0" selection-start-line="555" selection-start-column="0" selection-end-line="578" selection-end-column="0" />
               <folding>
-                <element signature="e#39929#40966#0" expanded="false" />
+                <element signature="e#13622#14762#0" expanded="false" />
+                <element signature="e#41185#42222#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -404,8 +403,8 @@
       <file leaf-file-name="lesson.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/lesson.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="187" column="19" selection-start-line="187" selection-start-column="19" selection-end-line="187" selection-end-column="19" />
+            <state relative-caret-position="272">
+              <caret line="280" column="19" selection-start-line="280" selection-start-column="19" selection-end-line="280" selection-end-column="19" />
               <folding>
                 <element signature="e#186#608#0" expanded="false" />
                 <element signature="e#232#604#0" expanded="false" />
@@ -468,8 +467,12 @@
                 <element signature="e#3838#3883#0" expanded="false" />
                 <element signature="e#3897#4112#0" expanded="false" />
                 <element signature="e#3951#4072#0" expanded="false" />
+                <element signature="e#4158#4583#0" expanded="false" />
+                <element signature="e#4197#4580#0" expanded="false" />
                 <element signature="e#4225#4270#0" expanded="false" />
                 <element signature="e#4301#4346#0" expanded="false" />
+                <element signature="e#4360#4574#0" expanded="false" />
+                <element signature="e#4414#4535#0" expanded="false" />
                 <element signature="e#4623#4897#0" expanded="false" />
                 <element signature="e#4681#4894#0" expanded="false" />
                 <element signature="e#4709#4756#0" expanded="false" />
@@ -490,13 +493,11 @@
                 <element signature="e#5703#5750#0" expanded="false" />
                 <element signature="e#5781#5828#0" expanded="false" />
                 <element signature="e#5842#5882#0" expanded="false" />
-                <element signature="e#5936#6379#0" expanded="false" />
                 <element signature="e#5989#6376#0" expanded="false" />
                 <element signature="e#6017#6064#0" expanded="false" />
                 <element signature="e#6095#6142#0" expanded="false" />
                 <element signature="e#6156#6370#0" expanded="false" />
                 <element signature="e#6210#6331#0" expanded="false" />
-                <element signature="e#6425#6696#0" expanded="false" />
                 <element signature="e#6480#6693#0" expanded="false" />
                 <element signature="e#6508#6555#0" expanded="false" />
                 <element signature="e#6586#6633#0" expanded="false" />
@@ -1225,16 +1226,16 @@
       <workItem from="1545889552998" duration="13379000" />
       <workItem from="1546063235691" duration="17052000" />
       <workItem from="1546148592622" duration="18718000" />
-      <workItem from="1546236674417" duration="6419000" />
+      <workItem from="1546236674417" duration="7676000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="434586000" />
+    <option name="totallyTimeSpent" value="435843000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1510,8 +1511,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/lesson.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="187" column="19" selection-start-line="187" selection-start-column="19" selection-end-line="187" selection-end-column="19" />
+        <state relative-caret-position="272">
+          <caret line="280" column="19" selection-start-line="280" selection-start-column="19" selection-end-line="280" selection-end-column="19" />
           <folding>
             <element signature="e#186#608#0" expanded="false" />
             <element signature="e#232#604#0" expanded="false" />
@@ -1574,8 +1575,12 @@
             <element signature="e#3838#3883#0" expanded="false" />
             <element signature="e#3897#4112#0" expanded="false" />
             <element signature="e#3951#4072#0" expanded="false" />
+            <element signature="e#4158#4583#0" expanded="false" />
+            <element signature="e#4197#4580#0" expanded="false" />
             <element signature="e#4225#4270#0" expanded="false" />
             <element signature="e#4301#4346#0" expanded="false" />
+            <element signature="e#4360#4574#0" expanded="false" />
+            <element signature="e#4414#4535#0" expanded="false" />
             <element signature="e#4623#4897#0" expanded="false" />
             <element signature="e#4681#4894#0" expanded="false" />
             <element signature="e#4709#4756#0" expanded="false" />
@@ -1596,13 +1601,11 @@
             <element signature="e#5703#5750#0" expanded="false" />
             <element signature="e#5781#5828#0" expanded="false" />
             <element signature="e#5842#5882#0" expanded="false" />
-            <element signature="e#5936#6379#0" expanded="false" />
             <element signature="e#5989#6376#0" expanded="false" />
             <element signature="e#6017#6064#0" expanded="false" />
             <element signature="e#6095#6142#0" expanded="false" />
             <element signature="e#6156#6370#0" expanded="false" />
             <element signature="e#6210#6331#0" expanded="false" />
-            <element signature="e#6425#6696#0" expanded="false" />
             <element signature="e#6480#6693#0" expanded="false" />
             <element signature="e#6508#6555#0" expanded="false" />
             <element signature="e#6586#6633#0" expanded="false" />
@@ -1636,8 +1639,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/database/database.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="683" column="20" selection-start-line="683" selection-start-column="10" selection-end-line="683" selection-end-column="20" />
+        <state relative-caret-position="43">
+          <caret line="225" column="17" selection-start-line="225" selection-start-column="17" selection-end-line="225" selection-end-column="17" />
           <folding>
             <element signature="e#119#339#0" expanded="false" />
             <element signature="e#164#336#0" expanded="false" />
@@ -1719,7 +1722,6 @@
             <element signature="e#4428#4458#0" expanded="false" />
             <element signature="e#4489#4518#0" expanded="false" />
             <element signature="e#4532#4566#0" expanded="false" />
-            <element signature="e#4620#4838#0" expanded="false" />
             <element signature="e#4663#4835#0" expanded="false" />
             <element signature="e#4691#4721#0" expanded="false" />
             <element signature="e#4752#4781#0" expanded="false" />
@@ -1933,9 +1935,10 @@
     <entry file="file://$PROJECT_DIR$/database/mongo.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="20">
-          <caret line="1448" column="26" selection-start-line="1448" selection-start-column="26" selection-end-line="1448" selection-end-column="26" />
+          <caret line="555" column="0" selection-start-line="555" selection-start-column="0" selection-end-line="578" selection-end-column="0" />
           <folding>
-            <element signature="e#39929#40966#0" expanded="false" />
+            <element signature="e#13622#14762#0" expanded="false" />
+            <element signature="e#41185#42222#0" expanded="false" />
           </folding>
         </state>
       </provider>

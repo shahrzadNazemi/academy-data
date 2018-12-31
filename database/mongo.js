@@ -519,7 +519,26 @@ module.exports.getSoundById = (sndId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("sound").findOne({"_id": new ObjectID(`${sndId}`)}, (err, result) => {
+            con.collection("sound").aggregate([
+                {$match: {"_id": new ObjectID(`${sndId}`)}},
+                {
+                    $lookup: {
+                        from: "lesson",
+                        localField: "lsnId",
+                        foreignField: "_id",
+                        as: "lesson"
+                    }
+                },
+
+                {
+                    $lookup: {
+                        from: "type",
+                        localField: "typeId",
+                        foreignField: "_id",
+                        as: "type"
+                    }
+
+                }]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -530,10 +549,33 @@ module.exports.getSoundById = (sndId, cb)=> {
                     cb(result)
                 }
             })
-
         }
     })
 };
+
+// module.exports.getSoundById = (sndId, cb)=> {
+//     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+//         if (err) {
+//             console.log("Err", err)
+//             cb(-1)
+//         }
+//         else {
+//             var con = db.db('englishAcademy')
+//             con.collection("sound").findOne({"_id": new ObjectID(`${sndId}`)}, (err, result) => {
+//                 if (err) {
+//                     cb(-1)
+//                 }
+//                 else if (result == null) {
+//                     cb(0)
+//                 }
+//                 else {
+//                     cb(result)
+//                 }
+//             })
+//
+//         }
+//     })
+// };
 
 module.exports.getSoundByLsn = (lsnId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
