@@ -947,7 +947,8 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
                     "thumbUrl": videoInfo.thumbUrl,
                     "lsnId": videoInfo.lsnId,
                     "order": videoInfo.order,
-                    "lvlId": videoInfo.lvlId
+                    "lvlId": videoInfo.lvlId,
+                    "text":videoInfo.text
                 }
             }, (err, result)=> {
                 if (err) {

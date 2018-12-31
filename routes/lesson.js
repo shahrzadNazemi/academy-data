@@ -95,6 +95,7 @@ router.put('/:lsnId', (req, res) => {
 
 router.put('/video/:vdId', (req, res) => {
     database.updateVideo(req.body, req.params.vdId, (result)=> {
+        console.log(result)
         if (result == -1) {
             res.status(500).end('')
         }
