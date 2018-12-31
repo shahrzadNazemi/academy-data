@@ -286,6 +286,11 @@ router.get('/sound/:sndId', (req, res) => {
             res.status(404).end('')
         }
         else {
+            for (var i = 0; i < result.length; i++) {
+                result[i].lesson = result[i].lesson[0]
+                result[i].type = result[i].type[0]
+            }
+
             res.json(result)
         }
     })
