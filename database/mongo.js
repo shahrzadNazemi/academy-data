@@ -956,7 +956,7 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
                     cb(-1)
                 }
                 else if (result.result.n == 1) {
-                    console.log("here")
+                    console.log("videoInfo" , videoInfo)
                     cb(videoInfo)
                 }
                 else {
