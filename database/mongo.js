@@ -938,7 +938,6 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
             videoInfo.lvlId = new ObjectID(`${videoInfo.lvlId}`)
             videoInfo.lsnId = new ObjectID(`${videoInfo.lsnId}`)
             videoInfo.typeId = new ObjectID(`${videoInfo.typeId}`)
-
             con.collection("video").updateOne({"_id": new ObjectID(vdId)}, {
                 $set: {
                     "title": videoInfo.title,
@@ -951,12 +950,10 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
                     "text":videoInfo.text
                 }
             }, (err, result)=> {
-                console.log("resultInMongo" , result)
                 if (err) {
                     cb(-1)
                 }
                 else if (result.result.n == 1) {
-                    console.log("videoInfo" , videoInfo)
                     cb(videoInfo)
                 }
                 else {
