@@ -695,6 +695,256 @@ module.exports.getAllTpe = (cb)=> {
 };
 
 
+module.exports.getFirstLesson = (cb) => {
+    module.exports.getFirstLevel(level=> {
+        console.log(level)
+        if (level == -1) {
+            cb(-1)
+        }
+        else if (level == 0) {
+            cb(0)
+        }
+        else {
+            mongo.getFrstLsn(level._id, lesson=> {
+
+                if (lesson == -1) {
+                    cb(-1)
+                }
+                else if (lesson == 0) {
+                    cb(0)
+                }
+                else {
+                    lesson.level = level
+                    console.log(lesson)
+                    console.log("lesson" , lesson)
+                    cb(lesson)
+                }
+            })
+
+        }
+    })
+}
+
+module.exports.getFirstLevel = (cb) => {
+    mongo.getFrstLvl(level=> {
+        if (level == -1) {
+            cb(-1)
+        }
+        else if (level == 0) {
+            cb(0)
+        }
+        else {
+            cb(level[0])
+        }
+    })
+}
+
+module.exports.getLessonLevel = (lsnId, cb)=> {
+    mongo.getLsnLvlByLsnId(lsnId, (lesson)=> {
+        if (lesson == -1) {
+            cb(-1)
+        }
+        else if (lesson == 0) {
+            cb(0)
+        }
+        else {
+            cb(lesson)
+        }
+    })
+}
+
+module.exports.getLevelByOrder = (order, cb)=> {
+    mongo.getLvlByOrder(order, (level)=> {
+        if (level == -1) {
+            cb(-1)
+        }
+        else if (level == 0) {
+            cb(0)
+        }
+        else {
+            cb(level)
+        }
+    })
+}
+
+module.exports.getLessonByOrder = (order, cb)=> {
+    mongo.getLsnByOrder(order, (level)=> {
+        if (level == -1) {
+            cb(-1)
+        }
+        else if (level == 0) {
+            cb(0)
+        }
+        else {
+            cb(level)
+        }
+    })
+}
+
+module.exports.getStuByUsername = (username, cb)=> {
+    mongo.getUsrByUsrname(username, (user)=> {
+        if (user == -1) {
+            cb(-1)
+        }
+        else if (user == 0) {
+            cb(0)
+        }
+        else {
+            cb(user)
+        }
+    })
+}
+
+module.exports.stuPlacement = (placeInfo, cb)=> {
+    if (placeInfo.lsnId == 0) {
+        module.exports.getFirstLesson((lesson)=> {
+            if (lesson == -1) {
+                cb(-1)
+            }
+            else if (lesson == 0) {
+                cb(0)
+            }
+            else {
+                console.log("lesson", lesson)
+                cb(lesson)
+            }
+        })
+    }
+    else {
+
+        module.exports.getLessonById(placeInfo.lsnId, (lesson)=> {
+            if (lesson == -1) {
+                cb(-1)
+            }
+            else if (lesson == 0) {
+                cb(0)
+            }
+            else {
+                module.exports.getLevelById(lesson.lvlId, (level)=> {
+                    if (level == -1) {
+                        cb(-1)
+                    }
+                    else if (level == 0) {
+                        cb(0)
+                    }
+                    else {
+                        if (lesson.order == 1) {
+                            let newOrder = level.order - 1
+                            if (newOrder != 0) {
+                                module.exports.getLevelByOrder(newOrder, (levels)=> {
+                                    if (levels== -1) {
+                                        cb(-1)
+                                    }
+                                    else if (levels == 0) {
+                                        cb(0)
+                                    }
+                                    else {
+                                        module.exports.getLessonByLvlId(levels[0]._id, (lessons)=> {
+                                            if (lessons == -1) {
+                                                cb(-1)
+                                            }
+                                            else if (lessons == 0) {
+                                                cb(0)
+                                            }
+                                            else {
+                                                let lesson1 = lessons[lessons.length-1]
+                                                lesson.level = level
+                                                module.exports.getStuByUsername(placeInfo.username, (student)=> {
+                                                    if (student == -1) {
+                                                        cb(-1)
+                                                    }
+                                                    else if (student == 0) {
+                                                        cb(0)
+                                                    }
+                                                    else {
+                                                        let stu = {}
+                                                        stu.lastPassedLesson = lesson1._id
+                                                        let newStudent = Object.assign({}, student[0], stu)
+                                                        module.exports.updateStudent(newStudent, student[0]._id, (result)=> {
+                                                            if (result == -1) {
+                                                                cb(-1)
+                                                            }
+                                                            else if (result == 0) {
+                                                                cb(0)
+                                                            }
+                                                            else {
+                                                                cb(lesson)
+                                                            }
+                                                        })
+                                                    }
+
+                                                })
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                            else {
+                                let info = {lsnId: 0}
+                                module.exports.stuPlacement(info, (lesson)=> {
+                                    if (lesson == -1) {
+                                        cb(-1)
+                                    }
+                                    else if (lesson == 0) {
+                                        cb(0)
+                                    }
+                                    else {
+                                        cb(lesson)
+                                    }
+                                })
+                            }
+                        }
+                        else {
+                            let info = {}
+                            info.lastPassOrder = lesson.order - 1
+                            info.lvlId = lesson.lvlId
+                            module.exports.getLessonByOrder(info, (lastPassedLesson)=> {
+                                if (lastPassedLesson == -1) {
+                                    cb(-1)
+                                }
+                                else if (lastPassedLesson == 0) {
+                                    cb(0)
+                                }
+                                else {
+
+                                    module.exports.getStuByUsername(placeInfo.username, (student)=> {
+                                        if (student == -1) {
+                                            cb(-1)
+                                        }
+                                        else if (student == 0) {
+                                            cb(0)
+                                        }
+                                        else {
+                                            let stu = {}
+                                            stu.lastPassedLesson = lastPassedLesson[0]._id
+                                            let newStudent = Object.assign({}, student[0], stu)
+                                            console.log("new", newStudent)
+                                            module.exports.updateStudent(newStudent, student[0]._id, (result)=> {
+                                                if (result == -1) {
+                                                    cb(-1)
+                                                }
+                                                else if (result == 0) {
+                                                    cb(0)
+                                                }
+                                                else {
+                                                    lesson.level = level
+                                                    cb(lesson)
+                                                }
+                                            })
+                                        }
+
+                                    })
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        })
+    }
+};
+
+
 
 
 

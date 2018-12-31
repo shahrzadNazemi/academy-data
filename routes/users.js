@@ -117,6 +117,22 @@ router.post('/student/login', (req, res) => {
     })
 });
 
+router.post('/student/placement', (req, res) => {
+    database.stuPlacement(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            console.log("result" , result)
+
+            res.json(result)
+        }
+    })
+});
+
 router.put('/student/:stuId', (req, res) => {
     console.log(req.params.stuId)
     database.updateStudent(req.body, req.params.stuId, (result)=> {

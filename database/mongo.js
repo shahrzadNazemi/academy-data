@@ -275,11 +275,189 @@ module.exports.getLsnLvlById = (lvlID, cb)=> {
             if (typeof lvlID == 'number') {
                 lvlID = lvlID + ''
             }
-            con.collection("lesson").find({"lvlId": new ObjectID(`${lvlID}`)}).toArray((err, result) => {
+            con.collection("lesson").find({"lvlId": new ObjectID(`${lvlID}`)}).sort({order: 1}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length==0) {
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getFrstLsn = (lvlID, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (typeof lvlID == 'number') {
+                lvlID = lvlID + ''
+            }
+            con.collection("lesson").find({"lvlId": new ObjectID(`${lvlID}`)}).sort({"order":1}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result[0])
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getFrstLvl = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("level").find().sort({"order":1}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getLsnLvlByLsnId = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            console.log(lsnId)
+            con.collection("lesson").aggregate([
+                {
+                    $lookup: {
+                        from: "level",
+                        localField: "lvlId",
+                        foreignField: "_id",
+                        as: "level"
+                    }
+                },
+                {$match: {"_id": new ObjectID(`${lsnId}`)}},
+                {
+                    $addFields: {
+                        level: {
+                            $arrayElemAt: [
+                                {
+                                    $filter: {
+                                        input: $level,
+                                        as: "level",
+                                        cond: {
+                                            $eq: ["_id",new ObjectID(`${lsnId}`) ]
+                                        }
+                                    }
+                                }, 0
+                            ]
+                        }
+                    }
+                }
+            ]).toArray((err, result) => {
+                if (err) {
+                    console.log(err)
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+        }
+    })
+};
+
+module.exports.getLvlByOrder = (order, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("level").find({"order": order}).toArray((err, result) => {
+                console.log("result", result)
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getLsnByOrder = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("lesson").find({"order": info.lastPassOrder, "lvlId":new ObjectID(`${info.lvlId}`)}).toArray((err, result) => {
+                console.log("result", result)
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getUsrByUsrname = (username, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("student").find({"username": username}).toArray((err, result) => {
+                console.log("result", result)
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
                     cb(0)
                 }
                 else {
@@ -614,12 +792,12 @@ module.exports.postLesson = (lessonInfo, cb)=> {
                 "title": lessonInfo.title,
                 "lvlId": lessonInfo.lvlId,
                 "deadline": lessonInfo.deadline,
-                "description":lessonInfo.description,
+                "description": lessonInfo.description,
                 "order": lessonInfo.order,
                 "avatarUrl": lessonInfo.avatarUrl
             }, (err, result) => {
 
-                 if (err) {
+                if (err) {
                     console.log(err)
                     cb(-1)
                 }
@@ -735,7 +913,7 @@ module.exports.editLesson = (info, lsnId, cb)=> {
                 }
             }, (err, result)=> {
                 if (err) {
-                        cb(-1)
+                    cb(-1)
                 }
                 else if (result.result.n == 1) {
                     console.log("updated")
@@ -1017,7 +1195,7 @@ module.exports.getAllStudents = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length==0) {
+                else if (result.length == 0) {
                     cb(0)
                 }
                 else {
@@ -1064,7 +1242,8 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                 var con = db.db('englishAcademy')
                 con.collection("student").updateOne({"_id": new ObjectID(stdId)}, {
                     $set: {
-                        password: stuInfo.password
+                        password: stuInfo.password,
+                        lastPassedLesson:stuInfo.lastPassedLesson
                     }
                 }, (err, result)=> {
                     if (err) {
@@ -1203,7 +1382,7 @@ module.exports.getAllTypes = (cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length==0) {
+                else if (result.length == 0) {
                     cb(0)
                 }
                 else {
