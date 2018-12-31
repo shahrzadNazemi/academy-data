@@ -951,10 +951,12 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
                     "text":videoInfo.text
                 }
             }, (err, result)=> {
+                console.log("resultInMongo" , result)
                 if (err) {
                     cb(-1)
                 }
                 else if (result.result.n == 1) {
+                    console.log("here")
                     cb(videoInfo)
                 }
                 else {
