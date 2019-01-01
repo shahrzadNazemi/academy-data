@@ -1552,6 +1552,83 @@ module.exports.getStudentByLevel = (lvlId, cb)=> {
     })
 };
 
+module.exports.getSndByType = (typeId , cb)=>{
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof typeId == 'number') {
+                typeId = JSON.stringify(typeId)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("sound").find({"typeId": new ObjectID(`${typeId}`)}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+}
+
+module.exports.getVDByType = (typeId , cb)=>{
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof typeId == 'number') {
+                typeId = JSON.stringify(typeId)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("video").find({"typeId": new ObjectID(`${typeId}`)}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+}
+
+module.exports.deleteType = (typeId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("type").findOneAndDelete({"_id": new ObjectID(`${typeId}`)}, (err, result)=> {
+                if (err) {
+                    console.log(err)
+                    cb(-1)
+                }
+                else {
+                    let result = "row deleted";
+                    cb(result)
+                }
+            })
+
+
+        }
+    })
+};
 
 
 

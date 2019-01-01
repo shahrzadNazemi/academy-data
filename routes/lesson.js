@@ -337,6 +337,26 @@ router.delete('/:lsnId', (req, res) => {
     })
 });
 
+router.delete('/type/:typeId', (req, res) => {
+    database.delType(req.params.typeId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else if (result == -2) {
+            res.status(402).end('')
+        }
+        else if (result == -3) {
+            res.status(403).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
 router.delete('/video/:vdId', (req, res) => {
     database.delVideo(req.params.vdId, (result)=> {
         if (result == -1) {

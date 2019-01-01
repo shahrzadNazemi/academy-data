@@ -711,6 +711,64 @@ module.exports.getAllTpe = (cb)=> {
     })
 };
 
+module.exports.getVideoByType = (typeId , cb)=>{
+    mongo.getVDByType(typeId , (video)=>{
+        if(video == -1){
+            cb(-1)
+        }
+        else if(video ==0){
+            cb(0)
+        }
+        else{
+            cb(video)
+        }
+    })
+}
+
+module.exports.getSoundByType = (typeId , cb)=>{
+    mongo.getSndByType(typeId , (sound)=>{
+        if(sound == -1){
+            cb(-1)
+        }
+        else if(sound ==0){
+            cb(0)
+        }
+        else{
+            cb(sound)
+        }
+    })
+}
+
+module.exports.delType = (typeId ,cb)=>{
+    module.exports.getVideoByType(typeId , (video)=>{
+        if(video == -1){
+            cb(-1)
+        }
+        else if(video == 0){
+            module.exports.getSoundByType(typeId , (sound)=>{
+                if(sound == -1){
+                    cb(-1)
+                }
+                else if(sound == 0){
+                    mongo.deleteType(typeId , (type)=>{
+                        if(type == -1){
+                            cb(-1)
+                        }
+                        else{
+                            cb(type)
+                        }
+                    })
+                }
+                else{
+                    cb(-3)
+                }
+            })
+        }
+        else{
+            cb(-2)
+        }
+    })
+}
 
 module.exports.getFirstLesson = (cb) => {
     module.exports.getFirstLevel(level=> {
@@ -733,7 +791,7 @@ module.exports.getFirstLesson = (cb) => {
                 else {
                     lesson.level = level
                     console.log(lesson)
-                    console.log("lesson" , lesson)
+                    console.log("lesson", lesson)
                     cb(lesson)
                 }
             })
@@ -849,7 +907,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                             let newOrder = level.order - 1
                             if (newOrder != 0) {
                                 module.exports.getLevelByOrder(newOrder, (levels)=> {
-                                    if (levels== -1) {
+                                    if (levels == -1) {
                                         cb(-1)
                                     }
                                     else if (levels == 0) {
@@ -864,7 +922,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                 cb(0)
                                             }
                                             else {
-                                                let lesson1 = lessons[lessons.length-1]
+                                                let lesson1 = lessons[lessons.length - 1]
                                                 lesson.level = level
                                                 module.exports.getStuByUsername(placeInfo.username, (student)=> {
                                                     if (student == -1) {
