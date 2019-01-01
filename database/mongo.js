@@ -914,7 +914,8 @@ module.exports.postSound = (soundInfo, cb)=> {
                 "lsnId": soundInfo.lsnId,
                 "order": soundInfo.order,
                 "lvlId": soundInfo.lvlId,
-                "text": soundInfo.text
+                "text": soundInfo.text,
+                "coverUrl":soundInfo.coverUrl
 
             }, (err, result) => {
                 if (err) {
@@ -1025,7 +1026,9 @@ module.exports.editSound = (info, sndId, cb)=> {
                     "url": info.url,
                     "lsnId": info.lsnId,
                     "lvlId": info.lvlId,
-                    "order": info.order
+                    "order": info.order,
+                    "coverUrl":info.coverUrl
+
                 }
             }, (err, result)=> {
                 if (err) {
