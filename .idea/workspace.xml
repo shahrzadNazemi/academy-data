@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0bf0fa1-bb0c-4322-86b6-038bccef4534" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/mongo.js" afterPath="$PROJECT_DIR$/database/mongo.js" />
     </list>
     <ignored path="analyze.iws" />
@@ -390,8 +391,8 @@
       <file leaf-file-name="mongo.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/database/mongo.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="1028" column="40" selection-start-line="1028" selection-start-column="40" selection-end-line="1028" selection-end-column="40" />
+            <state relative-caret-position="249">
+              <caret line="992" column="45" selection-start-line="992" selection-start-column="45" selection-end-line="992" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -1281,12 +1282,12 @@
       <workItem from="1546063235691" duration="17052000" />
       <workItem from="1546148592622" duration="18718000" />
       <workItem from="1546236674417" duration="10846000" />
-      <workItem from="1546320619441" duration="6613000" />
+      <workItem from="1546320619441" duration="8827000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="445626000" />
+    <option name="totallyTimeSpent" value="447840000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -2047,8 +2048,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/database/mongo.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="1028" column="40" selection-start-line="1028" selection-start-column="40" selection-end-line="1028" selection-end-column="40" />
+        <state relative-caret-position="249">
+          <caret line="992" column="45" selection-start-line="992" selection-start-column="45" selection-end-line="992" selection-end-column="45" />
           <folding />
         </state>
       </provider>

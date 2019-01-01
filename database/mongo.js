@@ -856,8 +856,6 @@ module.exports.postLesson = (lessonInfo, cb)=> {
 };
 
 module.exports.postVideo = (videoInfo, cb)=> {
-    console.log(videoInfo)
-
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -877,7 +875,8 @@ module.exports.postVideo = (videoInfo, cb)=> {
                 "lsnId": videoInfo.lsnId,
                 "order": videoInfo.order,
                 "lvlId": videoInfo.lvlId,
-                "text": videoInfo.text
+                "text": videoInfo.text,
+                "srtUrl":videoInfo.srtUrl
 
             }, (err, result) => {
                 if (err) {
@@ -990,7 +989,9 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
                     "lsnId": videoInfo.lsnId,
                     "order": videoInfo.order,
                     "lvlId": videoInfo.lvlId,
-                    "text":videoInfo.text
+                    "text":videoInfo.text,
+                    "srtUrl":videoInfo.srtUrl
+
                 }
             }, (err, result)=> {
                 if (err) {
