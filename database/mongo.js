@@ -247,7 +247,26 @@ module.exports.getLsnById = (lsnId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("lesson").findOne({"_id": new ObjectID(`${lsnId}`)}, (err, result) => {
+            con.collection("lesson").aggregate([
+                {$match: {"_id": new ObjectID(`${lsnId}`)}},
+                {
+                    $lookup: {
+                        from: "video",
+                        localField: "_id",
+                        foreignField: "lsnId",
+                        as: "video"
+                    }
+                },
+
+                {
+                    $lookup: {
+                        from: "sound",
+                        localField: "_id",
+                        foreignField: "lsnId",
+                        as: "sound"
+                    }
+
+                }]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
