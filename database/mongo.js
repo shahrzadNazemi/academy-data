@@ -1284,8 +1284,15 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                 var con = db.db('englishAcademy')
                 con.collection("student").updateOne({"_id": new ObjectID(stdId)}, {
                     $set: {
-                        password: stuInfo.password,
-                        lastPassedLesson:stuInfo.lastPassedLesson
+                        "username": stuInfo.username,
+                        "password": stuInfo.password,
+                        "fname": stuInfo.fname,
+                        "lname": stuInfo.lname,
+                        "mobile": stuInfo.mobile,
+                        "avatarUrl": stuInfo.avatarUrl,
+                        "score": stuInfo.score,
+                        "lastPassedLesson": stuInfo.lastPassedLesson
+
                     }
                 }, (err, result)=> {
                     if (err) {

@@ -134,16 +134,30 @@ router.post('/student/placement', (req, res) => {
 });
 
 router.put('/student/:stuId', (req, res) => {
-    console.log(req.params.stuId)
-    database.updateStudent(req.body, req.params.stuId, (result)=> {
-        if (result == -1) {
+    database.getStuById(req.params.stuId , (student)=>{
+        if(student == -1){
             res.status(500).end('')
         }
-        else if (result == 0) {
+        else if(student == 0){
             res.status(404).end('')
         }
-        else {
-            res.json(result)
+        else{
+            console.log(student)
+            console.log(req.body)
+            let newStu = Object.assign({} , student , req.body)
+            console.log(newStu)
+
+            database.updateStudent(newStu, req.params.stuId, (result)=> {
+                if (result == -1) {
+                    res.status(500).end('')
+                }
+                else if (result == 0) {
+                    res.status(404).end('')
+                }
+                else {
+                    res.json(result)
+                }
+            })
         }
     })
 });
