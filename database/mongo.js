@@ -255,8 +255,20 @@ module.exports.getLsnById = (lsnId, cb)=> {
                         localField: "_id",
                         foreignField: "lsnId",
                         as: "video"
+
+
                     }
                 },
+
+                {
+                    $lookup: {
+                        from: "level",
+                        localField: "lvlId",
+                        foreignField: "_id",
+                        as: "level"
+                    }
+                }
+                ,
 
                 {
                     $lookup: {
@@ -266,8 +278,10 @@ module.exports.getLsnById = (lsnId, cb)=> {
                         as: "sound"
                     }
 
-                }]).toArray((err, result) => {
+                }
+            ]).toArray((err, result) => {
                 if (err) {
+                    console.log(err)
                     cb(-1)
                 }
                 else if (result == null) {
@@ -321,7 +335,7 @@ module.exports.getFrstLsn = (lvlID, cb)=> {
             if (typeof lvlID == 'number') {
                 lvlID = lvlID + ''
             }
-            con.collection("lesson").find({"lvlId": new ObjectID(`${lvlID}`)}).sort({"order":1}).toArray((err, result) => {
+            con.collection("lesson").find({"lvlId": new ObjectID(`${lvlID}`)}).sort({"order": 1}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -345,7 +359,7 @@ module.exports.getFrstLvl = (cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("level").find().sort({"order":1}).toArray((err, result) => {
+            con.collection("level").find().sort({"order": 1}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -389,7 +403,7 @@ module.exports.getLsnLvlByLsnId = (lsnId, cb)=> {
                                         input: $level,
                                         as: "level",
                                         cond: {
-                                            $eq: ["_id",new ObjectID(`${lsnId}`) ]
+                                            $eq: ["_id", new ObjectID(`${lsnId}`)]
                                         }
                                     }
                                 }, 0
@@ -446,7 +460,10 @@ module.exports.getLsnByOrder = (info, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("lesson").find({"order": info.lastPassOrder, "lvlId":new ObjectID(`${info.lvlId}`)}).toArray((err, result) => {
+            con.collection("lesson").find({
+                "order": info.lastPassOrder,
+                "lvlId": new ObjectID(`${info.lvlId}`)
+            }).toArray((err, result) => {
                 console.log("result", result)
                 if (err) {
                     cb(-1)
@@ -895,7 +912,7 @@ module.exports.postVideo = (videoInfo, cb)=> {
                 "order": videoInfo.order,
                 "lvlId": videoInfo.lvlId,
                 "text": videoInfo.text,
-                "srtUrl":videoInfo.srtUrl
+                "srtUrl": videoInfo.srtUrl
 
             }, (err, result) => {
                 if (err) {
@@ -933,7 +950,7 @@ module.exports.postSound = (soundInfo, cb)=> {
                 "order": soundInfo.order,
                 "lvlId": soundInfo.lvlId,
                 "text": soundInfo.text,
-                "coverUrl":soundInfo.coverUrl
+                "coverUrl": soundInfo.coverUrl
 
             }, (err, result) => {
                 if (err) {
@@ -1008,8 +1025,8 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
                     "lsnId": videoInfo.lsnId,
                     "order": videoInfo.order,
                     "lvlId": videoInfo.lvlId,
-                    "text":videoInfo.text,
-                    "srtUrl":videoInfo.srtUrl
+                    "text": videoInfo.text,
+                    "srtUrl": videoInfo.srtUrl
 
                 }
             }, (err, result)=> {
@@ -1047,7 +1064,7 @@ module.exports.editSound = (info, sndId, cb)=> {
                     "lsnId": info.lsnId,
                     "lvlId": info.lvlId,
                     "order": info.order,
-                    "coverUrl":info.coverUrl
+                    "coverUrl": info.coverUrl
 
                 }
             }, (err, result)=> {
@@ -1582,7 +1599,7 @@ module.exports.getStudentByLevel = (lvlId, cb)=> {
     })
 };
 
-module.exports.getSndByType = (typeId , cb)=>{
+module.exports.getSndByType = (typeId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -1609,7 +1626,7 @@ module.exports.getSndByType = (typeId , cb)=>{
     })
 }
 
-module.exports.getVDByType = (typeId , cb)=>{
+module.exports.getVDByType = (typeId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)

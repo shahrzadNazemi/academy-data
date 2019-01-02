@@ -1,5 +1,7 @@
 let mongo = require('./mongo')
 let mongoose = require('./mongoose')
+let ObjectID = require('mongodb').ObjectID;
+
 
 
 module.exports.loginForAdmin = (loginInfo, cb)=> {
@@ -133,7 +135,43 @@ module.exports.getLessonById = (lsnId, cb)=> {
             cb(0)
         }
         else {
-            cb(result)
+            module.exports.getAllTpe((type)=> {
+                var k = 0
+                for (var i = 0; i < result[0].video.length; i++) {
+                    for (k = 0; k < type.length; k++) {
+                        if (result[0].video[i].typeId.equals(type[k]._id)) {
+                            result[0].video[i].type = type[k]
+                        }
+                    }
+
+                }
+                k = 0
+                console.log( type[1]._id)
+                console.log( result[0].sound[0].typeId)
+                console.log(result[0].sound[0].typeId.equals( type[1]._id))
+                
+                
+
+                if(result[0].sound[0].typeId === type[1]._id){
+
+                    console.log('equals');
+
+                }
+
+
+                for (var i = 0; i < result[0].sound.length; i++) {
+                    for(k=0;k<type.length;k++){
+                        if (result[0].sound[i].typeId.equals( type[k]._id)) {
+                            result[0].sound[i].type = type[k]
+                        }
+
+                    }
+
+                }
+
+                cb(result)
+
+            })
         }
     })
 
@@ -711,60 +749,60 @@ module.exports.getAllTpe = (cb)=> {
     })
 };
 
-module.exports.getVideoByType = (typeId , cb)=>{
-    mongo.getVDByType(typeId , (video)=>{
-        if(video == -1){
+module.exports.getVideoByType = (typeId, cb)=> {
+    mongo.getVDByType(typeId, (video)=> {
+        if (video == -1) {
             cb(-1)
         }
-        else if(video ==0){
+        else if (video == 0) {
             cb(0)
         }
-        else{
+        else {
             cb(video)
         }
     })
 }
 
-module.exports.getSoundByType = (typeId , cb)=>{
-    mongo.getSndByType(typeId , (sound)=>{
-        if(sound == -1){
+module.exports.getSoundByType = (typeId, cb)=> {
+    mongo.getSndByType(typeId, (sound)=> {
+        if (sound == -1) {
             cb(-1)
         }
-        else if(sound ==0){
+        else if (sound == 0) {
             cb(0)
         }
-        else{
+        else {
             cb(sound)
         }
     })
 }
 
-module.exports.delType = (typeId ,cb)=>{
-    module.exports.getVideoByType(typeId , (video)=>{
-        if(video == -1){
+module.exports.delType = (typeId, cb)=> {
+    module.exports.getVideoByType(typeId, (video)=> {
+        if (video == -1) {
             cb(-1)
         }
-        else if(video == 0){
-            module.exports.getSoundByType(typeId , (sound)=>{
-                if(sound == -1){
+        else if (video == 0) {
+            module.exports.getSoundByType(typeId, (sound)=> {
+                if (sound == -1) {
                     cb(-1)
                 }
-                else if(sound == 0){
-                    mongo.deleteType(typeId , (type)=>{
-                        if(type == -1){
+                else if (sound == 0) {
+                    mongo.deleteType(typeId, (type)=> {
+                        if (type == -1) {
                             cb(-1)
                         }
-                        else{
+                        else {
                             cb(type)
                         }
                     })
                 }
-                else{
+                else {
                     cb(-3)
                 }
             })
         }
-        else{
+        else {
             cb(-2)
         }
     })
