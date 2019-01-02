@@ -114,7 +114,7 @@ module.exports.postQuestion = (info, cb)=> {
         else {
             console.log(info.exam.value)
             var con = db.db('englishAcademy')
-            if(info.lesson.value || info.lesson.value != ""){
+            if(info.lesson.value || info.lesson.value = ""){
                 info.lesson.value = new ObjectID(`${info.lesson.value}`)
             }
             if(info.exam.value != undefined || info.exam.value == ""){
