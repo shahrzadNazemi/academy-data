@@ -213,40 +213,34 @@ module.exports.getLessonById = (lsnId, cb)=> {
             cb(0)
         }
         else {
+            result[0].level = result[0].level[0]
             module.exports.getAllTpe((type)=> {
-                var k = 0
-                for (var i = 0; i < result[0].video.length; i++) {
-                    for (k = 0; k < type.length; k++) {
-                        if (result[0].video[i].typeId.equals(type[k]._id)) {
-                            result[0].video[i].type = type[k]
-                        }
-                    }
-
+                if(type == 0 || type == -1){
+                    cb(-1)
                 }
-                k = 0
-                console.log(type[1]._id)
-                console.log(result[0].sound[0].typeId)
-                console.log(result[0].sound[0].typeId.equals(type[1]._id))
-
-
-                if (result[0].sound[0].typeId === type[1]._id) {
-
-                    console.log('equals');
-
-                }
-
-
-                for (var i = 0; i < result[0].sound.length; i++) {
-                    for (k = 0; k < type.length; k++) {
-                        if (result[0].sound[i].typeId.equals(type[k]._id)) {
-                            result[0].sound[i].type = type[k]
+                else{
+                    var k = 0
+                    for (var i = 0; i < result[0].video.length; i++) {
+                        for (k = 0; k < type.length; k++) {
+                            if (result[0].video[i].typeId.equals(type[k]._id)) {
+                                result[0].video[i].type = type[k]
+                            }
                         }
 
                     }
+                    k = 0
+                    for (var i = 0; i < result[0].sound.length; i++) {
+                        for (k = 0; k < type.length; k++) {
+                            if (result[0].sound[i].typeId.equals(type[k]._id)) {
+                                result[0].sound[i].type = type[k]
+                            }
+
+                        }
+
+                    }
+                    cb(result)
 
                 }
-
-                cb(result)
 
             })
         }
