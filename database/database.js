@@ -1001,7 +1001,6 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
         })
     }
     else {
-
         module.exports.getLessonById(placeInfo.lsnId, (lesson)=> {
             if (lesson == -1) {
                 cb(-1)
@@ -1010,6 +1009,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                 cb(0)
             }
             else {
+                lesson = lesson[0]
                 module.exports.getLevelById(lesson.lvlId, (level)=> {
                     if (level == -1) {
                         cb(-1)

@@ -1355,7 +1355,9 @@ module.exports.postStudent = (stuInfo, cb)=> {
                 "mobile": stuInfo.mobile,
                 "avatarUrl": stuInfo.avatarUrl,
                 "score": stuInfo.score,
-                "lastPassedLesson": stuInfo.lastPassedLesson
+                "lastPassedLesson": stuInfo.lastPassedLesson,
+                "passedLessonScore": stuInfo.passedLessonScore
+
             }, (err, result) => {
                 if (err != null) {
                     if (err.code == 11000) {
