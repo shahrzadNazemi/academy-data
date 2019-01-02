@@ -142,11 +142,7 @@ router.put('/student/:stuId', (req, res) => {
             res.status(404).end('')
         }
         else{
-            console.log(student)
-            console.log(req.body)
             let newStu = Object.assign({} , student , req.body)
-            console.log(newStu)
-
             database.updateStudent(newStu, req.params.stuId, (result)=> {
                 if (result == -1) {
                     res.status(500).end('')
@@ -154,6 +150,10 @@ router.put('/student/:stuId', (req, res) => {
                 else if (result == 0) {
                     res.status(404).end('')
                 }
+                else if (result == -2) {
+                    res.status(402).end('')
+                }
+
                 else {
                     res.json(result)
                 }

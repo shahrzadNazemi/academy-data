@@ -1482,7 +1482,14 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
 
                     }
                 }, (err, result)=> {
-                    if (err) {
+                    if (err != null) {
+                        if (err.code == 11000) {
+                            cb(-2)
+                        }
+                    }
+
+                    else if (err) {
+                        console.log(err)
                         cb(-1)
                     }
                     else {
