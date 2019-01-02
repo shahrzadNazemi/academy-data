@@ -1,6 +1,5 @@
 let mongo = require('./mongo')
 let mongoose = require('./mongoose')
-let ObjectID = require('mongodb').ObjectID;
 
 
 
@@ -52,6 +51,26 @@ module.exports.addLevel = (levelInfo, cb)=> {
     })
 };
 
+module.exports.addQuestion = (QInfo, cb)=> {
+    mongo.postQuestion(QInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == -2) {
+            cb(-2)
+        }
+        else if (result == -3) {
+            cb(-3)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.addType = (typeInfo, cb)=> {
     mongo.postType(typeInfo, (result)=> {
         if (result == -1) {
@@ -82,6 +101,36 @@ module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
         }
         else {
             cb(result)
+        }
+    })
+};
+
+module.exports.updateQuestion = (updateInfo, QId, cb)=> {
+    module.exports.getQuestionById(QId , (question)=>{
+        if(question == -1){
+            cb(-1)
+        }
+        else if(question == 0){
+            cb(0)
+        }
+        else{
+            mongo.edit(updateInfo, lvlId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == -2) {
+                    cb(-2)
+                }
+                else if (result == -3) {
+                    cb(-3)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
         }
     })
 };

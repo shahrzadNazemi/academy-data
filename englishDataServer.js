@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 let user  = require('./routes/users');
 let level = require('./routes/level');
 let lesson = require('./routes/lesson');
+let question = require('./routes/question');
 
 
 
@@ -19,6 +20,7 @@ let lesson = require('./routes/lesson');
 app.use('/api/users' , user);
 app.use('/api/level' , level);
 app.use('/api/lesson' , lesson);
+app.use('/api/question', question);
 
 
 // catch 404 and forward to error handler

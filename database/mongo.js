@@ -105,6 +105,35 @@ module.exports.postLevel = (info, cb)=> {
     })
 };
 
+module.exports.postQuestion = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("question").insertOne({
+                "content": info.content,
+                "score": info.score,
+                "type": info.type,
+                "answer": info.answer
+            }, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.postType = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
