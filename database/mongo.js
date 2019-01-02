@@ -112,12 +112,11 @@ module.exports.postQuestion = (info, cb)=> {
             cb(-1)
         }
         else {
-            console.log(info.exam.value)
             var con = db.db('englishAcademy')
             if (info.lesson.value || info.lesson.value != "") {
                 info.lesson.value = new ObjectID(`${info.lesson.value}`)
             }
-            if (info.exam.value != undefined || info.exam.value != "") {
+            if (info.exam.value != undefined && info.exam.value != "") {
                 info.exam.value = new ObjectID(`${info.exam.value}`)
             }
             con.collection("question").insertOne({
