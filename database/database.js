@@ -69,6 +69,19 @@ module.exports.addQuestion = (QInfo, cb)=> {
         }
     })
 };
+module.exports.addExam = (exInfo, cb)=> {
+    mongo.postExam(exInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
 
 module.exports.addType = (typeInfo, cb)=> {
     mongo.postType(typeInfo, (result)=> {

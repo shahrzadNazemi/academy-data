@@ -13,6 +13,7 @@ let user  = require('./routes/users');
 let level = require('./routes/level');
 let lesson = require('./routes/lesson');
 let question = require('./routes/question');
+let exam = require('./routes/exam');
 
 
 
@@ -21,6 +22,8 @@ app.use('/api/users' , user);
 app.use('/api/level' , level);
 app.use('/api/lesson' , lesson);
 app.use('/api/question', question);
+app.use('/api/exam', exam);
+
 
 
 // catch 404 and forward to error handler

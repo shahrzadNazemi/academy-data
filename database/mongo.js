@@ -114,20 +114,49 @@ module.exports.postQuestion = (info, cb)=> {
         else {
             console.log(info.exam.value)
             var con = db.db('englishAcademy')
-            if(info.lesson.value || info.lesson.value == ""){
+            if (info.lesson.value || info.lesson.value == "") {
                 info.lesson.value = new ObjectID(`${info.lesson.value}`)
             }
-            if(info.exam.value != undefined || info.exam.value == ""){
+            if (info.exam.value != undefined || info.exam.value == "") {
                 info.exam.value = new ObjectID(`${info.exam.value}`)
             }
             con.collection("question").insertOne({
                 "content": info.content,
                 "score": info.score,
                 "type": info.type,
-                "lesson":info.lesson,
-                "exam":info.exam,
+                "lesson": info.lesson,
+                "exam": info.exam,
                 "answer": info.answer,
-                "trueIndex":info.trueIndex
+                "trueIndex": info.trueIndex
+            }, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.postExam = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("exam").insertOne({
+                "title": info.title,
+                "score": info.score,
+                "time": info.time,
+                "preLesson": info.preLesson,
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -234,13 +263,13 @@ module.exports.editQuestion = (info, QId, cb)=> {
             cb(-1)
         }
         else {
-            if(info.lesson.value || info.lesson.value == ""){
+            if (info.lesson.value || info.lesson.value == "") {
                 info.lesson.value = new ObjectID(`${info.lesson.value}`)
             }
-            if(info.exam.value != undefined || info.exam.value == ""){
+            if (info.exam.value != undefined || info.exam.value == "") {
                 info.exam.value = new ObjectID(`${info.exam.value}`)
             }
-              
+
             var con = db.db('englishAcademy')
 
             con.collection("question").updateOne({"_id": new ObjectID(QId)}, {
@@ -248,10 +277,10 @@ module.exports.editQuestion = (info, QId, cb)=> {
                     "content": info.content,
                     "score": info.score,
                     "type": info.type,
-                    "lesson":info.lesson,
-                    "exam":info.exam,
+                    "lesson": info.lesson,
+                    "exam": info.exam,
                     "answer": info.answer,
-                    "trueIndex":info.trueIndex
+                    "trueIndex": info.trueIndex
 
                 }
             }, (err, result)=> {
