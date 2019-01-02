@@ -114,10 +114,10 @@ module.exports.postQuestion = (info, cb)=> {
         else {
             console.log(info.exam.value)
             var con = db.db('englishAcademy')
-            if (info.lesson.value || info.lesson.value == "") {
+            if (info.lesson.value || info.lesson.value != "") {
                 info.lesson.value = new ObjectID(`${info.lesson.value}`)
             }
-            if (info.exam.value != undefined || info.exam.value == "") {
+            if (info.exam.value != undefined || info.exam.value != "") {
                 info.exam.value = new ObjectID(`${info.exam.value}`)
             }
             con.collection("question").insertOne({
@@ -126,7 +126,7 @@ module.exports.postQuestion = (info, cb)=> {
                 "type": info.type,
                 "lesson": info.lesson,
                 "exam": info.exam,
-                "answer": info.answer,
+                "answers": info.answers,
                 "trueIndex": info.trueIndex
             }, (err, result) => {
                 if (err) {
@@ -151,6 +151,9 @@ module.exports.postExam = (info, cb)=> {
             cb(-1)
         }
         else {
+            if (info.preLesson.value !=undefined && info.preLesson.value != "") {
+                info.preLesson.value = new ObjectID(`${info.preLesson.value}`)
+            }
             var con = db.db('englishAcademy')
             con.collection("exam").insertOne({
                 "title": info.title,
@@ -279,7 +282,7 @@ module.exports.editQuestion = (info, QId, cb)=> {
                     "type": info.type,
                     "lesson": info.lesson,
                     "exam": info.exam,
-                    "answer": info.answer,
+                    "answers": info.answers,
                     "trueIndex": info.trueIndex
 
                 }
