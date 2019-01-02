@@ -307,6 +307,32 @@ module.exports.deleteLevel = (lvlId, cb)=> {
     })
 };
 
+module.exports.deleteQuestion = (QId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("question").findOneAndDelete({"_id": new ObjectID(`${QId}`)}, (err, result)=> {
+                console.log(result.lastErrorObject.n)
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result1 = "row deleted"
+                    cb(result1)
+                }
+                else {
+                    cb(0)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.getLvlById = (lvlID, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {

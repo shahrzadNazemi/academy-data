@@ -174,6 +174,21 @@ module.exports.delLevel = (lvlId, cb)=> {
 
 };
 
+module.exports.delQuestion = (QId, cb)=> {
+            mongo.deleteQuestion(QId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+};
+
 module.exports.getLevelById = (lvlId, cb)=> {
     mongo.getLvlById(lvlId, (result)=> {
         if (result == -1) {
