@@ -126,7 +126,8 @@ module.exports.postQuestion = (info, cb)=> {
                 "type": info.type,
                 "lesson":info.lesson,
                 "exam":info.exam,
-                "answer": info.answer
+                "answer": info.answer,
+                "trueIndex":info.trueIndex
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -249,7 +250,9 @@ module.exports.editQuestion = (info, QId, cb)=> {
                     "type": info.type,
                     "lesson":info.lesson,
                     "exam":info.exam,
-                    "answer": info.answer
+                    "answer": info.answer,
+                    "trueIndex":info.trueIndex
+
                 }
             }, (err, result)=> {
                 if (err != null) {

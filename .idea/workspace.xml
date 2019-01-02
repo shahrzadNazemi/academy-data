@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f0bf0fa1-bb0c-4322-86b6-038bccef4534" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/database.js" afterPath="$PROJECT_DIR$/database/database.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/mongo.js" afterPath="$PROJECT_DIR$/database/mongo.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/users.js" afterPath="$PROJECT_DIR$/routes/users.js" />
     </list>
     <ignored path="analyze.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -483,12 +481,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mongo.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="mongo.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/database/mongo.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="20">
-              <caret line="1475" column="21" selection-start-line="1475" selection-start-column="21" selection-end-line="1475" selection-end-column="21" />
-              <folding />
+            <state relative-caret-position="283">
+              <caret line="282" column="9" selection-start-line="282" selection-start-column="9" selection-end-line="282" selection-end-column="9" />
+              <folding>
+                <element signature="e#41797#42495#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -542,11 +542,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lesson.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lesson.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/lesson.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="184" column="2" selection-start-line="184" selection-start-column="2" selection-end-line="184" selection-end-column="2" />
+            <state relative-caret-position="137">
+              <caret line="165" column="2" selection-start-line="165" selection-start-column="2" selection-end-line="165" selection-end-column="2" />
               <folding>
                 <element signature="e#186#608#0" expanded="false" />
                 <element signature="e#232#604#0" expanded="false" />
@@ -809,9 +809,9 @@
         <option value="$PROJECT_DIR$/routes/lesson.js" />
         <option value="$PROJECT_DIR$/englishDataServer.js" />
         <option value="$PROJECT_DIR$/routes/question.js" />
-        <option value="$PROJECT_DIR$/database/mongo.js" />
         <option value="$PROJECT_DIR$/routes/users.js" />
         <option value="$PROJECT_DIR$/database/database.js" />
+        <option value="$PROJECT_DIR$/database/mongo.js" />
       </list>
     </option>
   </component>
@@ -1375,12 +1375,12 @@
       <workItem from="1546320619441" duration="10650000" />
       <workItem from="1546406188403" duration="4455000" />
       <workItem from="1546410673156" duration="863000" />
-      <workItem from="1546411587651" duration="11302000" />
+      <workItem from="1546411587651" duration="12800000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="466283000" />
+    <option name="totallyTimeSpent" value="467781000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -1606,14 +1606,6 @@
             <element signature="e#1618#1665#0" expanded="false" />
             <element signature="e#1679#1722#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/mongo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="1475" column="21" selection-start-line="1475" selection-start-column="21" selection-end-line="1475" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2111,8 +2103,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/lesson.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="184" column="2" selection-start-line="184" selection-start-column="2" selection-end-line="184" selection-end-column="2" />
+        <state relative-caret-position="137">
+          <caret line="165" column="2" selection-start-line="165" selection-start-column="2" selection-end-line="165" selection-end-column="2" />
           <folding>
             <element signature="e#186#608#0" expanded="false" />
             <element signature="e#232#604#0" expanded="false" />
@@ -2241,6 +2233,16 @@
             <element signature="e#8681#8728#0" expanded="false" />
             <element signature="e#8759#8806#0" expanded="false" />
             <element signature="e#8820#8860#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/mongo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="283">
+          <caret line="282" column="9" selection-start-line="282" selection-start-column="9" selection-end-line="282" selection-end-column="9" />
+          <folding>
+            <element signature="e#41797#42495#0" expanded="false" />
           </folding>
         </state>
       </provider>
