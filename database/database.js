@@ -2,7 +2,6 @@ let mongo = require('./mongo')
 let mongoose = require('./mongoose')
 
 
-
 module.exports.loginForAdmin = (loginInfo, cb)=> {
     mongo.adminLogin(loginInfo, (result)=> {
         if (result == -1) {
@@ -105,8 +104,8 @@ module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
     })
 };
 
-module.exports.updateQuestion = (updateInfo, QId, cb)=> {
-    module.exports.getQuestionById(QId , (question)=>{
+module.exports.getQuestionById = (QId , cb)=>{
+    mongo.getQstById(QId , (question)=>{
         if(question == -1){
             cb(-1)
         }
@@ -114,7 +113,22 @@ module.exports.updateQuestion = (updateInfo, QId, cb)=> {
             cb(0)
         }
         else{
-            mongo.edit(updateInfo, lvlId, (result)=> {
+            cb(question)
+        }
+    })
+}
+
+module.exports.updateQuestion = (updateInfo, QId, cb)=> {
+    module.exports.getQuestionById(QId, (question)=> {
+        if (question == -1) {
+            cb(-1)
+        }
+        else if (question == 0) {
+            cb(0)
+        }
+        else {
+            var newQuestion = Object.assign({}, question,updateInfo)
+            mongo.editQuestion(newQuestion, QId, (result)=> {
                 if (result == -1) {
                     cb(-1)
                 }
@@ -195,13 +209,12 @@ module.exports.getLessonById = (lsnId, cb)=> {
 
                 }
                 k = 0
-                console.log( type[1]._id)
-                console.log( result[0].sound[0].typeId)
-                console.log(result[0].sound[0].typeId.equals( type[1]._id))
-                
-                
+                console.log(type[1]._id)
+                console.log(result[0].sound[0].typeId)
+                console.log(result[0].sound[0].typeId.equals(type[1]._id))
 
-                if(result[0].sound[0].typeId === type[1]._id){
+
+                if (result[0].sound[0].typeId === type[1]._id) {
 
                     console.log('equals');
 
@@ -209,8 +222,8 @@ module.exports.getLessonById = (lsnId, cb)=> {
 
 
                 for (var i = 0; i < result[0].sound.length; i++) {
-                    for(k=0;k<type.length;k++){
-                        if (result[0].sound[i].typeId.equals( type[k]._id)) {
+                    for (k = 0; k < type.length; k++) {
+                        if (result[0].sound[i].typeId.equals(type[k]._id)) {
                             result[0].sound[i].type = type[k]
                         }
 

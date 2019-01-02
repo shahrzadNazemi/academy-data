@@ -226,6 +226,61 @@ module.exports.editLevel = (info, lvlId, cb)=> {
     })
 };
 
+module.exports.editQuestion = (info, QId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if(info.lesson.value || info.lesson.value == ""){
+                info.lesson.value = new ObjectID(`${info.lesson.value}`)
+            }
+            if(info.exam.value != undefined || info.exam.value == ""){
+                info.exam.value = new ObjectID(`${info.exam.value}`)
+            }
+              
+            var con = db.db('englishAcademy')
+
+            con.collection("question").updateOne({"_id": new ObjectID(QId)}, {
+                $set: {
+                    "content": info.content,
+                    "score": info.score,
+                    "type": info.type,
+                    "lesson":info.lesson,
+                    "exam":info.exam,
+                    "answer": info.answer
+                }
+            }, (err, result)=> {
+                if (err != null) {
+                    if (err.code == 11000) {
+                        var field = err.errmsg.split('index:')[1]
+// now we have `title_1 dup key`
+                        field = field.split(' dup key')[0]
+                        field = field.substring(0, field.lastIndexOf('_'))
+                        if (field == " title") {
+                            cb(-2)
+                        }
+                        else {
+                            cb(-3)
+                        }
+                    }
+                }
+                else if (err) {
+                    cb(-1)
+                }
+                else if (result.result.n == 1) {
+                    cb(info)
+
+                }
+                else {
+                    cb(0)
+                }
+            })
+        }
+    })
+};
+
 module.exports.deleteLevel = (lvlId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -262,6 +317,30 @@ module.exports.getLvlById = (lvlID, cb)=> {
             var con = db.db('englishAcademy')
             console.log(lvlID)
             con.collection("level").findOne({"_id": new ObjectID(`${lvlID}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getQstById = (QId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("question").findOne({"_id": new ObjectID(`${QId}`)}, (err, result) => {
                 if (err) {
                     cb(-1)
                 }
