@@ -1476,7 +1476,9 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                         "mobile": stuInfo.mobile,
                         "avatarUrl": stuInfo.avatarUrl,
                         "score": stuInfo.score,
-                        "lastPassedLesson": stuInfo.lastPassedLesson
+                        "lastPassedLesson": stuInfo.lastPassedLesson,
+                        "passedLessonScore": stuInfo.passedLessonScore
+
 
                     }
                 }, (err, result)=> {
