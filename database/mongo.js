@@ -113,7 +113,7 @@ module.exports.postQuestion = (info, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if (info.lesson.value || info.lesson.value != "") {
+            if (info.lesson.value!= undefined && info.lesson.value != "") {
                 info.lesson.value = new ObjectID(`${info.lesson.value}`)
             }
             if (info.exam.value != undefined && info.exam.value != "") {
@@ -1740,6 +1740,31 @@ module.exports.getAllSnds = (cb)=> {
                     }
 
                 }]).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getAllQuestions = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("question").find({}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }

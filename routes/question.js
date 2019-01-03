@@ -63,7 +63,7 @@ router.get('/:QId', (req, res)=> {
 });
 
 router.get('/', (req, res)=> {
-    database.getLevels((getResult)=> {
+    database.getQuestions((getResult)=> {
         if (getResult == -1) {
             res.status(500).end('')
         }
