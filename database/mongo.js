@@ -113,7 +113,7 @@ module.exports.postQuestion = (info, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if (info.lesson.value!= undefined && info.lesson.value != "") {
+            if (info.lesson.value != undefined && info.lesson.value != "") {
                 info.lesson.value = new ObjectID(`${info.lesson.value}`)
             }
             if (info.exam.value != undefined && info.exam.value != "") {
@@ -150,15 +150,15 @@ module.exports.postExam = (info, cb)=> {
             cb(-1)
         }
         else {
-            if (info.preLesson.value !=undefined && info.preLesson.value != "") {
+            if (info.preLesson.value != undefined && info.preLesson.value != "") {
                 info.preLesson.value = new ObjectID(`${info.preLesson.value}`)
             }
             var con = db.db('englishAcademy')
             con.collection("exam").insertOne({
                 "title": info.title,
-                "score": info.score,
                 "time": info.time,
                 "preLesson": info.preLesson,
+                "avatarUrl":info.avatarUrl
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -182,15 +182,15 @@ module.exports.editExam = (info, exId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if (info.preLesson.value !=undefined && info.preLesson.value != "") {
+            if (info.preLesson.value != undefined && info.preLesson.value != "") {
                 info.preLesson.value = new ObjectID(`${info.preLesson.value}`)
             }
             con.collection("exam").updateOne({"_id": new ObjectID(exId)}, {
                 $set: {
                     "title": info.title,
-                    "score": info.score,
                     "time": info.time,
                     "preLesson": info.preLesson,
+                    "avatarUrl":info.avatarUrl
                 }
             }, (err, result)=> {
                 if (err) {
