@@ -84,17 +84,17 @@ module.exports.addExam = (exInfo, cb)=> {
     })
 };
 
-module.exports.updateExam = (exInfo,exId ,  cb)=> {
-    module.exports.getExamById(exaId , (exam)=>{
-        if(exam == -1){
+module.exports.updateExam = (exInfo, exId, cb)=> {
+    module.exports.getExamById(exId, (exam)=> {
+        if (exam == -1) {
             cb(-1)
         }
-        else if(exam == 0){
+        else if (exam == 0) {
             cb(0)
         }
-        else{
-            let newExam = Object.assign({} ,exam , exInfo )
-            mongo.editExam(newExam, exId , (result)=> {
+        else {
+            let newExam = Object.assign({}, exam, exInfo)
+            mongo.editExam(newExam, exId, (result)=> {
                 if (result == -1) {
                     cb(-1)
                 }
@@ -105,7 +105,7 @@ module.exports.updateExam = (exInfo,exId ,  cb)=> {
                     cb(result)
                 }
             })
-            
+
         }
     })
 };
@@ -144,28 +144,28 @@ module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
     })
 };
 
-module.exports.getQuestionById = (QId , cb)=>{
-    mongo.getQstById(QId , (question)=>{
-        if(question == -1){
+module.exports.getQuestionById = (QId, cb)=> {
+    mongo.getQstById(QId, (question)=> {
+        if (question == -1) {
             cb(-1)
         }
-        else if(question == 0){
+        else if (question == 0) {
             cb(0)
         }
-        else{
+        else {
             cb(question)
         }
     })
 }
-module.exports.getExamById = (exId , cb)=>{
-    mongo.getExById(exId , (exam)=>{
-        if(exam == -1){
+module.exports.getExamById = (exId, cb)=> {
+    mongo.getExById(exId, (exam)=> {
+        if (exam == -1) {
             cb(-1)
         }
-        else if(exam == 0){
+        else if (exam == 0) {
             cb(0)
         }
-        else{
+        else {
             cb(exam)
         }
     })
@@ -181,7 +181,7 @@ module.exports.updateQuestion = (updateInfo, QId, cb)=> {
         }
         else {
             // var newAnswers = Object.assign({} , question.answers , updateInfo.answers)
-            var newQuestion = Object.assign({}, question,updateInfo)
+            var newQuestion = Object.assign({}, question, updateInfo)
             mongo.editQuestion(newQuestion, QId, (result)=> {
                 if (result == -1) {
                     cb(-1)
@@ -229,17 +229,17 @@ module.exports.delLevel = (lvlId, cb)=> {
 };
 
 module.exports.delQuestion = (QId, cb)=> {
-            mongo.deleteQuestion(QId, (result)=> {
-                if (result == -1) {
-                    cb(-1)
-                }
-                else if (result == 0) {
-                    cb(0)
-                }
-                else {
-                    cb(result)
-                }
-            })
+    mongo.deleteQuestion(QId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
 
 };
 
@@ -269,10 +269,10 @@ module.exports.getLessonById = (lsnId, cb)=> {
         else {
             result[0].level = result[0].level[0]
             module.exports.getAllTpe((type)=> {
-                if(type == 0 || type == -1){
+                if (type == 0 || type == -1) {
                     cb(-1)
                 }
-                else{
+                else {
                     var k = 0
                     for (var i = 0; i < result[0].video.length; i++) {
                         for (k = 0; k < type.length; k++) {

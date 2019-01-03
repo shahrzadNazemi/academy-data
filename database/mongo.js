@@ -185,7 +185,7 @@ module.exports.editExam = (info, exId, cb)=> {
             if (info.preLesson.value !=undefined && info.preLesson.value != "") {
                 info.preLesson.value = new ObjectID(`${info.preLesson.value}`)
             }
-            con.collection("level").updateOne({"_id": new ObjectID(exId)}, {
+            con.collection("exam").updateOne({"_id": new ObjectID(exId)}, {
                 $set: {
                     "title": info.title,
                     "score": info.score,
