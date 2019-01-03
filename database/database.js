@@ -242,6 +242,21 @@ module.exports.delQuestion = (QId, cb)=> {
     })
 
 };
+module.exports.delExam = (exId, cb)=> {
+    mongo.deleteExam(exId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+
+};
+
 
 module.exports.getLevelById = (lvlId, cb)=> {
     mongo.getLvlById(lvlId, (result)=> {
@@ -769,6 +784,19 @@ module.exports.getAllStu = (cb)=> {
 
 module.exports.getQuestions = (cb)=> {
     mongo.getAllQuestions((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+module.exports.getExams = (cb)=> {
+    mongo.getAllExams((result)=> {
         if (result == -1) {
             cb(-1)
         }

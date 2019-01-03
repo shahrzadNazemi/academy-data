@@ -399,6 +399,31 @@ module.exports.deleteQuestion = (QId, cb)=> {
         }
     })
 };
+module.exports.deleteExam = (exId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("exam").findOneAndDelete({"_id": new ObjectID(`${exId}`)}, (err, result)=> {
+                console.log(result.lastErrorObject.n)
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result1 = "row deleted"
+                    cb(result1)
+                }
+                else {
+                    cb(0)
+                }
+            })
+
+        }
+    })
+};
 
 module.exports.getLvlById = (lvlID, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -1821,6 +1846,30 @@ module.exports.getAllQuestions = (cb)=> {
             var con = db.db('englishAcademy')
 
             con.collection("question").find({}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+module.exports.getAllExams = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("exam").find({}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }

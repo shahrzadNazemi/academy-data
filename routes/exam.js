@@ -28,8 +28,8 @@ router.put('/:exId', (req, res)=> {
     })
 });
 
-router.delete('/:QId', (req, res)=> {
-    database.delQuestion(req.params.QId, (delResult)=> {
+router.delete('/:exId', (req, res)=> {
+    database.delExam(req.params.exId, (delResult)=> {
         if (delResult == -1) {
             res.status(500).end('')
         }
@@ -57,7 +57,7 @@ router.get('/:QId', (req, res)=> {
 });
 
 router.get('/', (req, res)=> {
-    database.getLevels((getResult)=> {
+    database.getExams((getResult)=> {
         if (getResult == -1) {
             res.status(500).end('')
         }
