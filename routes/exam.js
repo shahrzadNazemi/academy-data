@@ -14,8 +14,8 @@ router.post('/', (req, res)=> {
     })
 });
 
-router.put('/:QId', (req, res)=> {
-    database.updateQuestion(req.body, req.params.QId, (updateResult)=> {
+router.put('/:exId', (req, res)=> {
+    database.updateExam(req.body, req.params.exId, (updateResult)=> {
         if (updateResult == -1) {
             res.status(500).end('')
         }

@@ -84,6 +84,20 @@ module.exports.addExam = (exInfo, cb)=> {
     })
 };
 
+module.exports.updateExam = (exInfo,exId ,  cb)=> {
+    mongo.editExam(exInfo, exId , (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.addType = (typeInfo, cb)=> {
     mongo.postType(typeInfo, (result)=> {
         if (result == -1) {
@@ -141,6 +155,7 @@ module.exports.updateQuestion = (updateInfo, QId, cb)=> {
             cb(0)
         }
         else {
+            // var newAnswers = Object.assign({} , question.answers , updateInfo.answers)
             var newQuestion = Object.assign({}, question,updateInfo)
             mongo.editQuestion(newQuestion, QId, (result)=> {
                 if (result == -1) {

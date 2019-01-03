@@ -174,6 +174,39 @@ module.exports.postExam = (info, cb)=> {
         }
     })
 };
+module.exports.editExam = (info, exId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (info.preLesson.value !=undefined && info.preLesson.value != "") {
+                info.preLesson.value = new ObjectID(`${info.preLesson.value}`)
+            }
+            con.collection("level").updateOne({"_id": new ObjectID(exId)}, {
+                $set: {
+                    "title": info.title,
+                    "score": info.score,
+                    "time": info.time,
+                    "preLesson": info.preLesson,
+                }
+            }, (err, result)=> {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.result.n == 1) {
+                    cb(info)
+
+                }
+                else {
+                    cb(0)
+                }
+            })
+        }
+    })
+};
 
 module.exports.postType = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -265,10 +298,10 @@ module.exports.editQuestion = (info, QId, cb)=> {
             cb(-1)
         }
         else {
-            if (info.lesson.value || info.lesson.value == "") {
+            if (info.lesson.value != undefined && info.lesson.value == "") {
                 info.lesson.value = new ObjectID(`${info.lesson.value}`)
             }
-            if (info.exam.value != undefined || info.exam.value == "") {
+            if (info.exam.value != undefined && info.exam.value == "") {
                 info.exam.value = new ObjectID(`${info.exam.value}`)
             }
 
