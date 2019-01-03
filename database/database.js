@@ -85,15 +85,27 @@ module.exports.addExam = (exInfo, cb)=> {
 };
 
 module.exports.updateExam = (exInfo,exId ,  cb)=> {
-    mongo.editExam(exInfo, exId , (result)=> {
-        if (result == -1) {
+    module.exports.getExamById(exaId , (exam)=>{
+        if(exam == -1){
             cb(-1)
         }
-        else if (result == 0) {
+        else if(exam == 0){
             cb(0)
         }
-        else {
-            cb(result)
+        else{
+            let newExam = Object.assign({} ,exam , exInfo )
+            mongo.editExam(newExam, exId , (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+            
         }
     })
 };
@@ -142,6 +154,19 @@ module.exports.getQuestionById = (QId , cb)=>{
         }
         else{
             cb(question)
+        }
+    })
+}
+module.exports.getExamById = (exId , cb)=>{
+    mongo.getExById(exId , (exam)=>{
+        if(exam == -1){
+            cb(-1)
+        }
+        else if(exam == 0){
+            cb(0)
+        }
+        else{
+            cb(exam)
         }
     })
 }
