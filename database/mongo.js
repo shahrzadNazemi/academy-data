@@ -250,15 +250,14 @@ module.exports.editViewToInsert = (info, lsnId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+            if(info.video){
                 con.collection("view").updateMany({"lsnId": new ObjectID(lsnId)}, {
-                    $set: {
-                        "usrId": info.usrId,
+                    $push: {
                         "video": info.video,
-                        "sound": info.sound,
-                        "lsnId":lsnId
                     }
                 }, (err, result)=> {
                     if (err) {
+                        console.log(err)
                         cb(-1)
                     }
                     else if (result.result.n == 1) {
@@ -269,6 +268,12 @@ module.exports.editViewToInsert = (info, lsnId, cb)=> {
                         cb(0)
                     }
                 })
+            }
+
+            else{
+
+            }
+
         }
     })
 };
@@ -1255,7 +1260,10 @@ module.exports.postVideo = (videoInfo, cb)=> {
             videoInfo.lvlId = new ObjectID(`${videoInfo.lvlId}`)
             videoInfo.lsnId = new ObjectID(`${videoInfo.lsnId}`)
             videoInfo.typeId = new ObjectID(`${videoInfo.typeId}`)
-
+            console.log(videoInfo.srtUrl , "srtUrl")
+            if(videoInfo.srtUrl == undefined ){
+                videoInfo.srtUrl = ""
+            }
             con.collection("video").insertOne({
                 "title": videoInfo.title,
                 "typeId": videoInfo.typeId,

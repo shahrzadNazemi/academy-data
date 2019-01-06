@@ -25,7 +25,7 @@ router.put('/:lsnId', (req, res)=> {
         else {
             res.json(updateResult)
         }
-    })
+    });
 });
 
 router.put('/:lsnId/:usrId', (req, res)=> {

@@ -42,16 +42,16 @@ router.delete('/:exId', (req, res)=> {
     })
 });
 
-router.get('/:QId', (req, res)=> {
-    database.getLevelById(req.params.lvlId, (level)=> {
-        if (level == -1) {
+router.get('/:exId', (req, res)=> {
+    database.getExamById(req.params.exId, (exam)=> {
+        if (exam == -1) {
             res.status(500).end('')
         }
-        else if (level == 0) {
+        else if (exam == 0) {
             res.status(404).end('')
         }
         else {
-            res.json(level)
+            res.json(exam)
         }
     })
 });
