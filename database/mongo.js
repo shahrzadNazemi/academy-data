@@ -207,6 +207,101 @@ module.exports.editExam = (info, exId, cb)=> {
         }
     })
 };
+module.exports.postView = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (info.usrId != undefined && info.usrId != "") {
+                info.usrId = new ObjectID(`${info.usrId}`)
+            }
+            if (info.lsnId != undefined && info.lsnId != "0") {
+                info.lsnId = new ObjectID(`${info.lsnId}`)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("view").insertOne({
+                "usrId": info.usrId,
+                "video": info.video,
+                "sound": info.sound,
+                "lsnId":info.lsnId
+            }, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    console.log(result.insertedId)
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+module.exports.editViewToInsert = (info, lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+                con.collection("view").updateMany({"lsnId": new ObjectID(lsnId)}, {
+                    $set: {
+                        "usrId": info.usrId,
+                        "video": info.video,
+                        "sound": info.sound,
+                        "lsnId":lsnId
+                    }
+                }, (err, result)=> {
+                    if (err) {
+                        cb(-1)
+                    }
+                    else if (result.result.n == 1) {
+                        cb(info)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+        }
+    })
+};
+module.exports.editViewTosetTrue = (info, lsnId,usrId , cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("view").updateMany({"lsnId": new ObjectID(lsnId)} , {"usrId": new ObjectID(usrId)}, {
+                $set: {
+                    "title": info.title,
+                    "time": info.time,
+                    "preLesson": info.preLesson,
+                    "avatarUrl":info.avatarUrl
+                }
+            }, (err, result)=> {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.result.n == 1) {
+                    cb(info)
+
+                }
+                else {
+                    cb(0)
+                }
+            })
+        }
+    })
+};
 
 module.exports.postType = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {

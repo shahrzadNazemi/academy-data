@@ -754,6 +754,17 @@ module.exports.addStudent = (stuData, cb)=> {
     })
 };
 
+module.exports.addView = (viewInfo, cb)=> {
+        mongo.postView(viewInfo, (addedView)=> {
+        if (addedView == -1) {
+            cb(-1)
+        }
+        else {
+            cb(addedView)
+        }
+    })
+};
+
 module.exports.getStuById = (stdId, cb)=> {
     mongo.getStudentById(stdId, (result)=> {
         if (result == -1) {
@@ -819,6 +830,34 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
         }
         else if (result == -2) {
             cb(-2)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
+    mongo.editViewToInsert(updateInfo, lsnId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.updateViewToSetTrue = (updateInfo, lsnId,usrId , cb)=> {
+    mongo.editViewTosetTrue(updateInfo, lsnId,usrId , (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
         }
         else {
             cb(result)
