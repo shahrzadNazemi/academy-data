@@ -1278,7 +1278,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                 newView.sound = []
                                                                 for(var i=0;i<lesson.video.length;i++){
                                                                     newView.video[i] = {}
-                                                                    newView.video[i]._id = lesson[0].video[i]._id
+                                                                    newView.video[i]._id = lesson.video[i]._id
                                                                     newView.video[i].viewed = false
                                                                 }
                                                                 for(var i=0;i<lesson.sound.length;i++){
