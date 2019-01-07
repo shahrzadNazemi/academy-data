@@ -338,7 +338,7 @@ module.exports.editViewTosetTrue = (id, usrId, type, cb)=> {
                             console.log("updateView db Error", err)
                             cb(-1)
                         }
-                        else if (result) {
+                        else if (result.value != null) {
                             cb(result.value)
 
                         }
