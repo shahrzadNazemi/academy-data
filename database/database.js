@@ -1191,12 +1191,12 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
 
                                         for(var i=0;i<lesson.video.length;i++){
                                             newView.video[i] = {}
-                                            newView.video[i].vdId = lesson.video[i]._id
+                                            newView.video[i]._id = lesson.video[i]._id
                                             newView.video[i].viewed = false
                                         }
                                         for(var i=0;i<lesson.sound.length;i++){
                                             newView.sound[i] = {}
-                                            newView.sound[i].sndId = lesson.sound[i]._id
+                                            newView.sound[i]._id = lesson.sound[i]._id
                                             newView.sound[i].viewed = false
                                         }
                                         module.exports.updateViewByUsrId(newView , student[0]._id , (updated)=>{
@@ -1278,13 +1278,13 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                 newView.sound = []
                                                                 for(var i=0;i<lesson.video.length;i++){
                                                                     newView.video[i] = {}
-                                                                    newView.video[i].vdId = lesson[0].video[i]._id
+                                                                    newView.video[i]._id = lesson[0].video[i]._id
                                                                     newView.video[i].viewed = false
                                                                 }
                                                                 for(var i=0;i<lesson.sound.length;i++){
                                                                     newView.sound[i] = {}
 
-                                                                    newView.sound[i].sndId = lesson.sound[i]._id
+                                                                    newView.sound[i]._id = lesson.sound[i]._id
                                                                     newView.sound[i].viewed = false
                                                                 }
                                                                 module.exports.updateViewByUsrId(newView ,student[0]._id , (updated)=>{
@@ -1357,13 +1357,13 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                     for(var i=0;i<lesson[0].video.length;i++){
                                                         newView.video[i] = {}
 
-                                                        newView.video[i].vdId = lesson[0].video[i]._id
+                                                        newView.video[i]._id = lesson[0].video[i]._id
                                                         newView.video[i].viewed = false
                                                     }
                                                     for(var i=0;i<lesson[0].sound.length;i++){
                                                         newView.sound[i] = {}
 
-                                                        newView.sound[i].sndId = lesson[0].sound[i]._id
+                                                        newView.sound[i]._id = lesson[0].sound[i]._id
                                                         newView.sound[i].viewed = false
                                                     }
                                                     module.exports.updateViewByUsrId(newView ,student[0]._id , (updated)=>{

@@ -174,6 +174,7 @@ module.exports.postExam = (info, cb)=> {
         }
     })
 };
+
 module.exports.editExam = (info, exId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -207,6 +208,7 @@ module.exports.editExam = (info, exId, cb)=> {
         }
     })
 };
+
 module.exports.postView = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -242,6 +244,7 @@ module.exports.postView = (info, cb)=> {
         }
     })
 };
+
 module.exports.editViewToInsert = (info, lsnId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -293,6 +296,7 @@ module.exports.editViewToInsert = (info, lsnId, cb)=> {
         }
     })
 };
+
 module.exports.editViewTosetTrue = (id,usrId ,type, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -302,7 +306,7 @@ module.exports.editViewTosetTrue = (id,usrId ,type, cb)=> {
         else {
             var con = db.db('englishAcademy')
             if(type == 'sound'){
-                con.collection("view").findOneAndUpdate({"usrId": new ObjectID(usrId),"sound.sndId":new ObjectID(id)}, {
+                con.collection("view").findOneAndUpdate({"usrId": new ObjectID(usrId),"sound._id":new ObjectID(id)}, {
                     $set: {
                         "sound.$.viewed":true
                     }
@@ -321,7 +325,7 @@ module.exports.editViewTosetTrue = (id,usrId ,type, cb)=> {
                 })
             }
             else{
-                con.collection("view").findOneAndUpdate({"usrId": new ObjectID(usrId),"video.vdId":new ObjectID(id)}, {
+                con.collection("view").findOneAndUpdate({"usrId": new ObjectID(usrId),"video._id":new ObjectID(id)}, {
                     $set: {
                         "video.$.viewed":true
                     }
@@ -343,6 +347,7 @@ module.exports.editViewTosetTrue = (id,usrId ,type, cb)=> {
         }
     })
 };
+
 module.exports.editViewByUsrId = (info, usrId , cb)=> {
     console.log("usrId" , usrId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
