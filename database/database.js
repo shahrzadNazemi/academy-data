@@ -851,8 +851,8 @@ module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
     })
 };
 
-module.exports.updateViewToSetTrue = (vdId,usrId ,type, cb)=> {
-    mongo.editViewTosetTrue(vdId,usrId ,type, (result)=> {
+module.exports.updateViewToSetTrue = (id,usrId ,type, cb)=> {
+    mongo.editViewTosetTrue(id,usrId ,type, (result)=> {
         if (result == -1) {
             cb(-1)
         }

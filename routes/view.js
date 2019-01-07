@@ -61,26 +61,29 @@ router.delete('/:lvlId', (req, res)=> {
 
 router.get('/video/:vdId/:usrId', (req, res)=> {
     
-    database.updateViewToSetTrue(req.params.vdId,req.params.usrId , 'video', (level)=> {
-        if (level == -1) {
+    database.updateViewToSetTrue(req.params.vdId,req.params.usrId , 'video', (view)=> {
+        if (view == -1) {
             res.status(500).end('')
         }
-        else if (level == 0) {
+        else if (view == 0) {
             res.status(404).end('')
         }
         else {
-            res.json(level)
+            res.json(view)
         }
     })
 });
 
-router.get('/sound/:sndId/:sndId', (req, res)=> {
-    database.getLevels((getResult)=> {
-        if (getResult == -1) {
+router.get('/sound/:sndId/:usrId', (req, res)=> {
+    database.updateViewToSetTrue(req.params.sndId,req.params.usrId , 'sound', (view)=> {
+        if (view == -1) {
             res.status(500).end('')
         }
+        else if (view == 0) {
+            res.status(404).end('')
+        }
         else {
-            res.json(getResult)
+            res.json(view)
         }
     })
 });
