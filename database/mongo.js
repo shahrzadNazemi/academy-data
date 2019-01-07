@@ -271,13 +271,29 @@ module.exports.editViewToInsert = (info, lsnId, cb)=> {
             }
 
             else{
+                con.collection("view").updateMany({"lsnId": new ObjectID(lsnId)}, {
+                    $push: {
+                        "sound": info.sound,
+                    }
+                }, (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else if (result.result.n == 1) {
+                        cb(info)
 
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
             }
 
         }
     })
 };
-module.exports.editViewTosetTrue = (info, lsnId,usrId , cb)=> {
+module.exports.editViewTosetTrue = (id,usrId ,type, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -285,12 +301,61 @@ module.exports.editViewTosetTrue = (info, lsnId,usrId , cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("view").updateMany({"lsnId": new ObjectID(lsnId)} , {"usrId": new ObjectID(usrId)}, {
+            if(type == 'sound'){
+                con.collection("view").updateOne({"usrId": new ObjectID(usrId)} , {
+                    $set: {
+
+                    }
+                }, (err, result)=> {
+                    if (err) {
+                        cb(-1)
+                    }
+                    else if (result.result.n == 1) {
+                        cb(info)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+            }
+            else{
+                con.collection("view").updateOne({"usrId": new ObjectID(usrId)},{"video.$[element]":new ObjectID(id)}, {
+                    $set: {
+                        "video.$.viewed":true
+                    }
+                }, (err, result)=> {
+                    if (err) {
+                        console.log("updateView db Error",err)
+                        cb(-1)
+                    }
+                    else if (result.result.n == 1) {
+                        cb(info)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+            }
+
+        }
+    })
+};
+module.exports.editViewByUsrId = (info, usrId , cb)=> {
+    console.log("usrId" , usrId)
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("view").updateOne({"usrId": new ObjectID(usrId)}, {
                 $set: {
-                    "title": info.title,
-                    "time": info.time,
-                    "preLesson": info.preLesson,
-                    "avatarUrl":info.avatarUrl
+                    "lsnId":info.lsnId,
+                    "video":info.video,
+                    "sound":info.sound
                 }
             }, (err, result)=> {
                 if (err) {

@@ -49,15 +49,15 @@ router.delete('/:QId', (req, res)=> {
 });
 
 router.get('/:QId', (req, res)=> {
-    database.getLevelById(req.params.lvlId, (level)=> {
-        if (level == -1) {
+    database.getQuestionById(req.params.QId, (question)=> {
+        if (question == -1) {
             res.status(500).end('')
         }
-        else if (level == 0) {
+        else if (question == 0) {
             res.status(404).end('')
         }
         else {
-            res.json(level)
+            res.json(question)
         }
     })
 });

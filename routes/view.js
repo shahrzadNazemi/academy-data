@@ -59,8 +59,9 @@ router.delete('/:lvlId', (req, res)=> {
     })
 });
 
-router.get('/:lvlId', (req, res)=> {
-    database.getLevelById(req.params.lvlId, (level)=> {
+router.get('/video/:vdId/:usrId', (req, res)=> {
+    
+    database.updateViewToSetTrue(req.params.vdId,req.params.usrId , 'video', (level)=> {
         if (level == -1) {
             res.status(500).end('')
         }
@@ -73,7 +74,7 @@ router.get('/:lvlId', (req, res)=> {
     })
 });
 
-router.get('/', (req, res)=> {
+router.get('/sound/:sndId/:sndId', (req, res)=> {
     database.getLevels((getResult)=> {
         if (getResult == -1) {
             res.status(500).end('')

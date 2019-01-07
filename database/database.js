@@ -851,8 +851,8 @@ module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
     })
 };
 
-module.exports.updateViewToSetTrue = (updateInfo, lsnId,usrId , cb)=> {
-    mongo.editViewTosetTrue(updateInfo, lsnId,usrId , (result)=> {
+module.exports.updateViewToSetTrue = (vdId,usrId ,type, cb)=> {
+    mongo.editViewTosetTrue(vdId,usrId ,type, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -1119,16 +1119,68 @@ module.exports.getStuByUsername = (username, cb)=> {
 
 module.exports.stuPlacement = (placeInfo, cb)=> {
     if (placeInfo.lsnId == 0) {
-        module.exports.getFirstLesson((lesson)=> {
-            if (lesson == -1) {
+        module.exports.getFirstLesson((result)=> {
+            if (result == -1) {
                 cb(-1)
             }
-            else if (lesson == 0) {
+            else if (result == 0) {
                 cb(0)
             }
             else {
-                console.log("lesson", lesson)
-                cb(lesson)
+                module.exports.getLessonById(result._id , (lesson)=>{
+                    if(lesson == -1){
+                        cb(-1)
+                    }
+                    else if(lesson == 0){
+                        cb(0)
+                    }
+                    else{
+                        lesson = lesson[0]
+                        module.exports.getStuByUsername(placeInfo.username, (student)=> {
+                            if (student == -1) {
+                                cb(-1)
+                            }
+                            else if (student == 0) {
+                                cb(0)
+                            }
+                            else {
+                                let stu = {}
+                                stu.lastPassedLesson = lesson._id
+                                let newStudent = Object.assign({}, student[0], stu)
+                                module.exports.updateStudent(newStudent, student[0]._id, (result)=> {
+                                    if (result == -1) {
+                                        cb(-1)
+                                    }
+                                    else if (result == 0) {
+                                        cb(0)
+                                    }
+                                    else {
+                                        let newView = {}
+                                        newView.lsnId = lesson._id
+                                        newView.video = []
+                                        newView.sound = []
+
+                                        for(var i=0;i<lesson.video.length;i++){
+                                            newView.video[i] = {}
+                                            newView.video[i].vdId = lesson.video[i]._id
+                                            newView.video[i].viewed = false
+                                        }
+                                        for(var i=0;i<lesson.sound.length;i++){
+                                            newView.sound[i] = {}
+                                            newView.sound[i].sndId = lesson.sound[i]._id
+                                            newView.sound[i].viewed = false
+                                        }
+                                        module.exports.updateViewByUsrId(newView , student[0]._id , (updated)=>{
+                                            cb(lesson)
+                                        })
+                                    }
+                                })
+                            }
+
+                        })
+
+                    }
+                })
             }
         })
     }
@@ -1143,6 +1195,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
             else {
                 lesson = lesson[0]
                 module.exports.getLevelById(lesson.lvlId, (level)=> {
+
                     if (level == -1) {
                         cb(-1)
                     }
@@ -1190,7 +1243,25 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                 cb(0)
                                                             }
                                                             else {
-                                                                cb(lesson)
+                                                                let newView = {}
+                                                                newView.lsnId = lesson._id
+                                                                newView.video = []
+                                                                newView.sound = []
+                                                                for(var i=0;i<lesson.video.length;i++){
+                                                                    newView.video[i] = {}
+                                                                    newView.video[i].vdId = lesson[0].video[i]._id
+                                                                    newView.video[i].viewed = false
+                                                                }
+                                                                for(var i=0;i<lesson.sound.length;i++){
+                                                                    newView.sound[i] = {}
+
+                                                                    newView.sound[i].sndId = lesson.sound[i]._id
+                                                                    newView.sound[i].viewed = false
+                                                                }
+                                                                module.exports.updateViewByUsrId(newView ,student[0]._id , (updated)=>{
+                                                                    console.log("lesson", lesson)
+                                                                    cb(lesson)
+                                                                })
                                                             }
                                                         })
                                                     }
@@ -1202,7 +1273,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                 })
                             }
                             else {
-                                let info = {lsnId: 0}
+                                let info = {lsnId: 0 , username :placeInfo.username}
                                 module.exports.stuPlacement(info, (lesson)=> {
                                     if (lesson == -1) {
                                         cb(-1)
@@ -1250,7 +1321,26 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                 }
                                                 else {
                                                     lesson.level = level
-                                                    cb(lesson)
+                                                    let newView = {}
+                                                    newView.lsnId = lesson._id
+                                                    newView.video = []
+                                                    newView.sound = []
+                                                    for(var i=0;i<lesson[0].video.length;i++){
+                                                        newView.video[i] = {}
+
+                                                        newView.video[i].vdId = lesson[0].video[i]._id
+                                                        newView.video[i].viewed = false
+                                                    }
+                                                    for(var i=0;i<lesson[0].sound.length;i++){
+                                                        newView.sound[i] = {}
+
+                                                        newView.sound[i].sndId = lesson[0].sound[i]._id
+                                                        newView.sound[i].viewed = false
+                                                    }
+                                                    module.exports.updateViewByUsrId(newView ,student[0]._id , (updated)=>{
+                                                        console.log("lesson", lesson)
+                                                        cb(lesson)
+                                                    })
                                                 }
                                             })
                                         }
@@ -1265,6 +1355,21 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
         })
     }
 };
+
+module.exports.updateViewByUsrId = (updateInfo , usrId , cb)=>{
+    mongo.editViewByUsrId(updateInfo , usrId ,(updated)=>{
+        if(updated == -1){
+            cb(-1)
+        }
+        else if(updated == 0){
+            cb(0)
+        }
+        else{
+            cb(updated)
+        }
+        
+    })
+}
 
 
 

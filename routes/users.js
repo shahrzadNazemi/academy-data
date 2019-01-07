@@ -218,6 +218,20 @@ router.get('/student/:stdId', (req, res) => {
     })
 });
 
+router.get('/student/username/:username', (req, res) => {
+    database.getStuByUsername(req.params.username, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
 router.delete('/student/:stuId', (req, res) => {
     console.log(req.params.stuId)
     database.delStudent(req.params.stuId, (result)=> {
