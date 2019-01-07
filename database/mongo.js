@@ -307,42 +307,45 @@ module.exports.editViewTosetTrue = (id, usrId, type, cb)=> {
         else {
             var con = db.db('englishAcademy')
             if (type == 'sound') {
-                con.collection("view").findOneAndUpdate({"usrId": new ObjectID(usrId), "sound._id": new ObjectID(id)}, {
-                    $set: {
-                        "sound.$.viewed": true
-                    }
-                }, (err, result)=> {
-                    if (err) {
-                        console.log("updateView db Error", err)
-                        cb(-1)
-                    }
-                    else if (result) {
-                        cb(result.value)
+                con.collection("view").findOneAndUpdate({
+                        "usrId": new ObjectID(usrId),
+                        "sound._id": new ObjectID(id)
+                    }, {$set: {"sound.$.viewed": true}},
+                    {returnOriginal: false},
+                    (err, result)=> {
+                        if (err) {
+                            console.log("updateView db Error", err)
+                            cb(-1)
+                        }
+                        else if (result.value != null) {
+                            cb(result.value)
 
+                        }
+                        else {
+                            cb(0)
+                        }
                     }
-                    else {
-                        cb(0)
-                    }
-                })
+                )
             }
             else {
                 con.collection("view").findOneAndUpdate({"usrId": new ObjectID(usrId), "video._id": new ObjectID(id)}, {
-                    $set: {
-                        "video.$.viewed": true
-                    }
-                }, (err, result)=> {
-                    if (err) {
-                        console.log("updateView db Error", err)
-                        cb(-1)
-                    }
-                    else if (result) {
-                        cb(result.value)
+                        $set: {
+                            "video.$.viewed": true
+                        }
+                    }, {returnOriginal: false}
+                    , (err, result)=> {
+                        if (err) {
+                            console.log("updateView db Error", err)
+                            cb(-1)
+                        }
+                        else if (result) {
+                            cb(result.value)
 
-                    }
-                    else {
-                        cb(0)
-                    }
-                })
+                        }
+                        else {
+                            cb(0)
+                        }
+                    })
             }
 
         }
