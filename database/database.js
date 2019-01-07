@@ -860,6 +860,35 @@ module.exports.updateViewToSetTrue = (vdId,usrId ,type, cb)=> {
             cb(0)
         }
         else {
+            let permissionTrue = true
+            for(var i =0;i<result.video.length;i++){
+                if(result.video[i].viewed == false){
+                    permissionTrue = false
+                }
+            }
+            if(permissionTrue == true){
+                for(var i =0;i<result.sound.length;i++){
+                    if(result.sound[i].viewed == false){
+                        permissionTrue = false
+                    }
+                }
+            }
+            if(permissionTrue== true){
+                let info ={}
+                info.viewPermission = true
+                result.viewPermission = true
+                module.exports.updateViewByUsrId(info , usrId , (res)=>{
+                    if(res == -1){
+                        cb(-1)
+                    }
+                    else if(res == 0){
+                        cb(0)
+                    }
+                    else{
+                        cb(result)
+                    }
+                })
+            }
             cb(result)
         }
     })

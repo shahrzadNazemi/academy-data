@@ -302,16 +302,17 @@ module.exports.editViewTosetTrue = (id,usrId ,type, cb)=> {
         else {
             var con = db.db('englishAcademy')
             if(type == 'sound'){
-                con.collection("view").updateOne({"usrId": new ObjectID(usrId)} , {
+                con.collection("view").findOneAndUpdate({"usrId": new ObjectID(usrId),"sound.sndId":new ObjectID(id)}, {
                     $set: {
-
+                        "sound.$.viewed":true
                     }
                 }, (err, result)=> {
                     if (err) {
+                        console.log("updateView db Error",err)
                         cb(-1)
                     }
-                    else if (result.result.n == 1) {
-                        cb(info)
+                    else if (result) {
+                        cb(result.value)
 
                     }
                     else {
@@ -320,7 +321,7 @@ module.exports.editViewTosetTrue = (id,usrId ,type, cb)=> {
                 })
             }
             else{
-                con.collection("view").updateOne({"usrId": new ObjectID(usrId)},{"video.$[element]":new ObjectID(id)}, {
+                con.collection("view").findOneAndUpdate({"usrId": new ObjectID(usrId),"video.vdId":new ObjectID(id)}, {
                     $set: {
                         "video.$.viewed":true
                     }
@@ -329,8 +330,8 @@ module.exports.editViewTosetTrue = (id,usrId ,type, cb)=> {
                         console.log("updateView db Error",err)
                         cb(-1)
                     }
-                    else if (result.result.n == 1) {
-                        cb(info)
+                    else if (result) {
+                        cb(result.value)
 
                     }
                     else {
