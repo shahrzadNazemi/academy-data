@@ -164,8 +164,48 @@ module.exports.updateNotification = (notifInfo, NId, cb)=> {
     })
 };
 
+module.exports.updateText = (updateInfo, txtId, cb)=> {
+    module.exports.getTextById(txtId, (text)=> {
+        if (text == -1) {
+            cb(-1)
+        }
+        else if (text == 0) {
+            cb(0)
+        }
+        else {
+            let newText = Object.assign({}, text, updateInfo)
+            mongo.editText(newText, txtId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.addType = (typeInfo, cb)=> {
     mongo.postType(typeInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.addText = (textInfo, cb)=> {
+    mongo.postText(textInfo, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -214,6 +254,20 @@ module.exports.getQuestionById = (QId, cb)=> {
 
 module.exports.getExamById = (exId, cb)=> {
     mongo.getExById(exId, (exam)=> {
+        if (exam == -1) {
+            cb(-1)
+        }
+        else if (exam == 0) {
+            cb(0)
+        }
+        else {
+            cb(exam)
+        }
+    })
+}
+
+module.exports.getTextById = (txtId, cb)=> {
+    mongo.getTxtById(txtId, (exam)=> {
         if (exam == -1) {
             cb(-1)
         }
@@ -283,6 +337,20 @@ module.exports.delLevel = (lvlId, cb)=> {
 
 };
 
+module.exports.delText = (txtId, cb)=> {
+            mongo.deleteText(txtId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+};
+
 module.exports.delQuestion = (QId, cb)=> {
     mongo.deleteQuestion(QId, (result)=> {
         if (result == -1) {
@@ -297,6 +365,7 @@ module.exports.delQuestion = (QId, cb)=> {
     })
 
 };
+
 module.exports.delExam = (exId, cb)=> {
     mongo.deleteExam(exId, (result)=> {
         if (result == -1) {
@@ -311,6 +380,7 @@ module.exports.delExam = (exId, cb)=> {
     })
 
 };
+
 module.exports.delNotification = (NId, cb)=> {
     mongo.deleteNotification(NId, (result)=> {
         if (result == -1) {
@@ -325,7 +395,6 @@ module.exports.delNotification = (NId, cb)=> {
     })
 
 };
-
 
 module.exports.getLevelById = (lvlId, cb)=> {
     mongo.getLvlById(lvlId, (result)=> {
@@ -1045,6 +1114,20 @@ module.exports.getAllVideos = (cb)=> {
         }
         else if (result == -2) {
             cb(-2)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getAllText = (cb)=> {
+    mongo.getAllTexts((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
         }
         else {
             cb(result)

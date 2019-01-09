@@ -70,6 +70,17 @@ router.post('/type', (req, res) => {
     })
 });
 
+router.post('/text', (req, res) => {
+    database.addText(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
 
 router.put('/:lsnId', (req, res) => {
     database.updateLesson(req.body, req.params.lsnId, (result)=> {
@@ -121,6 +132,18 @@ router.put('/sound/:sndId', (req, res) => {
     })
 });
 
+router.put('/text/:txtId', (req, res) => {
+    database.updateText(req.body,req.params.txtId , (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
 
 router.get('/level/:lvlId', (req, res) => {
     database.getLessonByLvlId(req.params.lvlId, (result)=> {
@@ -159,11 +182,12 @@ router.get('/type', (req, res)=> {
             res.status(404).end()
         }
         else {
+           
             res.json(types)
 
         }
     })
-})
+});
 
 router.get('/video', (req, res)=> {
     database.getAllVideos((videos)=> {
@@ -182,7 +206,7 @@ router.get('/video', (req, res)=> {
 
         }
     })
-})
+});
 
 router.get('/sound', (req, res)=> {
     database.getAllSounds((sounds)=> {
@@ -201,6 +225,40 @@ router.get('/sound', (req, res)=> {
         }
     })
 })
+
+router.get('/text/:txtId', (req, res)=> {
+    database.getTextById(req.params.txtId ,(text)=> {
+        if (text == -1) {
+            res.status(500).end()
+        }
+        else if (text == 0) {
+            res.status(404).end()
+        }
+        else {
+            res.json(text)
+
+        }
+    })
+})
+
+router.get('/text', (req, res)=> {
+    database.getAllText((texts)=> {
+        if (texts == -1) {
+            res.status(500).end()
+        }
+        else if (texts == 0) {
+            res.status(404).end()
+        }
+        else {
+            for (var i = 0; i < texts.length; i++) {
+                texts[i].lesson = texts[i].lesson[0]
+                texts[i].type = texts[i].type[0]
+            }
+            res.json(texts)
+
+        }
+    })
+});
 
 
 router.get('/:lsnId', (req, res) => {
@@ -316,6 +374,7 @@ router.get('/', (req, res)=> {
 
 
 
+
 router.delete('/:lsnId', (req, res) => {
     database.delLesson(req.params.lsnId, (result)=> {
         if (result == -1) {
@@ -385,5 +444,18 @@ router.delete('/sound/:sndId', (req, res) => {
     })
 });
 
+router.delete('/text/:txtId', (req, res) => {
+    database.delText(req.params.txtId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
 
 module.exports = router
