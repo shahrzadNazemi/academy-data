@@ -105,6 +105,34 @@ module.exports.postLevel = (info, cb)=> {
     })
 };
 
+module.exports.postNotification = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("notification").insertOne({
+                "text": info.text,
+                "avatarUrl": info.avatarUrl,
+                "link":info.link
+            }, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.postQuestion = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -417,6 +445,38 @@ module.exports.postType = (info, cb)=> {
     })
 };
 
+module.exports.postResult = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("result").insertOne({
+               "usrId":info.usrId,
+                "lsnId":info.lsnId,
+                "quiz":info.quiz,
+                "exam":info.exam
+            }, (err, result) => {
+
+                    if (err) {
+                        cb(-1)
+                    }
+                    else if (result.length == 0) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result.insertedId)
+                    }
+
+
+            })
+
+        }
+    })
+};
+
 module.exports.editLevel = (info, lvlId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -523,6 +583,38 @@ module.exports.editQuestion = (info, QId, cb)=> {
     })
 };
 
+module.exports.editNotification = (info, NId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+
+            var con = db.db('englishAcademy')
+
+            con.collection("notification").updateOne({"_id": new ObjectID(NId)}, {
+                $set: {
+                    "link": info.link,
+                    "avatarUrl": info.avatarUrl,
+                    "text": info.text
+                }
+            }, (err, result)=> {
+                 if (err) {
+                    cb(-1)
+                }
+                else if (result.result.n == 1) {
+                    cb(info)
+
+                }
+                else {
+                    cb(0)
+                }
+            })
+        }
+    })
+};
+
 module.exports.deleteLevel = (lvlId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -574,6 +666,33 @@ module.exports.deleteQuestion = (QId, cb)=> {
         }
     })
 };
+
+module.exports.deleteNotification = (NId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("notification").findOneAndDelete({"_id": new ObjectID(`${NId}`)}, (err, result)=> {
+                console.log(result.lastErrorObject.n)
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result1 = "row deleted"
+                    cb(result1)
+                }
+                else {
+                    cb(0)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.deleteExam = (exId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -625,6 +744,55 @@ module.exports.getLvlById = (lvlID, cb)=> {
     })
 };
 
+module.exports.getExamByLsnId = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            console.log("lsnId" , lsnId)
+            con.collection("exam").findOne({"preLesson.value": new ObjectID(`${lsnId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getNotifById = (NId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("notification").findOne({"_id": new ObjectID(`${NId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.getQstById = (QId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -648,6 +816,7 @@ module.exports.getQstById = (QId, cb)=> {
         }
     })
 };
+
 module.exports.getExById = (exId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -729,6 +898,29 @@ module.exports.getLsnById = (lsnId, cb)=> {
     })
 };
 
+module.exports.getResultByLsnIdUsrId = (usrId , lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("result").findOne({"lsnId": new ObjectID(`${lsnId}`) , "usrId":new ObjectID(`${usrId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
 
 module.exports.getLsnLvlById = (lvlID, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -1105,6 +1297,30 @@ module.exports.getAllLevels = (cb)=> {
         else {
             var con = db.db('englishAcademy')
             con.collection("level").find().toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getAllNotifications = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("notification").find().toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }

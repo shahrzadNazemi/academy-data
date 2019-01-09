@@ -70,6 +70,34 @@ module.exports.addQuestion = (QInfo, cb)=> {
     })
 };
 
+module.exports.addNotification = (NId, cb)=> {
+    mongo.postNotification(NId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getNotificationById = (NId, cb)=> {
+    mongo.getNotifById(NId, (notification)=> {
+        if (notification == -1) {
+            cb(-1)
+        }
+        else if (notification == 0) {
+            cb(0)
+        }
+        else {
+            cb(notification)
+        }
+    })
+};
+
 module.exports.addExam = (exInfo, cb)=> {
     mongo.postExam(exInfo, (result)=> {
         if (result == -1) {
@@ -95,6 +123,32 @@ module.exports.updateExam = (exInfo, exId, cb)=> {
         else {
             let newExam = Object.assign({}, exam, exInfo)
             mongo.editExam(newExam, exId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.updateNotification = (notifInfo, NId, cb)=> {
+    module.exports.getNotificationById(NId, (notification)=> {
+        if (notification == -1) {
+            cb(-1)
+        }
+        else if (notification == 0) {
+            cb(0)
+        }
+        else {
+            let newNotif = Object.assign({}, notification, notifInfo)
+            mongo.editNotification(newNotif, NId, (result)=> {
                 if (result == -1) {
                     cb(-1)
                 }
@@ -157,6 +211,7 @@ module.exports.getQuestionById = (QId, cb)=> {
         }
     })
 }
+
 module.exports.getExamById = (exId, cb)=> {
     mongo.getExById(exId, (exam)=> {
         if (exam == -1) {
@@ -256,6 +311,20 @@ module.exports.delExam = (exId, cb)=> {
     })
 
 };
+module.exports.delNotification = (NId, cb)=> {
+    mongo.deleteNotification(NId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+
+};
 
 
 module.exports.getLevelById = (lvlId, cb)=> {
@@ -310,7 +379,6 @@ module.exports.getLessonById = (lsnId, cb)=> {
                     cb(result)
 
                 }
-
             })
         }
     })
@@ -335,6 +403,20 @@ module.exports.getLessonByLvlId = (lvlId, cb)=> {
 
 module.exports.getLevels = (cb)=> {
     mongo.getAllLevels((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getNotifications = (cb)=> {
+    mongo.getAllNotifications((result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -711,6 +793,20 @@ module.exports.getSndByLsnId = (lsnId, cb)=> {
         }
         else {
             cb(sounds)
+        }
+    })
+}
+
+module.exports.getResultByLsnUsr = (usrId ,lsnId, cb)=> {
+    mongo.getResultByLsnIdUsrId(usrId , lsnId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
         }
     })
 }
@@ -1188,7 +1284,6 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                         newView.lsnId = lesson._id
                                         newView.video = []
                                         newView.sound = []
-
                                         for(var i=0;i<lesson.video.length;i++){
                                             newView.video[i] = {}
                                             newView.video[i]._id = lesson.video[i]._id
@@ -1200,7 +1295,18 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                             newView.sound[i].viewed = false
                                         }
                                         module.exports.updateViewByUsrId(newView , student[0]._id , (updated)=>{
-                                            cb(lesson)
+                                           let resultInfo = {}
+                                            resultInfo.usrId = student[0]._id
+                                            resultInfo.lsnId = lesson._id
+                                            resultInfo.quiz = {}
+                                            resultInfo.quiz.time = lesson.deadline
+                                            resultInfo.quiz.questionTrue = 0;
+                                            resultInfo.quiz.getScore = 0
+                                            resultInfo.quiz.permission = true
+                                            resultInfo.exam = {}
+                                            module.exports.addResult(resultInfo , (addedResult)=>{
+                                                cb(lesson)
+                                            })
                                         })
                                     }
                                 })
@@ -1289,7 +1395,19 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                 }
                                                                 module.exports.updateViewByUsrId(newView ,student[0]._id , (updated)=>{
                                                                     console.log("lesson", lesson)
-                                                                    cb(lesson)
+                                                                    let resultInfo = {}
+                                                                    resultInfo.usrId = student[0]._id
+                                                                    resultInfo.lsnId = lesson._id
+                                                                    resultInfo.quiz = {}
+                                                                    resultInfo.quiz.time = lesson.deadline
+                                                                    resultInfo.quiz.questionTrue = 0;
+                                                                    resultInfo.quiz.getScore = 0
+                                                                    resultInfo.quiz.permission = true
+                                                                    resultInfo.exam = {}
+
+                                                                    module.exports.addResult(resultInfo , (addedResult)=>{
+                                                                        cb(lesson)
+                                                                    })
                                                                 })
                                                             }
                                                         })
@@ -1368,7 +1486,19 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                     }
                                                     module.exports.updateViewByUsrId(newView ,student[0]._id , (updated)=>{
                                                         console.log("lesson", lesson)
-                                                        cb(lesson)
+                                                        let resultInfo = {}
+                                                        resultInfo.usrId = student[0]._id
+                                                        resultInfo.lsnId = lesson._id
+                                                        resultInfo.quiz = {}
+                                                        resultInfo.quiz.time = lesson.deadline
+                                                        resultInfo.quiz.questionTrue = 0;
+                                                        resultInfo.quiz.getScore = 0
+                                                        resultInfo.quiz.permission = true
+                                                        resultInfo.exam = {}
+
+                                                        module.exports.addResult(resultInfo , (addedResult)=>{
+                                                            cb(lesson)
+                                                        })
                                                     })
                                                 }
                                             })
@@ -1400,6 +1530,54 @@ module.exports.updateViewByUsrId = (updateInfo , usrId , cb)=>{
     })
 }
 
+module.exports.addResult = (resultInfo  , cb)=>{
+    module.exports.getExamByLessonId(resultInfo.lsnId , (exam)=>{
+        if(exam == -1){
+            cb(-1)
+        }
+        else if(exam == 0){
+
+            mongo.postResult(resultInfo , (added)=>{
+                if(added == -1){
+                    cb(-1)
+                }
+                else {
+                    cb(added)
+                }
+            })
+        }
+        else{
+            resultInfo.exam = {}
+            resultInfo.exam.time = exam.time
+            resultInfo.exam.questionTrue = 0;
+            resultInfo.exam.getScore = 0
+            resultInfo.exam._id = exam._id
+            resultInfo.exam.permission = false
+            mongo.postResult(resultInfo , (added)=>{
+                if(added == -1){
+                    cb(-1)
+                }
+                else {
+                    cb(added)
+                }
+            })
+        }
+    })
+}
+
+module.exports.getExamByLessonId = (lsnId , cb)=>{
+    mongo.getExamByLsnId(lsnId , (exam)=>{
+        if(exam == -1){
+            cb(-1)
+        }
+        else if(exam == 0){
+            cb(0)
+        }
+        else{
+            cb(exam)
+        }
+    })
+}
 
 
 
