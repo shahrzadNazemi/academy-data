@@ -116,7 +116,8 @@ module.exports.postNotification = (info, cb)=> {
             con.collection("notification").insertOne({
                 "text": info.text,
                 "avatarUrl": info.avatarUrl,
-                "link": info.link
+                "link": info.link,
+                "title":info.title
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -597,7 +598,8 @@ module.exports.editNotification = (info, NId, cb)=> {
                 $set: {
                     "link": info.link,
                     "avatarUrl": info.avatarUrl,
-                    "text": info.text
+                    "text": info.text,
+                    "title":info.title
                 }
             }, (err, result)=> {
                 if (err) {
