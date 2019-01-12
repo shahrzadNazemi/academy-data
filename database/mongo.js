@@ -1058,7 +1058,7 @@ module.exports.getTrickBYTrickId = (trckId, cb)=> {
         else {
             var con = db.db('englishAcademy')
 
-            con.collection("trick").find({"_id": new ObjectID(`${_id}`)}).toArray((err, result) => {
+            con.collection("trick").find({"_id": new ObjectID(`${trckId}`)}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
