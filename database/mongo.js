@@ -117,7 +117,7 @@ module.exports.postNotification = (info, cb)=> {
                 "text": info.text,
                 "avatarUrl": info.avatarUrl,
                 "link": info.link,
-                "title":info.title
+                "title": info.title
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -381,6 +381,43 @@ module.exports.editViewTosetTrue = (id, usrId, type, cb)=> {
     })
 };
 
+module.exports.editTrick = (info, trckId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+                con.collection("trick").findOneAndUpdate({"_id": new ObjectID(trckId)}, {
+                        $set: {
+                            "title":info.title,
+                            "text":info.text,
+                            "url":info.url,
+                            "srtUrl":info.srtUrl,
+                            "thumbUrl":info.thumbUrl,
+                            "order":info.order
+                        }
+                    }, {returnOriginal: false}
+                    , (err, result)=> {
+                        if (err) {
+                            console.log("updateView db Error", err);
+                            cb(-1)
+                        }
+                        else if (result.value != null) {
+                            cb(result.value)
+
+                        }
+                        else {
+                            cb(0)
+                        }
+                    })
+            
+
+        }
+    })
+};
+
 module.exports.editViewByUsrId = (info, usrId, cb)=> {
     console.log("usrId", usrId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -599,7 +636,7 @@ module.exports.editNotification = (info, NId, cb)=> {
                     "link": info.link,
                     "avatarUrl": info.avatarUrl,
                     "text": info.text,
-                    "title":info.title
+                    "title": info.title
                 }
             }, (err, result)=> {
                 if (err) {
@@ -819,6 +856,54 @@ module.exports.getQstById = (QId, cb)=> {
     })
 };
 
+module.exports.getExamQuestion= (exId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("question").find({"exam.value": new ObjectID(`${exId}`), "type": "exam"}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getQuizByLesson = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("question").find({"lesson.value": new ObjectID(`${lsnId}`), "type": "quiz"}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.getExById = (exId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -938,6 +1023,33 @@ module.exports.getResultByLsnIdUsrId = (usrId, lsnId, cb)=> {
 };
 
 module.exports.getLsnLvlById = (lvlID, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (typeof lvlID == 'number') {
+                lvlID = lvlID + ''
+            }
+            con.collection("lesson").find({"lvlId": new ObjectID(`${lvlID}`)}).sort({order: 1}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getTrickBYTrickId = (trckId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -1666,6 +1778,42 @@ module.exports.postVideo = (videoInfo, cb)=> {
     })
 };
 
+module.exports.postTrick = (trickInfo, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            if (trickInfo.srtUrl == undefined) {
+                trickInfo.srtUrl = ""
+            }
+            con.collection("trick").insertOne({
+                "title":trickInfo.title,
+                "text":trickInfo.text,
+                "url":trickInfo.url,
+                "srtUrl":trickInfo.srtUrl,
+                "thumbUrl":trickInfo.thumbUrl,
+                "order":trickInfo.order
+
+            }, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.postSound = (soundInfo, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -1779,6 +1927,7 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
         }
     })
 };
+
 
 module.exports.editSound = (info, sndId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -2008,7 +2157,7 @@ module.exports.getTxtById = (textId, cb)=> {
             cb(-1)
         }
         else {
-            
+
             var con = db.db('englishAcademy')
             con.collection("text").aggregate([
                 {$match: {"_id": new ObjectID(`${textId}`)}},

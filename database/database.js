@@ -708,6 +708,20 @@ module.exports.addVideo = (videoInfo, cb)=> {
     })
 };
 
+module.exports.addTrick = (trickInfo, cb)=> {
+    mongo.postTrick(trickInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.addSound = (soundInfo, cb)=> {
     mongo.postSound(soundInfo, (result)=> {
         if (result == -1) {
@@ -788,6 +802,32 @@ module.exports.updateVideo = (updateInfo, vdId, cb)=> {
     })
 };
 
+module.exports.updateTrick = (updateInfo, trckId, cb)=> {
+    module.exports.getTrickById(trckId , (trick)=>{
+        if(trick == -1){
+            cb(-1)
+        }
+        else if(trick == 0){
+            cb(0)
+        }
+        else{
+            let newTrick = Object.assign({} , trick[0] , updateInfo)
+            mongo.editTrick(newTrick, trckId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+            
+        }
+    })
+};
+
 module.exports.updateSound = (updateInfo, sndId, cb)=> {
     mongo.editSound(updateInfo, sndId, (result)=> {
         if (result == -1) {
@@ -862,6 +902,20 @@ module.exports.getSndByLsnId = (lsnId, cb)=> {
         }
         else {
             cb(sounds)
+        }
+    })
+}
+
+module.exports.getTrickById = (id, cb)=> {
+    mongo.getTrickBYTrickId(id, (trick)=> {
+        if (trick == -1) {
+            cb(-1)
+        }
+        else if (trick == 0) {
+            cb(0)
+        }
+        else {
+            cb(trick)
         }
     })
 }
@@ -971,6 +1025,7 @@ module.exports.getQuestions = (cb)=> {
         }
     })
 };
+
 module.exports.getExams = (cb)=> {
     mongo.getAllExams((result)=> {
         if (result == -1) {
@@ -1176,6 +1231,34 @@ module.exports.getVideoByType = (typeId, cb)=> {
         }
         else {
             cb(video)
+        }
+    })
+}
+
+module.exports.getQuizLsnId = (lsnId  , cb)=> {
+    mongo.getQuizByLesson(lsnId  , (question)=> {
+        if (question == -1) {
+            cb(-1)
+        }
+        else if (question == 0) {
+            cb(0)
+        }
+        else {
+            cb(question)
+        }
+    })
+}
+
+module.exports.getExamQuest= (examId  , cb)=> {
+    mongo.getExamQuestion(examId  , (question)=> {
+        if (question == -1) {
+            cb(-1)
+        }
+        else if (question == 0) {
+            cb(0)
+        }
+        else {
+            cb(question)
         }
     })
 }
