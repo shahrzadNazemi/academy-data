@@ -1057,10 +1057,8 @@ module.exports.getTrickBYTrickId = (trckId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if (typeof lvlID == 'number') {
-                lvlID = lvlID + ''
-            }
-            con.collection("lesson").find({"lvlId": new ObjectID(`${lvlID}`)}).sort({order: 1}).toArray((err, result) => {
+
+            con.collection("trick").find({"_id": new ObjectID(`${_id}`)}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
