@@ -1012,6 +1012,20 @@ module.exports.getAllStu = (cb)=> {
     })
 };
 
+module.exports.getAllTrick = (cb)=> {
+    mongo.getAllTrickes((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.getQuestions = (cb)=> {
     mongo.getAllQuestions((result)=> {
         if (result == -1) {

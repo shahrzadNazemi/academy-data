@@ -43,7 +43,7 @@ router.get('/:trckId', (req, res)=> {
 });
 
 router.get('/', (req, res)=> {
-    database.getTrickes((getResult)=> {
+    database.getAllTrick((getResult)=> {
         if (getResult == -1) {
             res.status(500).end('')
         }
