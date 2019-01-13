@@ -1674,6 +1674,31 @@ module.exports.deleteAdmin = (admId, cb)=> {
     })
 };
 
+module.exports.deleteTrick = (trckId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("trick").findOneAndDelete({"_id": new ObjectID(`${trckId}`)}, (err, result)=> {
+                if (err) {
+                    console.log(err)
+                    cb(-1)
+                }
+                else {
+                    let result = "row deleted";
+                    cb(result)
+                }
+            })
+
+
+        }
+    })
+
+};
+
 module.exports.deleteLesson = (lsnId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {

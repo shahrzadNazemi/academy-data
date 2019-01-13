@@ -338,17 +338,17 @@ module.exports.delLevel = (lvlId, cb)=> {
 };
 
 module.exports.delText = (txtId, cb)=> {
-            mongo.deleteText(txtId, (result)=> {
-                if (result == -1) {
-                    cb(-1)
-                }
-                else if (result == 0) {
-                    cb(0)
-                }
-                else {
-                    cb(result)
-                }
-            })
+    mongo.deleteText(txtId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
 };
 
 module.exports.delQuestion = (QId, cb)=> {
@@ -803,15 +803,15 @@ module.exports.updateVideo = (updateInfo, vdId, cb)=> {
 };
 
 module.exports.updateTrick = (updateInfo, trckId, cb)=> {
-    module.exports.getTrickById(trckId , (trick)=>{
-        if(trick == -1){
+    module.exports.getTrickById(trckId, (trick)=> {
+        if (trick == -1) {
             cb(-1)
         }
-        else if(trick == 0){
+        else if (trick == 0) {
             cb(0)
         }
-        else{
-            let newTrick = Object.assign({} , trick[0] , updateInfo)
+        else {
+            let newTrick = Object.assign({}, trick[0], updateInfo)
             mongo.editTrick(newTrick, trckId, (result)=> {
                 if (result == -1) {
                     cb(-1)
@@ -823,7 +823,7 @@ module.exports.updateTrick = (updateInfo, trckId, cb)=> {
                     cb(result)
                 }
             })
-            
+
         }
     })
 };
@@ -920,8 +920,8 @@ module.exports.getTrickById = (id, cb)=> {
     })
 }
 
-module.exports.getResultByLsnUsr = (usrId ,lsnId, cb)=> {
-    mongo.getResultByLsnIdUsrId(usrId , lsnId, (result)=> {
+module.exports.getResultByLsnUsr = (usrId, lsnId, cb)=> {
+    mongo.getResultByLsnIdUsrId(usrId, lsnId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -974,7 +974,7 @@ module.exports.addStudent = (stuData, cb)=> {
 };
 
 module.exports.addView = (viewInfo, cb)=> {
-        mongo.postView(viewInfo, (addedView)=> {
+    mongo.postView(viewInfo, (addedView)=> {
         if (addedView == -1) {
             cb(-1)
         }
@@ -1085,8 +1085,8 @@ module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
     })
 };
 
-module.exports.updateViewToSetTrue = (id,usrId ,type, cb)=> {
-    mongo.editViewTosetTrue(id,usrId ,type, (result)=> {
+module.exports.updateViewToSetTrue = (id, usrId, type, cb)=> {
+    mongo.editViewTosetTrue(id, usrId, type, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -1095,30 +1095,30 @@ module.exports.updateViewToSetTrue = (id,usrId ,type, cb)=> {
         }
         else {
             let permissionTrue = true
-            for(var i =0;i<result.video.length;i++){
-                if(result.video[i].viewed == false){
+            for (var i = 0; i < result.video.length; i++) {
+                if (result.video[i].viewed == false) {
                     permissionTrue = false
                 }
             }
-            if(permissionTrue == true){
-                for(var i =0;i<result.sound.length;i++){
-                    if(result.sound[i].viewed == false){
+            if (permissionTrue == true) {
+                for (var i = 0; i < result.sound.length; i++) {
+                    if (result.sound[i].viewed == false) {
                         permissionTrue = false
                     }
                 }
             }
-            if(permissionTrue== true){
-                let info ={}
+            if (permissionTrue == true) {
+                let info = {}
                 info.viewPermission = true
                 result.viewPermission = true
-                module.exports.updateViewByUsrId(info , usrId , (res)=>{
-                    if(res == -1){
+                module.exports.updateViewByUsrId(info, usrId, (res)=> {
+                    if (res == -1) {
                         cb(-1)
                     }
-                    else if(res == 0){
+                    else if (res == 0) {
                         cb(0)
                     }
-                    else{
+                    else {
                         cb(result)
                     }
                 })
@@ -1249,8 +1249,8 @@ module.exports.getVideoByType = (typeId, cb)=> {
     })
 }
 
-module.exports.getQuizLsnId = (lsnId  , cb)=> {
-    mongo.getQuizByLesson(lsnId  , (question)=> {
+module.exports.getQuizLsnId = (lsnId, cb)=> {
+    mongo.getQuizByLesson(lsnId, (question)=> {
         if (question == -1) {
             cb(-1)
         }
@@ -1263,8 +1263,8 @@ module.exports.getQuizLsnId = (lsnId  , cb)=> {
     })
 }
 
-module.exports.getExamQuest= (examId  , cb)=> {
-    mongo.getExamQuestion(examId  , (question)=> {
+module.exports.getExamQuest = (examId, cb)=> {
+    mongo.getExamQuestion(examId, (question)=> {
         if (question == -1) {
             cb(-1)
         }
@@ -1322,6 +1322,18 @@ module.exports.delType = (typeId, cb)=> {
     })
 }
 
+module.exports.delTrick = (trckId, cb)=> {
+
+    mongo.deleteTrick(trckId, (trick)=> {
+        if (trick == -1) {
+            cb(-1)
+        }
+        else {
+            cb(trick)
+        }
+    })
+
+}
 module.exports.getFirstLesson = (cb) => {
     module.exports.getFirstLevel(level=> {
         console.log(level)
@@ -1432,14 +1444,14 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                 cb(0)
             }
             else {
-                module.exports.getLessonById(result._id , (lesson)=>{
-                    if(lesson == -1){
+                module.exports.getLessonById(result._id, (lesson)=> {
+                    if (lesson == -1) {
                         cb(-1)
                     }
-                    else if(lesson == 0){
+                    else if (lesson == 0) {
                         cb(0)
                     }
-                    else{
+                    else {
                         lesson = lesson[0]
                         module.exports.getStuByUsername(placeInfo.username, (student)=> {
                             if (student == -1) {
@@ -1464,18 +1476,18 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                         newView.lsnId = lesson._id
                                         newView.video = []
                                         newView.sound = []
-                                        for(var i=0;i<lesson.video.length;i++){
+                                        for (var i = 0; i < lesson.video.length; i++) {
                                             newView.video[i] = {}
                                             newView.video[i]._id = lesson.video[i]._id
                                             newView.video[i].viewed = false
                                         }
-                                        for(var i=0;i<lesson.sound.length;i++){
+                                        for (var i = 0; i < lesson.sound.length; i++) {
                                             newView.sound[i] = {}
                                             newView.sound[i]._id = lesson.sound[i]._id
                                             newView.sound[i].viewed = false
                                         }
-                                        module.exports.updateViewByUsrId(newView , student[0]._id , (updated)=>{
-                                           let resultInfo = {}
+                                        module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
+                                            let resultInfo = {}
                                             resultInfo.usrId = student[0]._id
                                             resultInfo.lsnId = lesson._id
                                             resultInfo.quiz = {}
@@ -1484,7 +1496,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                             resultInfo.quiz.getScore = 0
                                             resultInfo.quiz.permission = true
                                             resultInfo.exam = {}
-                                            module.exports.addResult(resultInfo , (addedResult)=>{
+                                            module.exports.addResult(resultInfo, (addedResult)=> {
                                                 cb(lesson)
                                             })
                                         })
@@ -1562,18 +1574,18 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                 newView.lsnId = lesson._id
                                                                 newView.video = []
                                                                 newView.sound = []
-                                                                for(var i=0;i<lesson.video.length;i++){
+                                                                for (var i = 0; i < lesson.video.length; i++) {
                                                                     newView.video[i] = {}
                                                                     newView.video[i]._id = lesson.video[i]._id
                                                                     newView.video[i].viewed = false
                                                                 }
-                                                                for(var i=0;i<lesson.sound.length;i++){
+                                                                for (var i = 0; i < lesson.sound.length; i++) {
                                                                     newView.sound[i] = {}
 
                                                                     newView.sound[i]._id = lesson.sound[i]._id
                                                                     newView.sound[i].viewed = false
                                                                 }
-                                                                module.exports.updateViewByUsrId(newView ,student[0]._id , (updated)=>{
+                                                                module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
                                                                     console.log("lesson", lesson)
                                                                     let resultInfo = {}
                                                                     resultInfo.usrId = student[0]._id
@@ -1585,7 +1597,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                     resultInfo.quiz.permission = true
                                                                     resultInfo.exam = {}
 
-                                                                    module.exports.addResult(resultInfo , (addedResult)=>{
+                                                                    module.exports.addResult(resultInfo, (addedResult)=> {
                                                                         cb(lesson)
                                                                     })
                                                                 })
@@ -1600,7 +1612,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                 })
                             }
                             else {
-                                let info = {lsnId: 0 , username :placeInfo.username}
+                                let info = {lsnId: 0, username: placeInfo.username}
                                 module.exports.stuPlacement(info, (lesson)=> {
                                     if (lesson == -1) {
                                         cb(-1)
@@ -1652,19 +1664,19 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                     newView.lsnId = lesson._id
                                                     newView.video = []
                                                     newView.sound = []
-                                                    for(var i=0;i<lesson[0].video.length;i++){
+                                                    for (var i = 0; i < lesson[0].video.length; i++) {
                                                         newView.video[i] = {}
 
                                                         newView.video[i]._id = lesson[0].video[i]._id
                                                         newView.video[i].viewed = false
                                                     }
-                                                    for(var i=0;i<lesson[0].sound.length;i++){
+                                                    for (var i = 0; i < lesson[0].sound.length; i++) {
                                                         newView.sound[i] = {}
 
                                                         newView.sound[i]._id = lesson[0].sound[i]._id
                                                         newView.sound[i].viewed = false
                                                     }
-                                                    module.exports.updateViewByUsrId(newView ,student[0]._id , (updated)=>{
+                                                    module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
                                                         console.log("lesson", lesson)
                                                         let resultInfo = {}
                                                         resultInfo.usrId = student[0]._id
@@ -1676,7 +1688,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                         resultInfo.quiz.permission = true
                                                         resultInfo.exam = {}
 
-                                                        module.exports.addResult(resultInfo , (addedResult)=>{
+                                                        module.exports.addResult(resultInfo, (addedResult)=> {
                                                             cb(lesson)
                                                         })
                                                     })
@@ -1695,30 +1707,30 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
     }
 };
 
-module.exports.updateViewByUsrId = (updateInfo , usrId , cb)=>{
-    mongo.editViewByUsrId(updateInfo , usrId ,(updated)=>{
-        if(updated == -1){
+module.exports.updateViewByUsrId = (updateInfo, usrId, cb)=> {
+    mongo.editViewByUsrId(updateInfo, usrId, (updated)=> {
+        if (updated == -1) {
             cb(-1)
         }
-        else if(updated == 0){
+        else if (updated == 0) {
             cb(0)
         }
-        else{
+        else {
             cb(updated)
         }
-        
+
     })
 }
 
-module.exports.addResult = (resultInfo  , cb)=>{
-    module.exports.getExamByLessonId(resultInfo.lsnId , (exam)=>{
-        if(exam == -1){
+module.exports.addResult = (resultInfo, cb)=> {
+    module.exports.getExamByLessonId(resultInfo.lsnId, (exam)=> {
+        if (exam == -1) {
             cb(-1)
         }
-        else if(exam == 0){
+        else if (exam == 0) {
 
-            mongo.postResult(resultInfo , (added)=>{
-                if(added == -1){
+            mongo.postResult(resultInfo, (added)=> {
+                if (added == -1) {
                     cb(-1)
                 }
                 else {
@@ -1726,15 +1738,15 @@ module.exports.addResult = (resultInfo  , cb)=>{
                 }
             })
         }
-        else{
+        else {
             resultInfo.exam = {}
             resultInfo.exam.time = exam.time
             resultInfo.exam.questionTrue = 0;
             resultInfo.exam.getScore = 0
             resultInfo.exam._id = exam._id
             resultInfo.exam.permission = false
-            mongo.postResult(resultInfo , (added)=>{
-                if(added == -1){
+            mongo.postResult(resultInfo, (added)=> {
+                if (added == -1) {
                     cb(-1)
                 }
                 else {
@@ -1745,15 +1757,15 @@ module.exports.addResult = (resultInfo  , cb)=>{
     })
 }
 
-module.exports.getExamByLessonId = (lsnId , cb)=>{
-    mongo.getExamByLsnId(lsnId , (exam)=>{
-        if(exam == -1){
+module.exports.getExamByLessonId = (lsnId, cb)=> {
+    mongo.getExamByLsnId(lsnId, (exam)=> {
+        if (exam == -1) {
             cb(-1)
         }
-        else if(exam == 0){
+        else if (exam == 0) {
             cb(0)
         }
-        else{
+        else {
             cb(exam)
         }
     })
