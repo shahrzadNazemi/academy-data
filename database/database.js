@@ -1749,7 +1749,7 @@ module.exports.addResult = (resultInfo, cb)=> {
                     resultInfo.exam.examScore = 0
                     resultInfo.exam.examCount = 0
                     resultInfo.quiz.quizScore = 0
-                    resultInfo.quiz.quizScore = 0
+                    resultInfo.quiz.quizCount = 0
                     mongo.postResult(resultInfo, (added)=> {
                         if (added == -1) {
                             cb(-1)
@@ -1764,13 +1764,13 @@ module.exports.addResult = (resultInfo, cb)=> {
                         resultInfo.exam.examScore = data[0].totalScore
                         resultInfo.exam.examCount = data[0].count
                         resultInfo.quiz.quizScore = data[1].totalScore
-                        resultInfo.quiz.quizScore = data[1].totalScore
+                        resultInfo.quiz.quizCount = data[1].count
                     }
                     else{
                         resultInfo.exam.examScore = 0
                         resultInfo.exam.examCount = 0
                         resultInfo.quiz.quizScore = data[0].totalScore
-                        resultInfo.quiz.quizScore = data[0].totalScore
+                        resultInfo.quiz.quizCount = data[0].count
                     }
 
 
@@ -1797,7 +1797,7 @@ module.exports.addResult = (resultInfo, cb)=> {
                     resultInfo.exam.examScore = 0
                     resultInfo.exam.examCount = 0
                     resultInfo.quiz.quizScore = 0
-                    resultInfo.quiz.quizScore = 0
+                    resultInfo.quiz.quizCount = 0
                     mongo.postResult(resultInfo, (added)=> {
                         if (added == -1) {
                             cb(-1)
@@ -1812,13 +1812,13 @@ module.exports.addResult = (resultInfo, cb)=> {
                         resultInfo.exam.examScore = data[0].totalScore
                         resultInfo.exam.examCount = data[0].count
                         resultInfo.quiz.quizScore = data[1].totalScore
-                        resultInfo.quiz.quizScore = data[1].totalScore
+                        resultInfo.quiz.quizCount = data[1].count
                     }
                     else{
                         resultInfo.exam.examScore = 0
                         resultInfo.exam.examCount = 0
                         resultInfo.quiz.quizScore = data[0].totalScore
-                        resultInfo.quiz.quizScore = data[0].totalScore
+                        resultInfo.quiz.quizCount = data[0].count
                     }
 
 
