@@ -76,7 +76,21 @@ router.get('/', (req, res)=> {
     })
 });
 
-router.get('/quiz/:lsnId/', (req, res)=> {
+router.get('/lesson/:lsnId', (req, res)=> {
+    database.getQuestionsScoreCountByLesson(req.params.lsnId  ,(getResult)=> {
+        if (getResult == -1) {
+            res.status(500).end('')
+        }
+        else if(getResult == 0){
+            res.status(404).end('')
+        }
+        else {
+            res.json(getResult)
+        }
+    })
+});
+
+router.get('/quiz/:lsnId', (req, res)=> {
     database.getQuizLsnId(req.params.lsnId  ,(getResult)=> {
         if (getResult == -1) {
             res.status(500).end('')
@@ -90,7 +104,7 @@ router.get('/quiz/:lsnId/', (req, res)=> {
     })
 });
 
-router.get('/exam/:exId/', (req, res)=> {
+router.get('/exam/:exId', (req, res)=> {
     database.getExamQuest(req.params.exId  ,(getResult)=> {
         if (getResult == -1) {
             res.status(500).end('')

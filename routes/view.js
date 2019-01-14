@@ -88,5 +88,18 @@ router.get('/sound/:sndId/:usrId', (req, res)=> {
     })
 });
 
+router.get('/user/:usrId', (req, res)=> {
+    database.getViewOfUsr(req.params.usrId , (view)=> {
+        if (view == -1) {
+            res.status(500).end('')
+        }
+        else if (view == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(view)
+        }
+    })
+});
 
 module.exports = router

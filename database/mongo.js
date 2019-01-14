@@ -389,30 +389,30 @@ module.exports.editTrick = (info, trckId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-                con.collection("trick").findOneAndUpdate({"_id": new ObjectID(trckId)}, {
-                        $set: {
-                            "title":info.title,
-                            "text":info.text,
-                            "url":info.url,
-                            "srtUrl":info.srtUrl,
-                            "thumbUrl":info.thumbUrl,
-                            "order":info.order
-                        }
-                    }, {returnOriginal: false}
-                    , (err, result)=> {
-                        if (err) {
-                            console.log("updateView db Error", err);
-                            cb(-1)
-                        }
-                        else if (result.value != null) {
-                            cb(result.value)
+            con.collection("trick").findOneAndUpdate({"_id": new ObjectID(trckId)}, {
+                    $set: {
+                        "title": info.title,
+                        "text": info.text,
+                        "url": info.url,
+                        "srtUrl": info.srtUrl,
+                        "thumbUrl": info.thumbUrl,
+                        "order": info.order
+                    }
+                }, {returnOriginal: false}
+                , (err, result)=> {
+                    if (err) {
+                        console.log("updateView db Error", err);
+                        cb(-1)
+                    }
+                    else if (result.value != null) {
+                        cb(result.value)
 
-                        }
-                        else {
-                            cb(0)
-                        }
-                    })
-            
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+
 
         }
     })
@@ -856,7 +856,7 @@ module.exports.getQstById = (QId, cb)=> {
     })
 };
 
-module.exports.getExamQuestion= (exId, cb)=> {
+module.exports.getExamQuestion = (exId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -864,7 +864,10 @@ module.exports.getExamQuestion= (exId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("question").find({"exam.value": new ObjectID(`${exId}`), "type": "exam"}).toArray((err, result) => {
+            con.collection("question").find({
+                "exam.value": new ObjectID(`${exId}`),
+                "type": "exam"
+            }).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -888,7 +891,10 @@ module.exports.getQuizByLesson = (lsnId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("question").find({"lesson.value": new ObjectID(`${lsnId}`), "type": "quiz"}).toArray((err, result) => {
+            con.collection("question").find({
+                "lesson.value": new ObjectID(`${lsnId}`),
+                "type": "quiz"
+            }).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -899,6 +905,72 @@ module.exports.getQuizByLesson = (lsnId, cb)=> {
                     cb(result)
                 }
             })
+
+        }
+    })
+};
+
+module.exports.getQuestionScCntByLsn = (lsnId, exId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (exId == 0){
+                con.collection('question').aggregate([
+                    {
+                        $match: {"lesson.value": new ObjectID(`${lsnId}`)}
+                    },
+                    {
+                        $group: {
+                            _id: "$type",
+                            totalScore: {$sum: "$score"},
+                            count: {$sum: 1}
+                        }
+                    }
+                ]).toArray((err, result) => {
+                    console.log("result", result)
+                    if (err) {
+                        cb(-1)
+                    }
+                    else if (result == null) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result)
+                    }
+                })
+            }
+
+            else {
+                con.collection('question').aggregate(
+                    [
+                        {
+                            $match: {$or: [{"exam.value": new ObjectID(`${exId}`)}, {"lesson.value": new ObjectID(`${lsnId}`)}]}
+                        },
+                        {
+                            $group: {
+                                _id: "$type",
+                                totalScore: {$sum: "$score"},
+                                count: {$sum: 1}
+                            }
+                        }
+                    ]
+                ).toArray((err, result) => {
+                    console.log("result in geTcOunt" , result)
+                    if (err) {
+                        cb(-1)
+                    }
+                    else if (result == null) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result)
+                    }
+                })
+            }
 
         }
     })
@@ -1838,12 +1910,12 @@ module.exports.postTrick = (trickInfo, cb)=> {
                 trickInfo.srtUrl = ""
             }
             con.collection("trick").insertOne({
-                "title":trickInfo.title,
-                "text":trickInfo.text,
-                "url":trickInfo.url,
-                "srtUrl":trickInfo.srtUrl,
-                "thumbUrl":trickInfo.thumbUrl,
-                "order":trickInfo.order
+                "title": trickInfo.title,
+                "text": trickInfo.text,
+                "url": trickInfo.url,
+                "srtUrl": trickInfo.srtUrl,
+                "thumbUrl": trickInfo.thumbUrl,
+                "order": trickInfo.order
 
             }, (err, result) => {
                 if (err) {
@@ -2457,6 +2529,7 @@ module.exports.getAllLess = (cb)=> {
                     as: "level"
                 }
             }]).toArray((err, result) => {
+                console.log("result" , result)
                 if (err) {
                     cb(-1)
                 }
@@ -2647,6 +2720,7 @@ module.exports.getAllQuestions = (cb)=> {
         }
     })
 };
+
 module.exports.getAllExams = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -2744,6 +2818,31 @@ module.exports.getVDByType = (typeId, cb)=> {
             var con = db.db('englishAcademy')
             con.collection("video").find({"typeId": new ObjectID(`${typeId}`)}).toArray((err, result) => {
                 if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+}
+
+module.exports.getViewByUsrId = (usrId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("view").find({"usrId": new ObjectID(`${usrId}`)}).toArray((err, result) => {
+                if (err) {
+                    console.log(err)
                     cb(-1)
                 }
                 else if (result.length == 0) {
