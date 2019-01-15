@@ -911,6 +911,7 @@ module.exports.getQuizByLesson = (lsnId, cb)=> {
 };
 
 module.exports.getQuestionScCntByLsn = (lsnId, exId, cb)=> {
+    console.log("examId",exId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)

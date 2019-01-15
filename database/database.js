@@ -445,6 +445,17 @@ module.exports.getLessonById = (lsnId, cb)=> {
                         }
 
                     }
+
+                    k = 0
+                    for (var i = 0; i < result[0].text.length; i++) {
+                        for (k = 0; k < type.length; k++) {
+                            if (result[0].text[i].typeId.equals(type[k]._id)) {
+                                result[0].text[i].type = type[k]
+                            }
+
+                        }
+
+                    }
                     cb(result)
 
                 }
@@ -1508,6 +1519,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                             resultInfo.quiz.getScore = 0
                                             resultInfo.quiz.permission = true
                                             resultInfo.exam = {}
+                                            resultInfo.passTime = 0
                                             module.exports.addResult(resultInfo, (addedResult)=> {
                                                 cb(lesson)
                                             })
@@ -1608,6 +1620,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                     resultInfo.quiz.getScore = 0
                                                                     resultInfo.quiz.permission = true
                                                                     resultInfo.exam = {}
+                                                                    resultInfo.passTime = 0
 
                                                                     module.exports.addResult(resultInfo, (addedResult)=> {
                                                                         cb(lesson)
@@ -1699,6 +1712,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                         resultInfo.quiz.getScore = 0
                                                         resultInfo.quiz.permission = true
                                                         resultInfo.exam = {}
+                                                        resultInfo.passTime = 0
 
                                                         module.exports.addResult(resultInfo, (addedResult)=> {
                                                             cb(lesson)
@@ -1740,12 +1754,12 @@ module.exports.addResult = (resultInfo, cb)=> {
             cb(-1)
         }
         else if (exam == 0) {
-            module.exports.getQuestionsScoreCountByLesson(resultInfo.lsnId , (data)=>{
-                console.log("d" ,data)
-                if(data == -1){
+            module.exports.getQuestionsScoreCountByLesson(resultInfo.lsnId, (data)=> {
+                console.log("d", data)
+                if (data == -1) {
                     cb(-1)
                 }
-                else if(data == 0){
+                else if (data == 0) {
                     resultInfo.exam.examScore = 0
                     resultInfo.exam.examCount = 0
                     resultInfo.quiz.quizScore = 0
@@ -1759,21 +1773,19 @@ module.exports.addResult = (resultInfo, cb)=> {
                         }
                     })
                 }
-                else{
-                    if(data.length >1){
+                else {
+                    if (data.length > 1) {
                         resultInfo.exam.examScore = data[0].totalScore
                         resultInfo.exam.examCount = data[0].count
                         resultInfo.quiz.quizScore = data[1].totalScore
                         resultInfo.quiz.quizCount = data[1].count
                     }
-                    else{
+                    else {
                         resultInfo.exam.examScore = 0
                         resultInfo.exam.examCount = 0
                         resultInfo.quiz.quizScore = data[0].totalScore
                         resultInfo.quiz.quizCount = data[0].count
                     }
-
-
 
 
                 }
@@ -1786,14 +1798,14 @@ module.exports.addResult = (resultInfo, cb)=> {
             resultInfo.exam.getScore = 0
             resultInfo.exam._id = exam._id
             resultInfo.exam.permission = false
-            console.log("lsnIdddddd",resultInfo.lsnId)
-            module.exports.getQuestionsScoreCountByLesson(resultInfo.lsnId , (data)=>{
-                console.log("d1" ,data)
+            console.log("lsnIdddddd", resultInfo.lsnId)
+            module.exports.getQuestionsScoreCountByLesson(resultInfo.lsnId, (data)=> {
+                console.log("d1", data)
 
-                if(data == -1){
+                if (data == -1) {
                     cb(-1)
                 }
-                else if(data == 0){
+                else if (data == 0) {
                     resultInfo.exam.examScore = 0
                     resultInfo.exam.examCount = 0
                     resultInfo.quiz.quizScore = 0
@@ -1807,20 +1819,19 @@ module.exports.addResult = (resultInfo, cb)=> {
                         }
                     })
                 }
-                else{
-                    if(data.length >1){
+                else {
+                    if (data.length > 1) {
                         resultInfo.exam.examScore = data[0].totalScore
                         resultInfo.exam.examCount = data[0].count
                         resultInfo.quiz.quizScore = data[1].totalScore
                         resultInfo.quiz.quizCount = data[1].count
                     }
-                    else{
+                    else {
                         resultInfo.exam.examScore = 0
                         resultInfo.exam.examCount = 0
                         resultInfo.quiz.quizScore = data[0].totalScore
                         resultInfo.quiz.quizCount = data[0].count
                     }
-
 
 
                     mongo.postResult(resultInfo, (added)=> {
@@ -1851,14 +1862,51 @@ module.exports.getExamByLessonId = (lsnId, cb)=> {
     })
 }
 
-module.exports.getQuestionsScoreCountByLesson = (lsnId, cb)=> {
-    module.exports.getExamByLessonId(lsnId , (exam)=>{
-        console.log("exam" , exam)
-        if(exam == -1){
+module.exports.getNextLesson = (lsnId, cb)=> {
+    module.exports.getLessonById(lsnId, (lesson)=> {
+        if (lesson == 0) {
+            cb(0)
+        }
+        else if (lesson == -1) {
             cb(-1)
         }
-        else if(exam == 0){
-            mongo.getQuestionScCntByLsn(lsnId,0 , (question)=> {
+        else {
+            module.exports.getLessonByLvlId(lesson[0].lvlId, (lessonsOfLevel)=> {
+                if (lessonsOfLevel == 0) {
+                    cb(lesson)
+                }
+                else if (lessonsOfLevel == -1) {
+                    cb(-1)
+                }
+                else {
+                    if (lessonsOfLevel[length - 1]._id == lsnId) {
+                        module.exports.getAllLevels((levels)=> {
+                            if (levels == -1) {
+                                cb(-1)
+                            }
+                            else if (levels == 0) {
+                                cb(0)
+                            }
+                            else {
+lesson[0].level.order
+                            }
+                        })
+                    }
+                }
+            })
+
+        }
+    })
+}
+
+module.exports.getQuestionsScoreCountByLesson = (lsnId, cb)=> {
+    module.exports.getExamByLessonId(lsnId, (exam)=> {
+        console.log("exam", exam)
+        if (exam == -1) {
+            cb(-1)
+        }
+        else if (exam == 0) {
+            mongo.getQuestionScCntByLsn(lsnId, 0, (question)=> {
                 if (question == -1) {
                     cb(-1)
                 }
@@ -1870,8 +1918,8 @@ module.exports.getQuestionsScoreCountByLesson = (lsnId, cb)=> {
                 }
             })
         }
-        else{
-            mongo.getQuestionScCntByLsn(lsnId, exam._id ,(question)=> {
+        else {
+            mongo.getQuestionScCntByLsn(lsnId, exam._id, (question)=> {
                 if (question == -1) {
                     cb(-1)
                 }
