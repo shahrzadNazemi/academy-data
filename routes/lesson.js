@@ -70,8 +70,25 @@ router.post('/type', (req, res) => {
     })
 });
 
-router.post('/text', (req, res) => {
-    database.addText(req.body, (result)=> {
+router.post('/type', (req, res) => {
+    database.addType(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == -2) {
+            res.status(403).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.post('/category', (req, res) => {
+    database.addCategory(req.body, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -197,6 +214,22 @@ router.get('/type', (req, res)=> {
         }
         else {
            
+            res.json(types)
+
+        }
+    })
+});
+
+router.get('/category', (req, res)=> {
+    database.getAllCats((types)=> {
+        if (types == -1) {
+            res.status(500).end()
+        }
+        else if (types == 0) {
+            res.status(404).end()
+        }
+        else {
+
             res.json(types)
 
         }

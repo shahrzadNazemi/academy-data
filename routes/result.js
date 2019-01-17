@@ -17,7 +17,7 @@ router.post('/', (req, res)=> {
         else {
             res.json(addResult)
         }
-    })
+    });
 });
 
 router.get('/:usrId/:lsnId', (req, res)=> {
@@ -28,8 +28,14 @@ router.get('/:usrId/:lsnId', (req, res)=> {
         else {
             res.json(getResult)
         }
-    })
+    });
 });
+
+router.post('/answerQuestion' , (req , res)=>{
+    database.answerQuestion(req.body , (result)=>{
+        
+    })
+})
 
 
 module.exports = router

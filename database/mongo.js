@@ -456,8 +456,47 @@ module.exports.postType = (info, cb)=> {
             cb(-1)
         }
         else {
+
             var con = db.db('englishAcademy')
+            if(info.category._id){
+                info.category._id= new ObjectID(info.category._id)
+            }
             con.collection("type").insertOne({
+                "title": info.title,
+                "category": info.category
+            }, (err, result) => {
+                if (err != null) {
+                    if (err.code == 11000) {
+                        cb(-2)
+                    }
+                }
+                else {
+                    if (err) {
+                        cb(-1)
+                    }
+                    else if (result.length == 0) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result.insertedId)
+                    }
+                }
+
+            })
+
+        }
+    })
+};
+
+module.exports.postCategory = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("category").insertOne({
                 "title": info.title
             }, (err, result) => {
                 if (err != null) {
@@ -494,8 +533,10 @@ module.exports.postResult = (info, cb)=> {
             con.collection("result").insertOne({
                 "usrId": info.usrId,
                 "lsnId": info.lsnId,
+                "passedLesson": info.passedLesson,
                 "quiz": info.quiz,
-                "exam": info.exam
+                "exam": info.exam,
+
             }, (err, result) => {
 
                 if (err) {
@@ -911,7 +952,7 @@ module.exports.getQuizByLesson = (lsnId, cb)=> {
 };
 
 module.exports.getQuestionScCntByLsn = (lsnId, exId, cb)=> {
-    console.log("examId",exId)
+    console.log("examId", exId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -919,7 +960,7 @@ module.exports.getQuestionScCntByLsn = (lsnId, exId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if (exId == 0){
+            if (exId == 0) {
                 con.collection('question').aggregate([
                     {
                         $match: {"lesson.value": new ObjectID(`${lsnId}`)}
@@ -960,7 +1001,7 @@ module.exports.getQuestionScCntByLsn = (lsnId, exId, cb)=> {
                         }
                     ]
                 ).toArray((err, result) => {
-                    console.log("result in geTcOunt" , result)
+                    console.log("result in geTcOunt", result)
                     if (err) {
                         cb(-1)
                     }
@@ -1078,7 +1119,8 @@ module.exports.getResultByLsnIdUsrId = (usrId, lsnId, cb)=> {
             var con = db.db('englishAcademy')
             con.collection("result").findOne({
                 "lsnId": new ObjectID(`${lsnId}`),
-                "usrId": new ObjectID(`${usrId}`)
+                "usrId": new ObjectID(`${usrId}`),
+                "passedLesson": false
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -2530,7 +2572,7 @@ module.exports.getAllLess = (cb)=> {
                     as: "level"
                 }
             }]).toArray((err, result) => {
-                console.log("result" , result)
+                console.log("result", result)
                 if (err) {
                     cb(-1)
                 }
@@ -2556,6 +2598,31 @@ module.exports.getAllTypes = (cb)=> {
             var con = db.db('englishAcademy')
 
             con.collection("type").find({}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getAllCategories = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("category").find({}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }

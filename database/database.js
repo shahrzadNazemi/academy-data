@@ -204,6 +204,20 @@ module.exports.addType = (typeInfo, cb)=> {
     })
 };
 
+module.exports.addCategory = (categoryInfo, cb)=> {
+    mongo.postCategory(categoryInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.addText = (textInfo, cb)=> {
     mongo.postText(textInfo, (result)=> {
         if (result == -1) {
@@ -1260,6 +1274,20 @@ module.exports.getAllTpe = (cb)=> {
     })
 };
 
+module.exports.getAllCats = (cb)=> {
+    mongo.getAllCategories((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.getVideoByType = (typeId, cb)=> {
     mongo.getVDByType(typeId, (video)=> {
         if (video == -1) {
@@ -1520,6 +1548,8 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                             resultInfo.quiz.permission = true
                                             resultInfo.exam = {}
                                             resultInfo.passTime = 0
+                                            resultInfo.passedLesson = false
+
                                             module.exports.addResult(resultInfo, (addedResult)=> {
                                                 cb(lesson)
                                             })
@@ -1621,6 +1651,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                     resultInfo.quiz.permission = true
                                                                     resultInfo.exam = {}
                                                                     resultInfo.passTime = 0
+                                                                    resultInfo.passedLesson = false
 
                                                                     module.exports.addResult(resultInfo, (addedResult)=> {
                                                                         cb(lesson)
@@ -1713,7 +1744,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                         resultInfo.quiz.permission = true
                                                         resultInfo.exam = {}
                                                         resultInfo.passTime = 0
-
+                                                        resultInfo.passedLesson = false
                                                         module.exports.addResult(resultInfo, (addedResult)=> {
                                                             cb(lesson)
                                                         })
@@ -1879,8 +1910,10 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                     cb(-1)
                 }
                 else {
+                    let length = lessonsOfLevel.length
                     if (lessonsOfLevel[length - 1]._id == lsnId) {
-                        module.exports.getAllLevels((levels)=> {
+                        console.log("firstCondition")
+                        module.exports.getLevels((levels)=> {
                             if (levels == -1) {
                                 cb(-1)
                             }
@@ -1888,9 +1921,42 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                                 cb(0)
                             }
                             else {
-lesson[0].level.order
+                                let newLevel = {}
+                                for(var i =0;i<levels.length;i++){
+                                    if(levels[i].order > lesson[0].level.order){
+                                        newLevel = levels[i]
+                                        break;
+                                    }
+                                }
+                                module.exports.getLessonByLvlId(newLevel._id  , (lessons)=>{
+                                    if(lessons == 0){
+                                        cb(lesson)
+                                    }
+                                    else if(lessons == -1){
+                                        cb(-1)
+                                    }
+                                    else{
+                                        cb(lessons[0])
+                                    }
+                                })
                             }
                         })
+                    }
+                    else{
+                        console.log("here")
+                        var index = -1;
+                        var val = lesson[0]._id
+                        let lastIndex = lessonsOfLevel.find(function(item, i){
+                            if(item._id.equals(val)){
+                                index = i;
+                                return i;
+                            }
+                        });
+                        console.log(lastIndex , index)
+                        let newLesson = lessonsOfLevel[index +1]
+                        
+                        
+                        cb(newLesson)
                     }
                 }
             })
@@ -1928,6 +1994,57 @@ module.exports.getQuestionsScoreCountByLesson = (lsnId, cb)=> {
                 }
                 else {
                     cb(question)
+                }
+            })
+        }
+    })
+}
+
+module.exports.answerQuestion = (info , cb)=>{
+    module.exports.getNextLesson(info.lsnId , (newLesson)=>{
+        if(newLesson == -1){
+            cb(-1)
+        }
+        else if(newLesson == 0){
+            cb(0)
+        }
+        else{
+            info.lastPassedLesson = newLesson._id
+            module.exports.updateStudent(info , info.usrId , (student)=>{
+                if(student == -1){
+                    cb(-1)
+                }
+                else if(student == 0){
+                    cb(0)
+                }
+                else{
+                    let newView = {}
+                    newView.lsnId = newLesson._id
+                    newView.video = []
+                    newView.sound = []
+                    for (var i = 0; i < newLesson.video.length; i++) {
+                        newView.video[i] = {}
+                        newView.video[i]._id = newLesson.video[i]._id
+                        newView.video[i].viewed = false
+                    }
+                    for (var i = 0; i < newLesson.sound.length; i++) {
+                        newView.sound[i] = {}
+                        newView.sound[i]._id = newLesson.sound[i]._id
+                        newView.sound[i].viewed = false
+                    }
+                    module.exports.updateViewByUsrId(newView, info.usrId, (updated)=>{
+                        if(updated == -1){
+                            cb(-1)
+                        }
+                        else if(updated == 0){
+                            cb(0)
+                        }
+                        else{
+                            module.exports.updateResult(info.usrId , info.lsnId , (result)=>{
+                            
+                            })
+                        }
+                    })
                 }
             })
         }
