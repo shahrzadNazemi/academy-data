@@ -159,7 +159,8 @@ module.exports.postQuestion = (info, cb)=> {
                 "lesson": info.lesson,
                 "exam": info.exam,
                 "answers": info.answers,
-                "trueIndex": info.trueIndex
+                "trueIndex": info.trueIndex,
+                "url":info.url
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -537,6 +538,7 @@ module.exports.postResult = (info, cb)=> {
                 "usrId": info.usrId,
                 "lsnId": info.lsnId,
                 "passedLesson": info.passedLesson,
+                "timePassed":"",
                 "quiz": info.quiz,
                 "exam": info.exam,
 
@@ -636,8 +638,8 @@ module.exports.editQuestion = (info, QId, cb)=> {
                     "lesson": info.lesson,
                     "exam": info.exam,
                     "answers": info.answers,
-                    "trueIndex": info.trueIndex
-
+                    "trueIndex": info.trueIndex,
+                    "url":info.url
                 }
             }, (err, result)=> {
                 if (err != null) {
