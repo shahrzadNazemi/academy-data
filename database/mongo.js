@@ -148,10 +148,14 @@ module.exports.postQuestion = (info, cb)=> {
             if (info.exam.value != undefined && info.exam.value != "") {
                 info.exam.value = new ObjectID(`${info.exam.value}`)
             }
+            if (info.typeId!= undefined && info.typeId != "") {
+                info.typeId= new ObjectID(`${info.typeId}`)
+            }
             con.collection("question").insertOne({
                 "content": info.content,
                 "score": info.score,
                 "type": info.type,
+                "typeId":info.typeId,
                 "lesson": info.lesson,
                 "exam": info.exam,
                 "answers": info.answers,
@@ -456,7 +460,6 @@ module.exports.postType = (info, cb)=> {
             cb(-1)
         }
         else {
-
             var con = db.db('englishAcademy')
             if(info.category._id){
                 info.category._id= new ObjectID(info.category._id)
@@ -618,6 +621,9 @@ module.exports.editQuestion = (info, QId, cb)=> {
             if (info.exam.value != undefined && info.exam.value == "") {
                 info.exam.value = new ObjectID(`${info.exam.value}`)
             }
+            if (info.typeId != undefined && info.typeId == "") {
+                info.typeId = new ObjectID(`${info.typeId}`)
+            }
 
             var con = db.db('englishAcademy')
 
@@ -626,6 +632,7 @@ module.exports.editQuestion = (info, QId, cb)=> {
                     "content": info.content,
                     "score": info.score,
                     "type": info.type,
+                    "typeId":info.typeId,
                     "lesson": info.lesson,
                     "exam": info.exam,
                     "answers": info.answers,
@@ -882,6 +889,30 @@ module.exports.getQstById = (QId, cb)=> {
         else {
             var con = db.db('englishAcademy')
             con.collection("question").findOne({"_id": new ObjectID(`${QId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getTypeById = (typeId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("type").findOne({"_id": new ObjectID(`${typeId}`)}, (err, result) => {
                 if (err) {
                     cb(-1)
                 }

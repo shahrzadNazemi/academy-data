@@ -1893,6 +1893,20 @@ module.exports.getExamByLessonId = (lsnId, cb)=> {
     })
 }
 
+module.exports.getTypeByTypeId = (typeId, cb)=> {
+    mongo.getTypeById(typeId, (type)=> {
+        if (type == -1) {
+            cb(-1)
+        }
+        else if (type == 0) {
+            cb(0)
+        }
+        else {
+            cb(type)
+        }
+    })
+}
+
 module.exports.getNextLesson = (lsnId, cb)=> {
     module.exports.getLessonById(lsnId, (lesson)=> {
         if (lesson == 0) {
@@ -1922,40 +1936,40 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                             }
                             else {
                                 let newLevel = {}
-                                for(var i =0;i<levels.length;i++){
-                                    if(levels[i].order > lesson[0].level.order){
+                                for (var i = 0; i < levels.length; i++) {
+                                    if (levels[i].order > lesson[0].level.order) {
                                         newLevel = levels[i]
                                         break;
                                     }
                                 }
-                                module.exports.getLessonByLvlId(newLevel._id  , (lessons)=>{
-                                    if(lessons == 0){
+                                module.exports.getLessonByLvlId(newLevel._id, (lessons)=> {
+                                    if (lessons == 0) {
                                         cb(lesson)
                                     }
-                                    else if(lessons == -1){
+                                    else if (lessons == -1) {
                                         cb(-1)
                                     }
-                                    else{
+                                    else {
                                         cb(lessons[0])
                                     }
                                 })
                             }
                         })
                     }
-                    else{
+                    else {
                         console.log("here")
                         var index = -1;
                         var val = lesson[0]._id
-                        let lastIndex = lessonsOfLevel.find(function(item, i){
-                            if(item._id.equals(val)){
+                        let lastIndex = lessonsOfLevel.find(function (item, i) {
+                            if (item._id.equals(val)) {
                                 index = i;
                                 return i;
                             }
                         });
-                        console.log(lastIndex , index)
-                        let newLesson = lessonsOfLevel[index +1]
-                        
-                        
+                        console.log(lastIndex, index)
+                        let newLesson = lessonsOfLevel[index + 1]
+
+
                         cb(newLesson)
                     }
                 }
@@ -2000,24 +2014,24 @@ module.exports.getQuestionsScoreCountByLesson = (lsnId, cb)=> {
     })
 }
 
-module.exports.answerQuestion = (info , cb)=>{
-    module.exports.getNextLesson(info.lsnId , (newLesson)=>{
-        if(newLesson == -1){
+module.exports.answerQuestion = (info, cb)=> {
+    module.exports.getNextLesson(info.lsnId, (newLesson)=> {
+        if (newLesson == -1) {
             cb(-1)
         }
-        else if(newLesson == 0){
+        else if (newLesson == 0) {
             cb(0)
         }
-        else{
+        else {
             info.lastPassedLesson = newLesson._id
-            module.exports.updateStudent(info , info.usrId , (student)=>{
-                if(student == -1){
+            module.exports.updateStudent(info, info.usrId, (student)=> {
+                if (student == -1) {
                     cb(-1)
                 }
-                else if(student == 0){
+                else if (student == 0) {
                     cb(0)
                 }
-                else{
+                else {
                     let newView = {}
                     newView.lsnId = newLesson._id
                     newView.video = []
@@ -2032,16 +2046,16 @@ module.exports.answerQuestion = (info , cb)=>{
                         newView.sound[i]._id = newLesson.sound[i]._id
                         newView.sound[i].viewed = false
                     }
-                    module.exports.updateViewByUsrId(newView, info.usrId, (updated)=>{
-                        if(updated == -1){
+                    module.exports.updateViewByUsrId(newView, info.usrId, (updated)=> {
+                        if (updated == -1) {
                             cb(-1)
                         }
-                        else if(updated == 0){
+                        else if (updated == 0) {
                             cb(0)
                         }
-                        else{
-                            module.exports.updateResult(info.usrId , info.lsnId , (result)=>{
-                            
+                        else {
+                            module.exports.updateResult(info.usrId, info.lsnId, (result)=> {
+
                             })
                         }
                     })
