@@ -117,7 +117,8 @@ module.exports.postNotification = (info, cb)=> {
                 "text": info.text,
                 "avatarUrl": info.avatarUrl,
                 "link": info.link,
-                "title": info.title
+                "title": info.title,
+                "viewedUsers":info.viewedUsers
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -680,13 +681,15 @@ module.exports.editNotification = (info, NId, cb)=> {
         else {
 
             var con = db.db('englishAcademy')
-
             con.collection("notification").updateOne({"_id": new ObjectID(NId)}, {
                 $set: {
                     "link": info.link,
                     "avatarUrl": info.avatarUrl,
                     "text": info.text,
-                    "title": info.title
+                    "title": info.title,
+                },
+                $push:{
+                    "viewedUsers":info.viewedUsers
                 }
             }, (err, result)=> {
                 if (err) {
