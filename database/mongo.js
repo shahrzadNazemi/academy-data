@@ -1596,7 +1596,7 @@ module.exports.getAllNotifications = (cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("notification").find().toArray((err, result) => {
+            con.collection("notification").find().sort({_id: -1}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
