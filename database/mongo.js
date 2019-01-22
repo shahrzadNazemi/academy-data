@@ -688,7 +688,7 @@ module.exports.editNotification = (info, NId, cb)=> {
                     "text": info.text,
                     "title": info.title,
                 },
-                $push:{
+                $addToSet:{
                     "viewedUsers":info.viewedUsers
                 }
             }, (err, result)=> {
