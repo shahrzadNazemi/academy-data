@@ -1904,7 +1904,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                 }
 
             }
-                else if(lsnId == 0){
+            else if (lsnId == 0) {
                 con.collection("result").findOneAndUpdate({
                         "lsnId": lsnId,
                         "usrId": new ObjectID(usrId)
@@ -3017,15 +3017,15 @@ module.exports.getAllExams = (usrId, cb)=> {
                         let: {exaId: "$_id"},
                         pipeline: [
                             {
-                                $match: {
-                                    $expr: {
-                                        $and: [
-                                            // {$eq: ["exam.exId", "exaId"]},
+                                "$match": {
+                                    "$expr": {
+                                        "$and": [
+                                            {"$eq": ["$exam.exId", "$$exaId"]},
                                             {"usrId": new ObjectID(`${usrId}`)}
                                         ]
                                     }
                                 }
-                            },
+                            }
                             // { $project: { stock_item: 0, _id: 0 } }
                         ],
                         as: "result"
@@ -3037,7 +3037,8 @@ module.exports.getAllExams = (usrId, cb)=> {
                         localField: "preLesson.value",
                         foreignField: "_id",
                         as: "lesson"
-                    },
+                    }
+                    ,
 
                 }
             ])
