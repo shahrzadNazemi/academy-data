@@ -3008,71 +3008,40 @@ module.exports.getAllExams = (usrId, cb)=> {
             cb(-1)
         }
         else {
-            // usrId: new ObjectID(`${usrId}`)
             var con = db.db('englishAcademy')
-            con.collection("exam").aggregate([
-                {
-                    $lookup: {
-                        from: "result",
-                        let: {exaId: "$_id"},
-                        pipeline: [
-                            {
-                                "$match": {
-                                    "$expr": {
-                                        "$and": [
-                                            {"$eq": ["$exam.exId", "$$exaId"]},
-                                            {"usrId": new ObjectID(`${usrId}`)}
-                                        ]
+            if(usrId != 0){
+                con.collection("exam").aggregate([
+                    {
+                        $lookup: {
+                            from: "result",
+                            let: {exaId: "$_id"},
+                            pipeline: [
+                                {
+                                    "$match": {
+                                        "$expr": {
+                                            "$and": [
+                                                {"$eq": ["$exam.exId", "$$exaId"]},
+                                                {"usrId": new ObjectID(`${usrId}`)}
+                                            ]
+                                        }
                                     }
                                 }
-                            }
-                            // { $project: { stock_item: 0, _id: 0 } }
-                        ],
-                        as: "result"
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "lesson",
-                        localField: "preLesson.value",
-                        foreignField: "_id",
-                        as: "lesson"
-                    }
-                    ,
+                                // { $project: { stock_item: 0, _id: 0 } }
+                            ],
+                            as: "result"
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "lesson",
+                            localField: "preLesson.value",
+                            foreignField: "_id",
+                            as: "lesson"
+                        }
+                        ,
 
-                }
-            ])
-            // con.collection("exam").aggregate([
-            //     // {},
-            //     {
-            //         $lookup: {
-            //             from: "result",
-            //             // localField: "_id",
-            //             // foreignField: "exam.exId",
-            //             let: { "exId":"$exam.exId" },
-            //             pipeline: [{
-            //                 "$match": {
-            //                 $expr:{
-            //                     "$and": [ {  "_id": "exId" },{"usrId": new ObjectID(`${usrId}`)}]
-            //                 }
-            //                 }
-            //
-            //
-            //
-            //             }],
-            //             as: "result"
-            //         }
-            //     },
-            //     {
-            //         $lookup: {
-            //             from: "lesson",
-            //             localField: "preLesson.value",
-            //             foreignField: "_id",
-            //             as: "lesson"
-            //         },
-            //
-            //     }])
-                .toArray((err, result) => {
+                    }
+                ]).toArray((err, result) => {
                     if (err) {
                         console.log(err)
                         cb(-1)
@@ -3085,6 +3054,23 @@ module.exports.getAllExams = (usrId, cb)=> {
                         cb(result)
                     }
                 })
+            }
+            else{
+                con.collection("exam").find({}).toArray((err, result) => {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else if (result == null) {
+                        cb(0)
+                    }
+                    else {
+                        console.log("result", result)
+                        cb(result)
+                    }
+                })
+            }
+
 
         }
     })

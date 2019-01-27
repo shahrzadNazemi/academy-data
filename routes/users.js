@@ -109,6 +109,13 @@ router.post('/student', (req, res)=> {
             resultInfo.passedLesson = false;
             resultInfo.timePassed = ""
             resultInfo.exam.examCount = 0
+            resultInfo.exam.getScore = 0
+            resultInfo.exam.time = 0
+            resultInfo.exam.questionTrue = 0
+
+            resultInfo.quiz.time = 0
+            resultInfo.quiz.questionTrue = 0
+            resultInfo.quiz.permission = 0
             resultInfo.quiz.quizScore = 0
             resultInfo.quiz.quizCount = 0
             database.addResult(resultInfo, (result1)=> {
