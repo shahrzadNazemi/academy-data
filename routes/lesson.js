@@ -306,6 +306,22 @@ router.get('/text', (req, res)=> {
     })
 });
 
+router.get('/first', (req, res)=> {
+    database.getFirstLesson((texts)=> {
+        if (texts == -1) {
+            res.status(500).end()
+        }
+        else if (texts == 0) {
+            res.status(404).end()
+        }
+        else {
+           
+            res.json(texts)
+
+        }
+    })
+});
+
 
 router.get('/:lsnId', (req, res) => {
     database.getLessonById(req.params.lsnId, (result)=> {

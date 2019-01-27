@@ -56,12 +56,14 @@ router.get('/:exId', (req, res)=> {
     })
 });
 
-router.get('/', (req, res)=> {
-    database.getExams((getResult)=> {
+router.get('/user/:usrId', (req, res)=> {
+    database.getExams(req.params.usrId ,(getResult)=> {
+        console.log("getResult")
         if (getResult == -1) {
             res.status(500).end('')
         }
         else {
+            
             res.json(getResult)
         }
     })

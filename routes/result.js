@@ -48,7 +48,24 @@ router.post('/answerQuestion', (req, res)=> {
         }
     })
 
-})
+});
+
+router.put('/:stdId/:lsnId', (req, res)=> {
+
+    database.updateResult(req.params.stdId , req.params.lsnId , req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+
+});
+
 
 
 module.exports = router

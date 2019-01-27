@@ -98,7 +98,22 @@ router.post('/student', (req, res)=> {
             res.status(403).end('')
         }
         else {
-            res.json(result)
+            let resultInfo = {}
+            resultInfo.exam ={}
+            resultInfo.quiz = {}
+            resultInfo.exam.examScore = 0
+            resultInfo.exam.permission = false
+            resultInfo.exam.exId = 0
+            resultInfo.lsnId = req.body.lastPassedLesson;
+            resultInfo.usrId = result
+            resultInfo.passedLesson = false;
+            resultInfo.timePassed = ""
+            resultInfo.exam.examCount = 0
+            resultInfo.quiz.quizScore = 0
+            resultInfo.quiz.quizCount = 0
+            database.addResult(resultInfo, (result1)=> {
+                res.json(result)
+            })
         }
     })
 });
@@ -126,7 +141,7 @@ router.post('/student/placement', (req, res) => {
             res.status(404).end('')
         }
         else {
-            console.log("result" , result)
+            console.log("result", result)
 
             res.json(result)
         }
@@ -134,16 +149,16 @@ router.post('/student/placement', (req, res) => {
 });
 
 router.put('/student/:stuId', (req, res) => {
-    database.getStuById(req.params.stuId , (student)=>{
-        if(student == -1){
+    database.getStuById(req.params.stuId, (student)=> {
+        if (student == -1) {
             res.status(500).end('')
         }
-        else if(student == 0){
+        else if (student == 0) {
             res.status(404).end('')
         }
-        else{
-            let newStu = Object.assign({} , student , req.body)
-            console.log(newStu , student)
+        else {
+            let newStu = Object.assign({}, student, req.body)
+            console.log(newStu, student)
             database.updateStudent(newStu, req.params.stuId, (result)=> {
                 if (result == -1) {
                     res.status(500).end('')
@@ -192,7 +207,7 @@ router.get('/student/best', (req, res) => {
 });
 
 router.get('/student/bestLevel/:lsnId', (req, res) => {
-    database.getStuByLevel(req.params.lvlId , (result)=> {
+    database.getStuByLevel(req.params.lvlId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
