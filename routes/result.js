@@ -32,10 +32,6 @@ router.get('/:usrId/:lsnId', (req, res)=> {
 });
 
 router.post('/answerQuestion', (req, res)=> {
-    console.log("quer in here",req.query)
-    if (req.query.round == 2) {
-        req.body.round = true
-    }
     database.answerQuestion(req.body, (result)=> {
         if (result == -1) {
             res.status(500).end('')

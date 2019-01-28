@@ -1639,7 +1639,6 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                             resultInfo.exam = {}
                                             resultInfo.timePassed = ""
                                             resultInfo.passedLesson = false
-
                                             module.exports.updateResult( student[0]._id ,0 ,resultInfo, (addedResult)=> {
                                                 cb(lesson)
                                             })
@@ -1647,7 +1646,6 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                     }
                                 })
                             }
-
                         })
 
                     }
@@ -2440,17 +2438,23 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                         cb(-1)
                     }
                     else if (exam == 0) {
+                        updateInfo.exam = {}
+                        updateInfo.exam.time = 0
+                        updateInfo.exam.questionTrue = 0;
+                        updateInfo.exam.getScore = 0
+                        updateInfo.exam.exId = 0
+                        updateInfo.exam.permission = false
+                        updateInfo.exam.examScore = 0
+                        updateInfo.quiz.quizScore = 0
+                        updateInfo.quiz.questionTrue = 0;
+                        updateInfo.quiz.getScore = 0
+                        updateInfo.quiz.permission = false
                         module.exports.getQuestionsScoreCountByLesson(lsnId, (data)=> {
                             console.log("d", data)
                             if (data == -1) {
                                 cb(-1)
                             }
-                            else if (data == 0) {updateInfo.exam = {}
-                                updateInfo.exam.time = 0
-                                updateInfo.exam.questionTrue = 0;
-                                updateInfo.exam.getScore = 0
-                                updateInfo.exam._id = 0
-                                updateInfo.exam.permission = false
+                            else if (data == 0) {
                                 updateInfo.exam.examScore = 0
                                 updateInfo.exam.examCount = 0
                                 updateInfo.quiz.quizScore = 0
@@ -2466,7 +2470,6 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                                         cb(updatedInfo)
                                     }
                                 });
-
                             }
                             else {
                                 if (data.length > 1) {
@@ -2481,74 +2484,88 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                                     updateInfo.quiz.quizScore = data[0].totalScore
                                     updateInfo.quiz.quizCount = data[0].count
                                 }
-                                module.exports.getQuestionsScoreCountByLesson(lsnId, (data)=> {
-                                    console.log("d1", data)
-
-                                    if (data == -1) {
+                                mongo.editResult(usrId, lsnId, updateInfo, (updatedInfo)=> {
+                                    if (updatedInfo == -1) {
                                         cb(-1)
                                     }
-                                    else if (data == 0) {
-                                        updateInfo.exam.examScore = 0
-                                        updateInfo.exam.examCount = 0
-                                        updateInfo.quiz.quizScore = 0
-                                        updateInfo.quiz.quizCount = 0
-                                        mongo.editResult(usrId, lsnId, updateInfo, (updatedInfo)=> {
-                                            if (updatedInfo == -1) {
-                                                cb(-1)
-                                            }
-                                            else if (updatedInfo == 0) {
-                                                cb(0)
-                                            }
-                                            else {
-                                                cb(updatedInfo)
-                                            }
-                                        });
-
+                                    else if (updatedInfo == 0) {
+                                        cb(0)
                                     }
                                     else {
-                                        if (data.length > 1) {
-                                            updateInfo.exam.examScore = data[0].totalScore
-                                            updateInfo.exam.examCount = data[0].count
-                                            updateInfo.quiz.quizScore = data[1].totalScore
-                                            updateInfo.quiz.quizCount = data[1].count
-                                        }
-                                        else {
-                                            updateInfo.exam.examScore = 0
-                                            updateInfo.exam.examCount = 0
-                                            updateInfo.quiz.quizScore = data[0].totalScore
-                                            updateInfo.quiz.quizCount = data[0].count
-                                        }
-
-
-                                        mongo.editResult(usrId, lsnId, updateInfo, (updatedInfo)=> {
-                                            if (updatedInfo == -1) {
-                                                cb(-1)
-                                            }
-                                            else if (updatedInfo == 0) {
-                                                cb(0)
-                                            }
-                                            else {
-                                                cb(updatedInfo)
-                                            }
-                                        });
-
+                                        cb(updatedInfo)
                                     }
-                                })
+                                });
+                                // module.exports.getQuestionsScoreCountByLesson(lsnId, (data)=> {
+                                //     console.log("d1", data)
+                                //
+                                //     if (data == -1) {
+                                //         cb(-1)
+                                //     }
+                                //     else if (data == 0) {
+                                //         updateInfo.exam.examScore = 0
+                                //         updateInfo.exam.examCount = 0
+                                //         updateInfo.quiz.quizScore = 0
+                                //         updateInfo.quiz.quizCount = 0
+                                //         mongo.editResult(usrId, lsnId, updateInfo, (updatedInfo)=> {
+                                //             if (updatedInfo == -1) {
+                                //                 cb(-1)
+                                //             }
+                                //             else if (updatedInfo == 0) {
+                                //                 cb(0)
+                                //             }
+                                //             else {
+                                //                 cb(updatedInfo)
+                                //             }
+                                //         });
+                                //
+                                //     }
+                                //     else {
+                                //         if (data.length > 1) {
+                                //             updateInfo.exam.examScore = data[0].totalScore
+                                //             updateInfo.exam.examCount = data[0].count
+                                //             updateInfo.quiz.quizScore = data[1].totalScore
+                                //             updateInfo.quiz.quizCount = data[1].count
+                                //         }
+                                //         else {
+                                //             updateInfo.exam.examScore = 0
+                                //             updateInfo.exam.examCount = 0
+                                //             updateInfo.quiz.quizScore = data[0].totalScore
+                                //             updateInfo.quiz.quizCount = data[0].count
+                                //         }
+                                //
+                                //
+                                //         mongo.editResult(usrId, lsnId, updateInfo, (updatedInfo)=> {
+                                //             if (updatedInfo == -1) {
+                                //                 cb(-1)
+                                //             }
+                                //             else if (updatedInfo == 0) {
+                                //                 cb(0)
+                                //             }
+                                //             else {
+                                //                 cb(updatedInfo)
+                                //             }
+                                //         });
+                                //
+                                //     }
+                                // })
 
                             }
                         })
                     }
                     else {
                         updateInfo.exam = {}
+                        updateInfo.quiz = {}
                         updateInfo.exam.time = exam.time
                         updateInfo.exam.questionTrue = 0;
                         updateInfo.exam.getScore = 0
-                        updateInfo.exam._id = exam._id
+                        updateInfo.exam.exId = exam._id
                         updateInfo.exam.permission = false
-                        // console.log("lsnIdddddd", resultInfo.lsnId)
+                        updateInfo.quiz.time = exam.time
+                        updateInfo.quiz.questionTrue = 0;
+                        updateInfo.quiz.getScore = 0
+                        updateInfo.quiz.permission = false
                         module.exports.getQuestionsScoreCountByLesson(lsnId, (data)=> {
                             console.log("d1", data)
-
                             if (data == -1) {
                                 cb(-1)
                             }
@@ -2557,7 +2574,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                                 updateInfo.exam.examCount = 0
                                 updateInfo.quiz.quizScore = 0
                                 updateInfo.quiz.quizCount = 0
-                                let newResult = Object.assign({} , updateInfo , lastResult)
+                                let newResult = Object.assign({} ,lastResult , updateInfo)
                                 mongo.editResult(usrId, lsnId, newResult, (updatedInfo)=> {
                                     if (updatedInfo == -1) {
                                         cb(-1)
@@ -2585,8 +2602,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                                     updateInfo.quiz.quizCount = data[0].count
                                 }
 
-                                let newResult = Object.assign({} , updateInfo , lastResult)
-
+                                let newResult = Object.assign({} , lastResult , updateInfo)
                                 mongo.editResult(usrId, lsnId, newResult, (updatedInfo)=> {
                                     if (updatedInfo == -1) {
                                         cb(-1)
