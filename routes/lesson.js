@@ -70,6 +70,40 @@ router.post('/type', (req, res) => {
     })
 });
 
+router.post('/text', (req, res) => {
+    database.addText(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == -2) {
+            res.status(403).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.post('/note', (req, res) => {
+    database.addNote(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == -2) {
+            res.status(403).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
 router.post('/category', (req, res) => {
     database.addCategory(req.body, (result)=> {
         if (result == -1) {
@@ -142,6 +176,7 @@ router.put('/text/:txtId', (req, res) => {
         }
     })
 });
+
 
 
 

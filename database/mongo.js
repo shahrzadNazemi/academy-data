@@ -1756,6 +1756,37 @@ module.exports.postText = (textInfo, cb)=> {
     })
 };
 
+module.exports.postNote = (noteInfo, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            noteInfo.lsnId = new ObjectID(`${noteInfo.lsnId}`)
+            noteInfo.typeId = new ObjectID(`${noteInfo.typeId}`)
+
+            var con = db.db('englishAcademy')
+            con.collection("note").insertOne({
+                "content": noteInfo.content,
+                "lsnId": noteInfo.lsnId,
+                "typeId": noteInfo.typeId
+            }, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.getAllAdmins = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -1846,6 +1877,44 @@ module.exports.editText = (info, txtId, cb)=> {
         }
     })
 };
+
+module.exports.editNote = (info, ntId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (info.lsnId) {
+                info.lsnId = new ObjectID(info.lsnId)
+            }
+            if (info.typeId) {
+                info.typeId = new ObjectID(info.typeId)
+            }
+            con.collection("note").findOneAndUpdate({"_id": new ObjectID(ntId)}, {
+                    $set: {
+                        "title": info.title,
+                        "description": info.description,
+                        "typeId": info.typeId,
+                        "lsnId": info.lsnId
+
+                    }
+                },
+                {returnOriginal: false}, (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else {
+
+                        cb(result)
+                    }
+                })
+        }
+    })
+};
+
 
 module.exports.editResult = (usrId, lsnId, info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {

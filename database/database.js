@@ -277,6 +277,20 @@ module.exports.addText = (textInfo, cb)=> {
     })
 };
 
+module.exports.addNote = (noteInfo, cb)=> {
+    mongo.postNote(noteInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
     mongo.editLevel(updateInfo, lvlId, (result)=> {
         if (result == -1) {
@@ -2470,7 +2484,6 @@ module.exports.answerQuestion = (info, cb)=> {
             }
         })
     }
-
     else {
         let updateInfo = {}
         updateInfo.quiz = {}
