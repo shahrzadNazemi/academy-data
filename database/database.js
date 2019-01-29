@@ -2320,18 +2320,12 @@ module.exports.answerQuestion = (info, cb)=> {
 
                 }
                 else {
+                    updateInfo.quiz = {}
                     updateInfo.quiz.newScore = info.score
                     updateInfo.quiz.questionTrue = 1
                     updateInfo.answer = true
-
                     updateInfo.type = info.type
-                    module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
-                        if (updatedResult == -1) {
-                            cb(-1)
-                        } else if (updatedResult == 0) {
-                            cb(0)
-                        }
-                        else {
+                    console.log("gfgfhjgjg",info)
                             module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
                                 if (result == -1) {
                                     cb(-1)
@@ -2342,13 +2336,12 @@ module.exports.answerQuestion = (info, cb)=> {
                                 else {
                                     if (info.type == "quiz") {
                                         console.log("result")
-                                        if (result.quiz.questionTrue / result.quiz.quizCount > 0.06) {
-                                            let info = {}
-                                            info.exam = {}
-                                            info.exam.permission = true
-                                            info.answer = true
-
-                                            module.exports.updateResult(info.usrId, info.lsnId, info, (updatedResult)=> {
+                                        if ((result.quiz.questionTrue+1) / result.quiz.quizCount > 0.6) {
+                                            updateInfo.exam = {}
+                                            updateInfo.exam.permission = true
+                                            updateInfo.answer = true
+                                            updateInfo.type = info.type
+                                            module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                                                 if (updatedResult == -1) {
                                                     cb(-1)
                                                 } else if (updatedResult == 0) {
@@ -2445,6 +2438,24 @@ module.exports.answerQuestion = (info, cb)=> {
                                                 }
                                             })
                                         }
+                                        else {
+                                            console.log("lo2")
+
+                                            // updateInfo.round = false
+                                            updateInfo.answer = true
+                                            updateInfo.quiz.newScore = info.score
+                                            updateInfo.timePassed = new Date().getTime()
+                                            module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
+                                                if (updatedResult == -1) {
+                                                    cb(-1)
+                                                } else if (updatedResult == 0) {
+                                                    cb(0)
+                                                }
+                                                else {
+                                                    cb(updatedResult)
+                                                }
+                                            })
+                                        }
                                     }
                                     else {
                                         if (result.exam.questionTrue / result.exam.examCount > 0.06) {
@@ -2454,8 +2465,6 @@ module.exports.answerQuestion = (info, cb)=> {
 
                                 }
                             })
-                        }
-                    })
                 }
 
             }

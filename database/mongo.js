@@ -1204,6 +1204,7 @@ module.exports.getLsnById = (lsnId, cb)=> {
 };
 
 module.exports.getResultByLsnIdUsrId = (usrId, lsnId, cb)=> {
+    console.log(usrId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -1866,10 +1867,15 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             }
                             , $set: {
                                 "timePassed": info.timePassed,
-                                "round": info.round
+                                "round": info.round,
+                                "exam.permission": info.exam.permission
                             }
                         },
-                        {returnOriginal: false}, (err, result)=> {
+                        {
+                            returnOriginal: false
+                        }
+                        ,
+                        (err, result)=> {
                             if (err) {
                                 console.log(err)
                                 cb(-1)
@@ -1878,7 +1884,8 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
 
                                 cb(result)
                             }
-                        })
+                        }
+                    )
                 }
                 else {
                     con.collection("result").findOneAndUpdate({
