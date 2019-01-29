@@ -243,6 +243,7 @@ module.exports.editExam = (info, exId, cb)=> {
         }
     })
 };
+
 module.exports.updateResultByLsnId = (lsnId, info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -299,7 +300,6 @@ module.exports.updateResultByLsnId = (lsnId, info, cb)=> {
         }
     })
 };
-
 
 module.exports.postView = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -1260,6 +1260,33 @@ module.exports.getLsnLvlById = (lvlID, cb)=> {
     })
 };
 
+module.exports.getAllNotes = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (typeof lsnId == 'number') {
+                lsnId = lsnId + ''
+            }
+            con.collection("note").find({"lsnId": new ObjectID(`${lsnId}`)}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.getTrickBYTrickId = (trckId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -1894,8 +1921,7 @@ module.exports.editNote = (info, ntId, cb)=> {
             }
             con.collection("note").findOneAndUpdate({"_id": new ObjectID(ntId)}, {
                     $set: {
-                        "title": info.title,
-                        "description": info.description,
+                        "content": info.content,
                         "typeId": info.typeId,
                         "lsnId": info.lsnId
 
@@ -1925,7 +1951,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
         else {
             var con = db.db('englishAcademy')
             if (info.Score) {
-                if(info.exam.permission == undefined){
+                if (info.exam.permission == undefined) {
                     info.exam.permission = false
                 }
                 if (info.type == "quiz") {
@@ -2105,6 +2131,32 @@ module.exports.deleteTrick = (trckId, cb)=> {
     })
 
 };
+
+module.exports.deleteNote = (ntId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("note").findOneAndDelete({"_id": new ObjectID(`${ntId}`)}, (err, result)=> {
+                if (err) {
+                    console.log(err)
+                    cb(-1)
+                }
+                else {
+                    let result = "row deleted";
+                    cb(result)
+                }
+            })
+
+
+        }
+    })
+
+};
+
 
 module.exports.deleteLesson = (lsnId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {

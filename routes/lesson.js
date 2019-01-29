@@ -177,8 +177,32 @@ router.put('/text/:txtId', (req, res) => {
     })
 });
 
+router.put('/note/:ntId', (req, res) => {
+    database.updateNote(req.body,req.params.ntId , (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
 
 
+
+router.get('/:lsnId/note', (req, res) => {
+    database.getNotes(req.params.lsnId ,(result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
 
 router.get('/level/:lvlId', (req, res) => {
     database.getLessonByLvlId(req.params.lvlId, (result)=> {
@@ -542,6 +566,20 @@ router.delete('/sound/:sndId', (req, res) => {
 
 router.delete('/text/:txtId', (req, res) => {
     database.delText(req.params.txtId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.delete('/note/:ntId', (req, res) => {
+    database.delNote(req.params.ntId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
