@@ -599,6 +599,7 @@ module.exports.postResult = (info, cb)=> {
                 "timePassed": "",
                 "quiz": info.quiz,
                 "exam": info.exam,
+                "round": false
 
             }, (err, result) => {
 
@@ -1853,18 +1854,19 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if (info.newScore) {
+            if (info.Score) {
                 if (info.type == "quiz") {
                     con.collection("result").findOneAndUpdate({
                             "lsnId": new ObjectID(lsnId),
                             "usrId": new ObjectID(usrId)
                         }, {
                             $inc: {
-                                "quiz.questionTrue": info.questionTrue,
-                                "quiz.getScore": info.newScore
+                                "quiz.questionTrue": info.quiz.questionTrue,
+                                "quiz.getScore": info.quiz.newScore
                             }
                             , $set: {
-                                "timePassed": info.timePassed
+                                "timePassed": info.timePassed,
+                                "round": info.round
                             }
                         },
                         {returnOriginal: false}, (err, result)=> {
@@ -1916,6 +1918,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             "timePassed": info.timePassed,
                             "quiz": info.quiz,
                             "exam": info.exam,
+                            "round": info.round
                         }
                     },
                     {returnOriginal: false}, (err, result)=> {
@@ -1941,6 +1944,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             "timePassed": info.timePassed,
                             "quiz": info.quiz,
                             "exam": info.exam,
+                            "round": info.round
                         }
                     },
                     {returnOriginal: false}, (err, result)=> {
@@ -3009,7 +3013,7 @@ module.exports.getAllExams = (usrId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if(usrId != 0){
+            if (usrId != 0) {
                 con.collection("exam").aggregate([
                     {
                         $lookup: {
@@ -3055,7 +3059,7 @@ module.exports.getAllExams = (usrId, cb)=> {
                     }
                 })
             }
-            else{
+            else {
                 con.collection("exam").find({}).toArray((err, result) => {
                     if (err) {
                         console.log(err)

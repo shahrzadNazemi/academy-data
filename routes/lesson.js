@@ -322,7 +322,6 @@ router.get('/first', (req, res)=> {
     })
 });
 
-
 router.get('/:lsnId', (req, res) => {
     database.getLessonById(req.params.lsnId, (result)=> {
         if (result == -1) {
