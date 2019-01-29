@@ -1260,7 +1260,7 @@ module.exports.getLsnLvlById = (lvlID, cb)=> {
     })
 };
 
-module.exports.getAllNotes = (lsnId,usrId, cb)=> {
+module.exports.getAllNotes = (lsnId, usrId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -1271,7 +1271,10 @@ module.exports.getAllNotes = (lsnId,usrId, cb)=> {
             if (typeof lsnId == 'number') {
                 lsnId = lsnId + ''
             }
-            con.collection("note").find({"lsnId": new ObjectID(`${lsnId}`), "usrId": new ObjectID(`${usrId}`)}).toArray((err, result) => {
+            con.collection("note").find({
+                "lsnId": new ObjectID(`${lsnId}`),
+                "usrId": new ObjectID(`${usrId}`)
+            }).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -1800,7 +1803,7 @@ module.exports.postNote = (noteInfo, cb)=> {
                 "content": noteInfo.content,
                 "lsnId": noteInfo.lsnId,
                 "typeId": noteInfo.typeId,
-                "usrId":noteInfo.usrId
+                "usrId": noteInfo.usrId
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -1931,7 +1934,7 @@ module.exports.editNote = (info, ntId, cb)=> {
                         "content": info.content,
                         "typeId": info.typeId,
                         "lsnId": info.lsnId,
-                        "usrId":info.usrId
+                        "usrId": info.usrId
 
                     }
                 },
@@ -1999,8 +2002,8 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             "usrId": new ObjectID(usrId)
                         }, {
                             $inc: {
-                                "exam.questionTrue": info.questionTrue,
-                                "exam.getScore": info.newScore
+                                "exam.questionTrue": info.exam.questionTrue,
+                                "exam.getScore": info.exam.newScore
                             }
                             , $set: {
                                 "timePassed": info.timePassed
@@ -2013,7 +2016,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             }
                             else {
 
-                                cb(result)
+                                cb(result.value)
                             }
                         })
                 }

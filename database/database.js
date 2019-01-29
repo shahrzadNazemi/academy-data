@@ -1195,8 +1195,8 @@ module.exports.getExams = (usrId, cb)=> {
     })
 };
 
-module.exports.getNotes = (lsnId,usrId , cb)=> {
-    mongo.getAllNotes(lsnId,usrId , (result)=> {
+module.exports.getNotes = (lsnId, usrId, cb)=> {
+    mongo.getAllNotes(lsnId, usrId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -2221,328 +2221,656 @@ module.exports.getQuestionsScoreCountByLesson = (lsnId, cb)=> {
 }
 
 module.exports.answerQuestion = (info, cb)=> {
-    if (info.true) {
-        let updateInfo = {}
-        updateInfo.answer = true
-        updateInfo.timePassed = new Date().getTime()
-        updateInfo.questionTrue = 1
+    if (info.type == "exam") {
+        if (info.true == true) {
+            let updateInfo = {}
+            updateInfo.answer = true
+            updateInfo.timePassed = new Date().getTime()
+            updateInfo.questionTrue = 1
 
-        module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
-            if (result == -1) {
-                cb(-1)
-            }
-            else if (result == 0) {
-                cb(0)
-            }
-            else {
-                if (info.round || result.round == true) {
+            module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    if (info.round || result.round == true) {
 
-                    updateInfo.type = info.type
-                    updateInfo.round = true
-                    if (info.type == "quiz") {
-                        updateInfo.quiz = {}
+                        updateInfo.type = info.type
+                        updateInfo.round = true
+                        if (info.type == "quiz") {
+                            updateInfo.quiz = {}
 
-                        updateInfo.quiz.newScore = 0
+                            updateInfo.quiz.newScore = 0
 
-                        console.log(result.quiz.questionTrue, result.quiz.quizCount)
-                        if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
-                            console.log("result", result)
-                            let updateInf = {}
-                            updateInf.quiz = {}
+                            console.log(result.quiz.questionTrue, result.quiz.quizCount)
+                            if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
+                                console.log("result", result)
+                                let updateInf = {}
+                                updateInf.quiz = {}
 
-                            updateInf.answer = true
-                            updateInf.exam = {}
-                            updateInf.exam.permission = true
-                            updateInf.type = info.type
-                            updateInf.round = true
-                            updateInf.quiz.newScore = 0
-                            module.exports.updateResult(info.usrId, info.lsnId, updateInf, (res)=> {
-                                module.exports.getNextLesson(info.lsnId, (newLesson)=> {
-                                    if (newLesson == -1) {
+                                updateInf.answer = true
+                                updateInf.exam = {}
+                                updateInf.exam.permission = true
+                                updateInf.type = info.type
+                                updateInf.round = true
+                                updateInf.quiz.newScore = 0
+                                module.exports.updateResult(info.usrId, info.lsnId, updateInf, (res)=> {
+                                    module.exports.getNextLesson(info.lsnId, (newLesson)=> {
+                                        if (newLesson == -1) {
+                                            cb(-1)
+                                        }
+                                        else if (newLesson == 0) {
+                                            cb(0)
+                                        }
+                                        else {
+                                            let studentUpdateInfo = {}
+                                            if (newLesson._id == info.lsnId) {
+                                                cb(newLesson)
+                                            }
+                                            else {
+                                                module.exports.getLessonById(newLesson._id, (lessonDEtails)=> {
+                                                    if (lessonDEtails == -1) {
+                                                        cb(-1)
+                                                    } else if (lessonDEtails == 0) {
+                                                        cb(0)
+                                                    }
+                                                    else {
+                                                        studentUpdateInfo.lastPassedLesson = newLesson._id
+                                                        module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
+                                                            if (std == -1) {
+                                                                cb(-1)
+                                                            }
+                                                            else if (std == 0) {
+                                                                cb(0)
+                                                            }
+                                                            else {
+                                                                let newView = {}
+                                                                newView.video = []
+                                                                newView.sound = []
+                                                                for (var i = 0; i < lessonDEtails[0].video.length; i++) {
+                                                                    newView.video[i] = {}
+                                                                    newView.video[i]._id = lessonDEtails[0].video[i]._id
+                                                                    newView.video[i].viewed = false
+
+                                                                }
+                                                                for (var i = 0; i < lessonDEtails[0].sound.length; i++) {
+                                                                    newView.sound[i] = {}
+                                                                    newView.sound[i]._id = lessonDEtails[0].sound[i]._id
+                                                                    newView.sound[i].viewed = false
+                                                                }
+                                                                newView.lsnId = newLesson._id
+                                                                newView.viewPermission = false;
+
+                                                                module.exports.updateViewByUsrId(newView, info.usrId, (updatedResult)=> {
+                                                                    if (updatedResult == -1) {
+                                                                        cb(-1)
+                                                                    }
+                                                                    else if (updatedResult == 0) {
+                                                                        cb(0)
+                                                                    }
+                                                                    else {
+                                                                        let newResult = {}
+                                                                        newResult.usrId = info.usrId
+                                                                        newResult.lsnId = newLesson._id
+                                                                        newResult.quiz = {}
+                                                                        newResult.quiz.time = newLesson.deadline
+                                                                        newResult.quiz.questionTrue = 0;
+                                                                        newResult.quiz.getScore = 0
+                                                                        newResult.quiz.permission = true
+                                                                        newResult.exam = {}
+                                                                        newResult.timePassed = ""
+                                                                        newResult.passedLesson = false
+                                                                        module.exports.addResult(newResult, (addedResult)=> {
+                                                                            if (addedResult == -1) {
+                                                                                cb(-1)
+                                                                            }
+                                                                            else {
+                                                                                cb(addedResult)
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                })
+
+                                                            }
+                                                        })
+                                                    }
+                                                })
+
+                                            }
+
+
+                                        }
+                                    })
+                                })
+                            }
+                            else {
+                                console.log("lo")
+                                updateInfo.quiz = {}
+
+                                updateInfo.round = true
+                                updateInfo.answer = true
+                                updateInfo.quiz.newScore = 0
+                                updateInfo.timePassed = new Date().getTime()
+                                module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
+                                    if (updatedResult == -1) {
                                         cb(-1)
-                                    }
-                                    else if (newLesson == 0) {
+                                    } else if (updatedResult == 0) {
                                         cb(0)
                                     }
                                     else {
-                                        let studentUpdateInfo = {}
-                                        if (newLesson._id == info.lsnId) {
-                                            cb(newLesson)
-                                        }
-                                        else {
-                                            module.exports.getLessonById(newLesson._id, (lessonDEtails)=> {
-                                                if (lessonDEtails == -1) {
-                                                    cb(-1)
-                                                } else if (lessonDEtails == 0) {
-                                                    cb(0)
-                                                }
-                                                else {
-                                                    studentUpdateInfo.lastPassedLesson = newLesson._id
-                                                    module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
-                                                        if (std == -1) {
-                                                            cb(-1)
-                                                        }
-                                                        else if (std == 0) {
-                                                            cb(0)
+                                        cb(updatedResult)
+                                    }
+                                })
+                            }
+                        }
+
+                        else {
+                            if (result.exam.questionTrue / result.exam.examCount > 0.06) {
+                                cb(result)
+                            }
+                        }
+
+                    }
+                    else {
+                        updateInfo.quiz = {}
+                        updateInfo.quiz.newScore = info.score
+                        updateInfo.quiz.questionTrue = 1
+                        updateInfo.answer = true
+                        updateInfo.type = info.type
+                        console.log("gfgfhjgjg", info)
+                        module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
+                            if (result == -1) {
+                                cb(-1)
+                            }
+                            else if (result == 0) {
+                                cb(0)
+                            }
+                            else {
+                                if (info.type == "quiz") {
+                                    console.log("result")
+                                    if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
+                                        updateInfo.exam = {}
+                                        updateInfo.exam.permission = true
+                                        updateInfo.answer = true
+                                        updateInfo.type = info.type
+                                        module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
+                                            if (updatedResult == -1) {
+                                                cb(-1)
+                                            } else if (updatedResult == 0) {
+                                                cb(0)
+                                            }
+                                            else {
+                                                module.exports.getNextLesson(info.lsnId, (newLesson)=> {
+                                                    if (newLesson == -1) {
+                                                        cb(-1)
+                                                    }
+                                                    else if (newLesson == 0) {
+                                                        cb(0)
+                                                    }
+                                                    else {
+                                                        let studentUpdateInfo = {}
+                                                        if (newLesson._id == info.lsnId) {
+                                                            cb(newLesson)
                                                         }
                                                         else {
-                                                            let newView = {}
-                                                            newView.video = []
-                                                            newView.sound = []
-                                                            for (var i = 0; i < lessonDEtails[0].video.length; i++) {
-                                                                newView.video[i] = {}
-                                                                newView.video[i]._id = lessonDEtails[0].video[i]._id
-                                                                newView.video[i].viewed = false
-
-                                                            }
-                                                            for (var i = 0; i < lessonDEtails[0].sound.length; i++) {
-                                                                newView.sound[i] = {}
-                                                                newView.sound[i]._id = lessonDEtails[0].sound[i]._id
-                                                                newView.sound[i].viewed = false
-                                                            }
-                                                            newView.lsnId = newLesson._id
-                                                            newView.viewPermission = false;
-
-                                                            module.exports.updateViewByUsrId(newView, info.usrId, (updatedResult)=> {
-                                                                if (updatedResult == -1) {
+                                                            module.exports.getLessonById(newLesson._id, (lessonDEtails)=> {
+                                                                if (lessonDEtails == -1) {
                                                                     cb(-1)
-                                                                }
-                                                                else if (updatedResult == 0) {
+                                                                } else if (lessonDEtails == 0) {
                                                                     cb(0)
                                                                 }
                                                                 else {
-                                                                    let newResult = {}
-                                                                    newResult.usrId = info.usrId
-                                                                    newResult.lsnId = newLesson._id
-                                                                    newResult.quiz = {}
-                                                                    newResult.quiz.time = newLesson.deadline
-                                                                    newResult.quiz.questionTrue = 0;
-                                                                    newResult.quiz.getScore = 0
-                                                                    newResult.quiz.permission = true
-                                                                    newResult.exam = {}
-                                                                    newResult.timePassed = ""
-                                                                    newResult.passedLesson = false
-                                                                    module.exports.addResult(newResult, (addedResult)=> {
-                                                                        if (addedResult == -1) {
+                                                                    studentUpdateInfo.lastPassedLesson = newLesson._id
+                                                                    module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
+                                                                        if (std == -1) {
                                                                             cb(-1)
                                                                         }
+                                                                        else if (std == 0) {
+                                                                            cb(0)
+                                                                        }
                                                                         else {
-                                                                            cb(addedResult)
+                                                                            let newView = {}
+                                                                            newView.video = []
+                                                                            newView.sound = []
+                                                                            for (var i = 0; i < lessonDEtails[0].video.length; i++) {
+                                                                                newView.video[i] = {}
+                                                                                newView.video[i]._id = lessonDEtails[0].video[i]._id
+                                                                                newView.video[i].viewed = false
+
+                                                                            }
+                                                                            for (var i = 0; i < lessonDEtails[0].sound.length; i++) {
+                                                                                newView.sound[i] = {}
+                                                                                newView.sound[i]._id = lessonDEtails[0].sound[i]._id
+                                                                                newView.sound[i].viewed = false
+                                                                            }
+                                                                            newView.lsnId = newLesson._id
+                                                                            newView.viewPermission = false;
+
+                                                                            module.exports.updateViewByUsrId(newView, info.usrId, (updatedResult)=> {
+                                                                                if (updatedResult == -1) {
+                                                                                    cb(-1)
+                                                                                }
+                                                                                else if (updatedResult == 0) {
+                                                                                    cb(0)
+                                                                                }
+                                                                                else {
+                                                                                    let newResult = {}
+                                                                                    newResult.usrId = info.usrId
+                                                                                    newResult.lsnId = newLesson._id
+                                                                                    newResult.quiz = {}
+                                                                                    newResult.quiz.time = newLesson.deadline
+                                                                                    newResult.quiz.questionTrue = 0;
+                                                                                    newResult.quiz.getScore = 0
+                                                                                    newResult.quiz.permission = true
+                                                                                    newResult.exam = {}
+                                                                                    newResult.timePassed = ""
+                                                                                    newResult.passedLesson = false
+                                                                                    module.exports.addResult(newResult, (addedResult)=> {
+                                                                                        if (addedResult == -1) {
+                                                                                            cb(-1)
+                                                                                        }
+                                                                                        else {
+                                                                                            cb(addedResult)
+                                                                                        }
+                                                                                    })
+                                                                                }
+                                                                            })
+
                                                                         }
                                                                     })
                                                                 }
                                                             })
 
                                                         }
-                                                    })
-                                                }
-                                            })
-
-                                        }
 
 
+                                                    }
+                                                })
+
+                                            }
+                                        })
                                     }
-                                })
-                            })
-                        }
-                        else {
-                            console.log("lo")
-                            updateInfo.quiz = {}
+                                    else {
+                                        console.log("lo2")
 
-                            updateInfo.round = true
-                            updateInfo.answer = true
-                            updateInfo.quiz.newScore = 0
-                            updateInfo.timePassed = new Date().getTime()
-                            module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
-                                if (updatedResult == -1) {
-                                    cb(-1)
-                                } else if (updatedResult == 0) {
-                                    cb(0)
+                                        // updateInfo.round = false
+                                        updateInfo.answer = true
+                                        updateInfo.quiz.newScore = info.score
+                                        updateInfo.timePassed = new Date().getTime()
+                                        module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
+                                            if (updatedResult == -1) {
+                                                cb(-1)
+                                            } else if (updatedResult == 0) {
+                                                cb(0)
+                                            }
+                                            else {
+                                                cb(updatedResult)
+                                            }
+                                        })
+                                    }
                                 }
                                 else {
-                                    cb(updatedResult)
+                                    if (result.exam.questionTrue / result.exam.examCount > 0.06) {
+                                        cb(result)
+                                    }
                                 }
-                            })
-                        }
-                    }
 
-                    else {
-                        if (result.exam.questionTrue / result.exam.examCount > 0.06) {
-                            cb(result)
-                        }
+                            }
+                        })
                     }
 
                 }
+            })
+        }
+        else {
+            let updateInfo = {}
+            updateInfo.exam = {}
+            updateInfo.answer = true
+            updateInfo.exam.newScore = 0
+            updateInfo.exam.questionTrue = 0
+            updateInfo.type = info.type
+            updateInfo.timePassed = new Date().getTime()
+            updateInfo.Score = true
+            module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
+                if (updatedResult == -1) {
+                    cb(-1)
+                } else if (updatedResult == 0) {
+                    cb(0)
+                }
                 else {
-                    updateInfo.quiz = {}
-                    updateInfo.quiz.newScore = info.score
-                    updateInfo.quiz.questionTrue = 1
-                    updateInfo.answer = true
-                    updateInfo.type = info.type
-                    console.log("gfgfhjgjg", info)
-                    module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
-                        if (result == -1) {
-                            cb(-1)
-                        }
-                        else if (result == 0) {
-                            cb(0)
-                        }
-                        else {
-                            if (info.type == "quiz") {
-                                console.log("result")
-                                if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
-                                    updateInfo.exam = {}
-                                    updateInfo.exam.permission = true
-                                    updateInfo.answer = true
-                                    updateInfo.type = info.type
-                                    module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
-                                        if (updatedResult == -1) {
+                    cb(updatedResult)
+                }
+            })
+        }
+    }
+    else {
+        if (info.true == true) {
+            let updateInfo = {}
+            updateInfo.answer = true
+            updateInfo.timePassed = new Date().getTime()
+            updateInfo.questionTrue = 1
+
+            module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    if (info.round || result.round == true) {
+
+                        updateInfo.type = info.type
+                        updateInfo.round = true
+                        if (info.type == "quiz") {
+                            updateInfo.quiz = {}
+
+                            updateInfo.quiz.newScore = 0
+
+                            console.log(result.quiz.questionTrue, result.quiz.quizCount)
+                            if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
+                                console.log("result", result)
+                                let updateInf = {}
+                                updateInf.quiz = {}
+
+                                updateInf.answer = true
+                                updateInf.exam = {}
+                                updateInf.exam.permission = true
+                                updateInf.type = info.type
+                                updateInf.round = true
+                                updateInf.quiz.newScore = 0
+                                module.exports.updateResult(info.usrId, info.lsnId, updateInf, (res)=> {
+                                    module.exports.getNextLesson(info.lsnId, (newLesson)=> {
+                                        if (newLesson == -1) {
                                             cb(-1)
-                                        } else if (updatedResult == 0) {
+                                        }
+                                        else if (newLesson == 0) {
                                             cb(0)
                                         }
                                         else {
-                                            module.exports.getNextLesson(info.lsnId, (newLesson)=> {
-                                                if (newLesson == -1) {
-                                                    cb(-1)
-                                                }
-                                                else if (newLesson == 0) {
-                                                    cb(0)
-                                                }
-                                                else {
-                                                    let studentUpdateInfo = {}
-                                                    if (newLesson._id == info.lsnId) {
-                                                        cb(newLesson)
+                                            let studentUpdateInfo = {}
+                                            if (newLesson._id == info.lsnId) {
+                                                cb(newLesson)
+                                            }
+                                            else {
+                                                module.exports.getLessonById(newLesson._id, (lessonDEtails)=> {
+                                                    if (lessonDEtails == -1) {
+                                                        cb(-1)
+                                                    } else if (lessonDEtails == 0) {
+                                                        cb(0)
                                                     }
                                                     else {
-                                                        module.exports.getLessonById(newLesson._id, (lessonDEtails)=> {
-                                                            if (lessonDEtails == -1) {
+                                                        studentUpdateInfo.lastPassedLesson = newLesson._id
+                                                        module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
+                                                            if (std == -1) {
                                                                 cb(-1)
-                                                            } else if (lessonDEtails == 0) {
+                                                            }
+                                                            else if (std == 0) {
                                                                 cb(0)
                                                             }
                                                             else {
-                                                                studentUpdateInfo.lastPassedLesson = newLesson._id
-                                                                module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
-                                                                    if (std == -1) {
+                                                                let newView = {}
+                                                                newView.video = []
+                                                                newView.sound = []
+                                                                for (var i = 0; i < lessonDEtails[0].video.length; i++) {
+                                                                    newView.video[i] = {}
+                                                                    newView.video[i]._id = lessonDEtails[0].video[i]._id
+                                                                    newView.video[i].viewed = false
+
+                                                                }
+                                                                for (var i = 0; i < lessonDEtails[0].sound.length; i++) {
+                                                                    newView.sound[i] = {}
+                                                                    newView.sound[i]._id = lessonDEtails[0].sound[i]._id
+                                                                    newView.sound[i].viewed = false
+                                                                }
+                                                                newView.lsnId = newLesson._id
+                                                                newView.viewPermission = false;
+
+                                                                module.exports.updateViewByUsrId(newView, info.usrId, (updatedResult)=> {
+                                                                    if (updatedResult == -1) {
                                                                         cb(-1)
                                                                     }
-                                                                    else if (std == 0) {
+                                                                    else if (updatedResult == 0) {
                                                                         cb(0)
                                                                     }
                                                                     else {
-                                                                        let newView = {}
-                                                                        newView.video = []
-                                                                        newView.sound = []
-                                                                        for (var i = 0; i < lessonDEtails[0].video.length; i++) {
-                                                                            newView.video[i] = {}
-                                                                            newView.video[i]._id = lessonDEtails[0].video[i]._id
-                                                                            newView.video[i].viewed = false
-
-                                                                        }
-                                                                        for (var i = 0; i < lessonDEtails[0].sound.length; i++) {
-                                                                            newView.sound[i] = {}
-                                                                            newView.sound[i]._id = lessonDEtails[0].sound[i]._id
-                                                                            newView.sound[i].viewed = false
-                                                                        }
-                                                                        newView.lsnId = newLesson._id
-                                                                        newView.viewPermission = false;
-
-                                                                        module.exports.updateViewByUsrId(newView, info.usrId, (updatedResult)=> {
-                                                                            if (updatedResult == -1) {
+                                                                        let newResult = {}
+                                                                        newResult.usrId = info.usrId
+                                                                        newResult.lsnId = newLesson._id
+                                                                        newResult.quiz = {}
+                                                                        newResult.quiz.time = newLesson.deadline
+                                                                        newResult.quiz.questionTrue = 0;
+                                                                        newResult.quiz.getScore = 0
+                                                                        newResult.quiz.permission = true
+                                                                        newResult.exam = {}
+                                                                        newResult.timePassed = ""
+                                                                        newResult.passedLesson = false
+                                                                        module.exports.addResult(newResult, (addedResult)=> {
+                                                                            if (addedResult == -1) {
                                                                                 cb(-1)
                                                                             }
-                                                                            else if (updatedResult == 0) {
-                                                                                cb(0)
-                                                                            }
                                                                             else {
-                                                                                let newResult = {}
-                                                                                newResult.usrId = info.usrId
-                                                                                newResult.lsnId = newLesson._id
-                                                                                newResult.quiz = {}
-                                                                                newResult.quiz.time = newLesson.deadline
-                                                                                newResult.quiz.questionTrue = 0;
-                                                                                newResult.quiz.getScore = 0
-                                                                                newResult.quiz.permission = true
-                                                                                newResult.exam = {}
-                                                                                newResult.timePassed = ""
-                                                                                newResult.passedLesson = false
-                                                                                module.exports.addResult(newResult, (addedResult)=> {
-                                                                                    if (addedResult == -1) {
-                                                                                        cb(-1)
-                                                                                    }
-                                                                                    else {
-                                                                                        cb(addedResult)
-                                                                                    }
-                                                                                })
+                                                                                cb(addedResult)
                                                                             }
                                                                         })
-
                                                                     }
                                                                 })
+
                                                             }
                                                         })
-
                                                     }
+                                                })
 
+                                            }
 
-                                                }
-                                            })
 
                                         }
                                     })
-                                }
-                                else {
-                                    console.log("lo2")
-
-                                    // updateInfo.round = false
-                                    updateInfo.answer = true
-                                    updateInfo.quiz.newScore = info.score
-                                    updateInfo.timePassed = new Date().getTime()
-                                    module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
-                                        if (updatedResult == -1) {
-                                            cb(-1)
-                                        } else if (updatedResult == 0) {
-                                            cb(0)
-                                        }
-                                        else {
-                                            cb(updatedResult)
-                                        }
-                                    })
-                                }
+                                })
                             }
                             else {
-                                if (result.exam.questionTrue / result.exam.examCount > 0.06) {
-                                    cb(result)
-                                }
+                                console.log("lo")
+                                updateInfo.quiz = {}
+
+                                updateInfo.round = true
+                                updateInfo.answer = true
+                                updateInfo.quiz.newScore = 0
+                                updateInfo.timePassed = new Date().getTime()
+                                module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
+                                    if (updatedResult == -1) {
+                                        cb(-1)
+                                    } else if (updatedResult == 0) {
+                                        cb(0)
+                                    }
+                                    else {
+                                        cb(updatedResult)
+                                    }
+                                })
                             }
-
                         }
-                    })
-                }
 
-            }
-        })
+                        else {
+                            if (result.exam.questionTrue / result.exam.examCount > 0.06) {
+                                cb(result)
+                            }
+                        }
+
+                    }
+                    else {
+                        updateInfo.quiz = {}
+                        updateInfo.quiz.newScore = info.score
+                        updateInfo.quiz.questionTrue = 1
+                        updateInfo.answer = true
+                        updateInfo.type = info.type
+                        console.log("gfgfhjgjg", info)
+                        module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
+                            if (result == -1) {
+                                cb(-1)
+                            }
+                            else if (result == 0) {
+                                cb(0)
+                            }
+                            else {
+                                if (info.type == "quiz") {
+                                    console.log("result")
+                                    if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
+                                        updateInfo.exam = {}
+                                        updateInfo.exam.permission = true
+                                        updateInfo.answer = true
+                                        updateInfo.type = info.type
+                                        module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
+                                            if (updatedResult == -1) {
+                                                cb(-1)
+                                            } else if (updatedResult == 0) {
+                                                cb(0)
+                                            }
+                                            else {
+                                                module.exports.getNextLesson(info.lsnId, (newLesson)=> {
+                                                    if (newLesson == -1) {
+                                                        cb(-1)
+                                                    }
+                                                    else if (newLesson == 0) {
+                                                        cb(0)
+                                                    }
+                                                    else {
+                                                        let studentUpdateInfo = {}
+                                                        if (newLesson._id == info.lsnId) {
+                                                            cb(newLesson)
+                                                        }
+                                                        else {
+                                                            module.exports.getLessonById(newLesson._id, (lessonDEtails)=> {
+                                                                if (lessonDEtails == -1) {
+                                                                    cb(-1)
+                                                                } else if (lessonDEtails == 0) {
+                                                                    cb(0)
+                                                                }
+                                                                else {
+                                                                    studentUpdateInfo.lastPassedLesson = newLesson._id
+                                                                    module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
+                                                                        if (std == -1) {
+                                                                            cb(-1)
+                                                                        }
+                                                                        else if (std == 0) {
+                                                                            cb(0)
+                                                                        }
+                                                                        else {
+                                                                            let newView = {}
+                                                                            newView.video = []
+                                                                            newView.sound = []
+                                                                            for (var i = 0; i < lessonDEtails[0].video.length; i++) {
+                                                                                newView.video[i] = {}
+                                                                                newView.video[i]._id = lessonDEtails[0].video[i]._id
+                                                                                newView.video[i].viewed = false
+
+                                                                            }
+                                                                            for (var i = 0; i < lessonDEtails[0].sound.length; i++) {
+                                                                                newView.sound[i] = {}
+                                                                                newView.sound[i]._id = lessonDEtails[0].sound[i]._id
+                                                                                newView.sound[i].viewed = false
+                                                                            }
+                                                                            newView.lsnId = newLesson._id
+                                                                            newView.viewPermission = false;
+
+                                                                            module.exports.updateViewByUsrId(newView, info.usrId, (updatedResult)=> {
+                                                                                if (updatedResult == -1) {
+                                                                                    cb(-1)
+                                                                                }
+                                                                                else if (updatedResult == 0) {
+                                                                                    cb(0)
+                                                                                }
+                                                                                else {
+                                                                                    let newResult = {}
+                                                                                    newResult.usrId = info.usrId
+                                                                                    newResult.lsnId = newLesson._id
+                                                                                    newResult.quiz = {}
+                                                                                    newResult.quiz.time = newLesson.deadline
+                                                                                    newResult.quiz.questionTrue = 0;
+                                                                                    newResult.quiz.getScore = 0
+                                                                                    newResult.quiz.permission = true
+                                                                                    newResult.exam = {}
+                                                                                    newResult.timePassed = ""
+                                                                                    newResult.passedLesson = false
+                                                                                    module.exports.addResult(newResult, (addedResult)=> {
+                                                                                        if (addedResult == -1) {
+                                                                                            cb(-1)
+                                                                                        }
+                                                                                        else {
+                                                                                            cb(addedResult)
+                                                                                        }
+                                                                                    })
+                                                                                }
+                                                                            })
+
+                                                                        }
+                                                                    })
+                                                                }
+                                                            })
+
+                                                        }
+
+
+                                                    }
+                                                })
+
+                                            }
+                                        })
+                                    }
+                                    else {
+                                        console.log("lo2")
+
+                                        // updateInfo.round = false
+                                        updateInfo.answer = true
+                                        updateInfo.quiz.newScore = info.score
+                                        updateInfo.timePassed = new Date().getTime()
+                                        module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
+                                            if (updatedResult == -1) {
+                                                cb(-1)
+                                            } else if (updatedResult == 0) {
+                                                cb(0)
+                                            }
+                                            else {
+                                                cb(updatedResult)
+                                            }
+                                        })
+                                    }
+                                }
+                                else {
+                                    if (result.exam.questionTrue / result.exam.examCount > 0.06) {
+                                        cb(result)
+                                    }
+                                }
+
+                            }
+                        })
+                    }
+
+                }
+            })
+        }
+        else {
+            let updateInfo = {}
+            updateInfo.quiz = {}
+            updateInfo.answer = true
+            updateInfo.quiz.newScore = 0
+            updateInfo.quiz.questionTrue = 0
+            updateInfo.type = info.type
+            updateInfo.timePassed = new Date().getTime()
+            module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
+                if (updatedResult == -1) {
+                    cb(-1)
+                } else if (updatedResult == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(updatedResult)
+                }
+            })
+        }
     }
-    else {
-        let updateInfo = {}
-        updateInfo.quiz = {}
-        updateInfo.answer = true
-        updateInfo.quiz.newScore = 0
-        updateInfo.quiz.questionTrue = 0
-        updateInfo.type = info.type
-        updateInfo.timePassed = new Date().getTime()
-        module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
-            if (updatedResult == -1) {
-                cb(-1)
-            } else if (updatedResult == 0) {
-                cb(0)
-            }
-            else {
-                cb(updatedResult)
-            }
-        })
-    }
+
 
 }
 
