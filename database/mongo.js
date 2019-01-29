@@ -1856,6 +1856,9 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
         else {
             var con = db.db('englishAcademy')
             if (info.Score) {
+                if(info.exam.permission == undefined){
+                    info.exam.permission = false
+                }
                 if (info.type == "quiz") {
                     con.collection("result").findOneAndUpdate({
                             "lsnId": new ObjectID(lsnId),
