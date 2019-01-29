@@ -1195,8 +1195,8 @@ module.exports.getExams = (usrId, cb)=> {
     })
 };
 
-module.exports.getNotes = (lsnId, cb)=> {
-    mongo.getAllNotes(lsnId, (result)=> {
+module.exports.getNotes = (lsnId,usrId , cb)=> {
+    mongo.getAllNotes(lsnId,usrId , (result)=> {
         if (result == -1) {
             cb(-1)
         }

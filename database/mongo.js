@@ -1260,7 +1260,7 @@ module.exports.getLsnLvlById = (lvlID, cb)=> {
     })
 };
 
-module.exports.getAllNotes = (lsnId, cb)=> {
+module.exports.getAllNotes = (lsnId,usrId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -1271,7 +1271,7 @@ module.exports.getAllNotes = (lsnId, cb)=> {
             if (typeof lsnId == 'number') {
                 lsnId = lsnId + ''
             }
-            con.collection("note").find({"lsnId": new ObjectID(`${lsnId}`)}).toArray((err, result) => {
+            con.collection("note").find({"lsnId": new ObjectID(`${lsnId}`), "usrId": new ObjectID(`${usrId}`)}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -1792,12 +1792,15 @@ module.exports.postNote = (noteInfo, cb)=> {
         else {
             noteInfo.lsnId = new ObjectID(`${noteInfo.lsnId}`)
             noteInfo.typeId = new ObjectID(`${noteInfo.typeId}`)
+            noteInfo.usrId = new ObjectID(`${noteInfo.usrId}`)
+
 
             var con = db.db('englishAcademy')
             con.collection("note").insertOne({
                 "content": noteInfo.content,
                 "lsnId": noteInfo.lsnId,
-                "typeId": noteInfo.typeId
+                "typeId": noteInfo.typeId,
+                "usrId":noteInfo.usrId
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -1919,11 +1922,16 @@ module.exports.editNote = (info, ntId, cb)=> {
             if (info.typeId) {
                 info.typeId = new ObjectID(info.typeId)
             }
+            if (info.usrId) {
+                info.usrId = new ObjectID(info.usrId)
+            }
+
             con.collection("note").findOneAndUpdate({"_id": new ObjectID(ntId)}, {
                     $set: {
                         "content": info.content,
                         "typeId": info.typeId,
-                        "lsnId": info.lsnId
+                        "lsnId": info.lsnId,
+                        "usrId":info.usrId
 
                     }
                 },

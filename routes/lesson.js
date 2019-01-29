@@ -190,8 +190,8 @@ router.put('/note/:ntId', (req, res) => {
 
 
 
-router.get('/:lsnId/note', (req, res) => {
-    database.getNotes(req.params.lsnId ,(result)=> {
+router.get('/:lsnId/note/:usrId', (req, res) => {
+    database.getNotes(req.params.lsnId ,req.params.usrId ,(result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
