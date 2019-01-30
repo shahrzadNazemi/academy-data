@@ -587,7 +587,7 @@ router.delete('/note/:ntId', (req, res) => {
             res.status(404).end('')
         }
         else {
-            res.json(result)
+            res.json({"delete":result})
         }
     })
 });

@@ -530,55 +530,118 @@ module.exports.getLevelById = (lvlId, cb)=> {
 };
 
 module.exports.getLessonById = (lsnId, cb)=> {
-    mongo.getLsnById(lsnId, (result)=> {
-        if (result == -1) {
-            cb(-1)
-        }
-        else if (result == 0) {
-            cb(0)
-        }
-        else {
-            result[0].level = result[0].level[0]
-            module.exports.getAllTpe((type)=> {
-                if (type == 0 || type == -1) {
-                    cb(-1)
-                }
-                else {
-                    var k = 0
-                    for (var i = 0; i < result[0].video.length; i++) {
-                        for (k = 0; k < type.length; k++) {
-                            if (result[0].video[i].typeId.equals(type[k]._id)) {
-                                result[0].video[i].type = type[k]
+    if(lsnId == 0){
+        module.exports.getFirstLesson((firstLesson)=>{
+            if(firstLesson == 0 || firstLesson == -1){
+                cb(-1)
+            }
+            else{
+                lsnId = firstLesson._id
+                mongo.getLsnById(lsnId, (result)=> {
+                    if (result == -1) {
+                        cb(-1)
+                    }
+                    else if (result == 0) {
+                        cb(0)
+                    }
+                    else {
+                        result[0].level = result[0].level[0]
+                        module.exports.getAllTpe((type)=> {
+                            if (type == 0 || type == -1) {
+                                cb(-1)
                             }
+                            else {
+                                var k = 0
+                                for (var i = 0; i < result[0].video.length; i++) {
+                                    for (k = 0; k < type.length; k++) {
+                                        if (result[0].video[i].typeId.equals(type[k]._id)) {
+                                            result[0].video[i].type = type[k]
+                                        }
+                                    }
+
+                                }
+                                k = 0
+                                for (var i = 0; i < result[0].sound.length; i++) {
+                                    for (k = 0; k < type.length; k++) {
+                                        if (result[0].sound[i].typeId.equals(type[k]._id)) {
+                                            result[0].sound[i].type = type[k]
+                                        }
+
+                                    }
+
+                                }
+                                k = 0
+                                for (var i = 0; i < result[0].text.length; i++) {
+                                    for (k = 0; k < type.length; k++) {
+                                        if (result[0].text[i].typeId.equals(type[k]._id)) {
+                                            result[0].text[i].type = type[k]
+                                        }
+
+                                    }
+
+                                }
+                                cb(result)
+
+                            }
+                        })
+                    }
+                })
+
+            }
+        })
+    }
+    else{
+        mongo.getLsnById(lsnId, (result)=> {
+            if (result == -1) {
+                cb(-1)
+            }
+            else if (result == 0) {
+                cb(0)
+            }
+            else {
+                result[0].level = result[0].level[0]
+                module.exports.getAllTpe((type)=> {
+                    if (type == 0 || type == -1) {
+                        cb(-1)
+                    }
+                    else {
+                        var k = 0
+                        for (var i = 0; i < result[0].video.length; i++) {
+                            for (k = 0; k < type.length; k++) {
+                                if (result[0].video[i].typeId.equals(type[k]._id)) {
+                                    result[0].video[i].type = type[k]
+                                }
+                            }
+
                         }
+                        k = 0
+                        for (var i = 0; i < result[0].sound.length; i++) {
+                            for (k = 0; k < type.length; k++) {
+                                if (result[0].sound[i].typeId.equals(type[k]._id)) {
+                                    result[0].sound[i].type = type[k]
+                                }
+
+                            }
+
+                        }
+                        k = 0
+                        for (var i = 0; i < result[0].text.length; i++) {
+                            for (k = 0; k < type.length; k++) {
+                                if (result[0].text[i].typeId.equals(type[k]._id)) {
+                                    result[0].text[i].type = type[k]
+                                }
+
+                            }
+
+                        }
+                        cb(result)
 
                     }
-                    k = 0
-                    for (var i = 0; i < result[0].sound.length; i++) {
-                        for (k = 0; k < type.length; k++) {
-                            if (result[0].sound[i].typeId.equals(type[k]._id)) {
-                                result[0].sound[i].type = type[k]
-                            }
+                })
+            }
+        })
 
-                        }
-
-                    }
-                    k = 0
-                    for (var i = 0; i < result[0].text.length; i++) {
-                        for (k = 0; k < type.length; k++) {
-                            if (result[0].text[i].typeId.equals(type[k]._id)) {
-                                result[0].text[i].type = type[k]
-                            }
-
-                        }
-
-                    }
-                    cb(result)
-
-                }
-            })
-        }
-    })
+    }
 };
 
 module.exports.getLessonByLvlId = (lvlId, cb)=> {
@@ -2237,19 +2300,20 @@ module.exports.answerQuestion = (info, cb)=> {
                 }
                 else {
                     if (info.round || result.examRound == true) {
+                        updateInfo.exam ={}
                         updateInfo.exam.permission = true
                         updateInfo.type = info.type
                         updateInfo.examRound = true
                         if (info.type == "exam") {
-                            updateInfo.exam = {}
 
                             updateInfo.exam.newScore = 0
 
-                            console.log(result.exam.questionTrue, result.exam.quizCount)
-                            if ((result.exam.questionTrue + 1) / result.exam.quizCount > 0.6) {
+                            console.log(result.exam.questionTrue, result.exam.examCount)
+                            if ((result.exam.questionTrue + 1) / result.exam.examCount > 0.6) {
                                 console.log("result", result)
                                 let updateInf = {}
                                 updateInf.quiz = {}
+                                updateInfo.exam.questionTrue = 0
 
                                 updateInf.answer = true
                                 updateInf.exam = {}
@@ -2353,6 +2417,8 @@ module.exports.answerQuestion = (info, cb)=> {
                                 updateInfo.answer = true
                                 updateInfo.exam.newScore = 0
                                 updateInfo.examTimePassed = new Date().getTime()
+                                updateInfo.exam.questionTrue = 0
+
                                 module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                                     if (updatedResult == -1) {
                                         cb(-1)
@@ -2390,7 +2456,7 @@ module.exports.answerQuestion = (info, cb)=> {
                             else {
                                 if (info.type == "exam") {
                                     console.log("result")
-                                    if ((result.exam.questionTrue + 1) / result.exam.quizCount > 0.6) {
+                                    if ((result.exam.questionTrue + 1) / result.exam.examCount > 0.6) {
                                         updateInfo.exam = {}
                                         updateInfo.exam.permission = true
                                         updateInfo.answer = true
