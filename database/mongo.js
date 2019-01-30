@@ -2006,7 +2006,8 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                                 "exam.getScore": info.exam.newScore
                             }
                             , $set: {
-                                "timePassed": info.timePassed
+                                "examTimePassed": info.examTimePassed,
+                                "examRound": info.examRound
                             }
                         },
                         {returnOriginal: false}, (err, result)=> {

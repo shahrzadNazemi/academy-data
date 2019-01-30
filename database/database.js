@@ -2225,7 +2225,7 @@ module.exports.answerQuestion = (info, cb)=> {
         if (info.true == true) {
             let updateInfo = {}
             updateInfo.answer = true
-            updateInfo.timePassed = new Date().getTime()
+            updateInfo.examTimePassed = new Date().getTime()
             updateInfo.questionTrue = 1
 
             module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
@@ -2236,17 +2236,17 @@ module.exports.answerQuestion = (info, cb)=> {
                     cb(0)
                 }
                 else {
-                    if (info.round || result.round == true) {
-
+                    if (info.round || result.examRound == true) {
+                        updateInfo.exam.permission = true
                         updateInfo.type = info.type
-                        updateInfo.round = true
-                        if (info.type == "quiz") {
-                            updateInfo.quiz = {}
+                        updateInfo.examRound = true
+                        if (info.type == "exam") {
+                            updateInfo.exam = {}
 
-                            updateInfo.quiz.newScore = 0
+                            updateInfo.exam.newScore = 0
 
-                            console.log(result.quiz.questionTrue, result.quiz.quizCount)
-                            if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
+                            console.log(result.exam.questionTrue, result.exam.quizCount)
+                            if ((result.exam.questionTrue + 1) / result.exam.quizCount > 0.6) {
                                 console.log("result", result)
                                 let updateInf = {}
                                 updateInf.quiz = {}
@@ -2255,8 +2255,8 @@ module.exports.answerQuestion = (info, cb)=> {
                                 updateInf.exam = {}
                                 updateInf.exam.permission = true
                                 updateInf.type = info.type
-                                updateInf.round = true
-                                updateInf.quiz.newScore = 0
+                                updateInf.examRound = true
+                                updateInf.exam.newScore = 0
                                 module.exports.updateResult(info.usrId, info.lsnId, updateInf, (res)=> {
                                     module.exports.getNextLesson(info.lsnId, (newLesson)=> {
                                         if (newLesson == -1) {
@@ -2348,12 +2348,11 @@ module.exports.answerQuestion = (info, cb)=> {
                             }
                             else {
                                 console.log("lo")
-                                updateInfo.quiz = {}
-
-                                updateInfo.round = true
+                                updateInfo.exam = {}
+                                updateInfo.examRound = true
                                 updateInfo.answer = true
-                                updateInfo.quiz.newScore = 0
-                                updateInfo.timePassed = new Date().getTime()
+                                updateInfo.exam.newScore = 0
+                                updateInfo.examTimePassed = new Date().getTime()
                                 module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                                     if (updatedResult == -1) {
                                         cb(-1)
@@ -2375,9 +2374,9 @@ module.exports.answerQuestion = (info, cb)=> {
 
                     }
                     else {
-                        updateInfo.quiz = {}
-                        updateInfo.quiz.newScore = info.score
-                        updateInfo.quiz.questionTrue = 1
+                        updateInfo.exam = {}
+                        updateInfo.exam.newScore = info.score
+                        updateInfo.exam.questionTrue = 1
                         updateInfo.answer = true
                         updateInfo.type = info.type
                         console.log("gfgfhjgjg", info)
@@ -2389,9 +2388,9 @@ module.exports.answerQuestion = (info, cb)=> {
                                 cb(0)
                             }
                             else {
-                                if (info.type == "quiz") {
+                                if (info.type == "exam") {
                                     console.log("result")
-                                    if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
+                                    if ((result.exam.questionTrue + 1) / result.exam.quizCount > 0.6) {
                                         updateInfo.exam = {}
                                         updateInfo.exam.permission = true
                                         updateInfo.answer = true
@@ -2498,8 +2497,8 @@ module.exports.answerQuestion = (info, cb)=> {
 
                                         // updateInfo.round = false
                                         updateInfo.answer = true
-                                        updateInfo.quiz.newScore = info.score
-                                        updateInfo.timePassed = new Date().getTime()
+                                        updateInfo.exam.newScore = info.score
+                                        updateInfo.examTimePassed = new Date().getTime()
                                         module.exports.updateResult(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                                             if (updatedResult == -1) {
                                                 cb(-1)
