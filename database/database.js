@@ -320,7 +320,6 @@ module.exports.updateNote = (updateNote, ntId, cb)=> {
             cb(0)
         }
         else {
-            result._id = ntId
             cb(result)
         }
     })
@@ -2479,7 +2478,20 @@ module.exports.answerQuestion = (info, cb)=> {
                                                     else {
                                                         let studentUpdateInfo = {}
                                                         if (newLesson._id == info.lsnId) {
-                                                            cb(newLesson)
+                                                            let score = updatedResult.quiz.getScore + updatedResult.exam.getScore
+                                                            studentUpdateInfo.score = score
+                                                            studentUpdateInfo.lastPassedLesson = newLesson._id
+                                                            module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
+                                                                if (std == -1) {
+                                                                    cb(-1)
+                                                                }
+                                                                else if (std == 0) {
+                                                                    cb(0)
+                                                                }
+                                                                else{
+                                                                    cb(updatedResult)
+                                                                }})
+
                                                         }
                                                         else {
                                                             module.exports.getLessonById(newLesson._id, (lessonDEtails)=> {
@@ -2813,7 +2825,21 @@ module.exports.answerQuestion = (info, cb)=> {
                                                     else {
                                                         let studentUpdateInfo = {}
                                                         if (newLesson._id == info.lsnId) {
-                                                            cb(newLesson)
+                                                            
+                                                            let score = updatedResult.quiz.getScore + updatedResult.exam.getScore
+                                                            studentUpdateInfo.score = score
+                                                            studentUpdateInfo.lastPassedLesson = newLesson._id
+                                                            module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
+                                                                if (std == -1) {
+                                                                    cb(-1)
+                                                                }
+                                                                else if (std == 0) {
+                                                                    cb(0)
+                                                                }
+                                                                else{
+                                                                    cb(updatedResult)
+                                                                }})
+
                                                         }
                                                         else {
                                                             module.exports.getLessonById(newLesson._id, (lessonDEtails)=> {
@@ -2911,7 +2937,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                             else {
                                                 let score = updatedResult.quiz.getScore + updatedResult.exam.getScore
                                                 let updateStu = {}
-                                                updatedResult.score = score
+                                                updateStu.score = score
                                                 module.exports.updateStudent( updateStu , info.usrId ,(student)=>{
                                                     cb(updatedResult)
 

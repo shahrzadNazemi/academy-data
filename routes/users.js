@@ -213,7 +213,7 @@ router.get('/student/best', (req, res) => {
     })
 });
 
-router.get('/student/bestLevel/:lsnId', (req, res) => {
+router.get('/student/level/:lvlId', (req, res) => {
     database.getStuByLevel(req.params.lvlId, (result)=> {
         if (result == -1) {
             res.status(500).end('')

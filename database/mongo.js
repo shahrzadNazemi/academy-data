@@ -1945,7 +1945,7 @@ module.exports.editNote = (info, ntId, cb)=> {
                     }
                     else {
 
-                        cb(result)
+                        cb(result.value)
                     }
                 })
         }
@@ -1991,7 +1991,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             }
                             else {
 
-                                cb(result)
+                                cb(result.value)
                             }
                         }
                     )
