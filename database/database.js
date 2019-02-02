@@ -16,6 +16,7 @@ module.exports.loginForAdmin = (loginInfo, cb)=> {
     })
 };
 
+
 module.exports.loginForStudent = (loginInfo, cb)=> {
     mongo.studentLogin(loginInfo, (result)=> {
         if (result == -1) {
@@ -536,6 +537,7 @@ module.exports.getLessonById = (lsnId, cb)=> {
                 cb(-1)
             }
             else{
+                console.log(firstLesson)
                 lsnId = firstLesson._id
                 mongo.getLsnById(lsnId, (result)=> {
                     if (result == -1) {
@@ -698,6 +700,18 @@ module.exports.addAdmin = (adminData, cb)=> {
     })
 };
 
+module.exports.addSupporter = (data, cb)=> {
+    mongo.postSupporter(data, (added)=> {
+        if (added == -1) {
+            cb(-1)
+        }
+        else {
+            cb(added)
+        }
+    })
+};
+
+
 module.exports.getAdmins = (cb)=> {
     mongo.getAllAdmins((admins)=> {
         if (admins == -1) {
@@ -711,6 +725,21 @@ module.exports.getAdmins = (cb)=> {
         }
     })
 };
+
+module.exports.getSupporters = (cb)=> {
+    mongo.getAllSupporters((sups)=> {
+        if (sups == -1) {
+            cb(-1)
+        }
+        else if (sups == 0) {
+            cb(0)
+        }
+        else {
+            cb(sups)
+        }
+    })
+};
+
 
 module.exports.getVideoByLVLLSN = (lvlId, lsnId, cb)=> {
     mongo.getVDByLVLLSN(lvlId, lsnId, (result)=> {
@@ -782,6 +811,21 @@ module.exports.updateAdmin = (updateInfo, admId, cb)=> {
     })
 };
 
+module.exports.updateSupporter = (updateInfo, supId, cb)=> {
+    mongo.editSupporter(updateInfo, supId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+
 module.exports.delAdmin = (admId, cb)=> {
     mongo.deleteAdmin(admId, (result)=> {
         if (result == -1) {
@@ -798,6 +842,21 @@ module.exports.delAdmin = (admId, cb)=> {
         }
     })
 };
+
+module.exports.delSupporter = (supId, cb)=> {
+    mongo.deleteSupporter(supId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 
 module.exports.delStudent = (stuId, cb)=> {
     mongo.deleteStudent(stuId, (result)=> {
@@ -1373,6 +1432,21 @@ module.exports.getAdminById = (admId, cb)=> {
         }
     })
 };
+
+module.exports.getSupportById = (supId, cb)=> {
+    mongo.getSupById(supId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 
 module.exports.getStuByLevel = (lvlId, cb)=> {
     mongo.getStudentByLevel(lvlId, (result)=> {

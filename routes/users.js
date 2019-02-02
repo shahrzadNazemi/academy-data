@@ -89,6 +89,75 @@ router.get('/admin/:admId', (req, res) => {
 });
 
 
+router.put('/supporter/:supId', (req, res) => {
+    database.updateSupporter(req.body, req.params.supId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.get('/supporter', (req, res) => {
+    database.getSupporters((result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.delete('/supporter/:supId', (req, res) => {
+    database.delSupporter(req.params.supId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.post('/supporter', (req, res)=> {
+    database.addSupporter(req.body, (addedSupport)=> {
+        if (addedSupport == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addedSupport)
+        }
+    })
+});
+
+router.get('/supporter/:supId', (req, res) => {
+    database.getSupportById(req.params.supId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
+
 router.post('/student', (req, res)=> {
     database.addStudent(req.body, (result)=> {
         if (result == -1) {

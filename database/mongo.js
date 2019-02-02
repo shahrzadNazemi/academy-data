@@ -20,7 +20,21 @@ module.exports.adminLogin = (loginInfo, cb)=> {
                     cb(-1)
                 }
                 else if (result.length == 0) {
-                    cb(0)
+                    con.collection("supporter").find({
+                        password: loginInfo.password,
+                        username: loginInfo.username
+                    }).toArray((err, result) => {
+                        if (err) {
+                            cb(-1)
+                        }
+                        else if (result.length == 0) {
+                            cb(0)
+                        }
+                        else {
+                            result[0].role = "supporter"
+                            cb(result[0])
+                        }
+                    })
                 }
                 else {
                     cb(result[0])
@@ -1754,6 +1768,42 @@ module.exports.postAdmin = (adminInfo, cb)=> {
     })
 };
 
+module.exports.postSupporter = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("supporter").insertOne({
+                "name": info.name,
+                "username": info.username,
+                "password": info.password
+            }, (err, result) => {
+                if (err) {
+                   
+                        if (err.code == 11000) {
+                            cb(-2)
+                        }
+                    else{
+                            cb(-1)
+                        }
+                    
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.postText = (textInfo, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -1845,6 +1895,32 @@ module.exports.getAllAdmins = (cb)=> {
     })
 };
 
+module.exports.getAllSupporters = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("supporter").find().toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.editAdmin = (info, admId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -1873,6 +1949,42 @@ module.exports.editAdmin = (info, admId, cb)=> {
         }
     })
 };
+
+module.exports.editSupporter = (info, supId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            let infor = {
+                "name": info.name,
+                "username": info.username,
+                "password": info.password
+            }
+            con.collection("supporter").findOneAndUpdate({"_id": new ObjectID(supId)}, {
+                $set: infor
+            },{returnOriginal: false}, (err, result)=> {
+                if (err) {
+                    if(err.code == 11000){
+                        cb(-2)
+                    }
+                    else{
+                        console.log(err)
+
+                        cb(-1)
+                    }
+                }
+                else {
+
+                    cb(result.value)
+                }
+            })
+        }
+    })
+};
+
 
 module.exports.editText = (info, txtId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -2118,6 +2230,31 @@ module.exports.deleteAdmin = (admId, cb)=> {
         }
     })
 };
+
+module.exports.deleteSupporter = (supId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+                        con.collection("supporter").findOneAndDelete({"_id": new ObjectID(`${supId}`)}, (err, result)=> {
+                            if (err) {
+                                cb(-1)
+                            }
+                            else if (result.lastErrorObject.n != 0) {
+                                let result = "row deleted"
+                                cb(result)
+                            }
+                            else {
+                                cb(0)
+                            }
+                        })
+        }
+    })
+};
+
 
 module.exports.deleteTrick = (trckId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -2836,6 +2973,34 @@ module.exports.getAdmById = (admId, cb)=> {
     })
 };
 
+module.exports.getSupById = (supId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof supId == 'number') {
+                supId = JSON.stringify(supId)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("supporter").findOne({"_id": new ObjectID(`${supId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.deleteVideo = (vdId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -3232,15 +3397,20 @@ module.exports.getStudentByLevel = (lvlId, cb)=> {
         else {
             var con = db.db('englishAcademy')
 
-            con.collection("student").aggregate([{
-                $lookup: {
-                    from: "level",
-                    localField: "lvlId",
-                    foreignField: "_id",
-                    as: "level"
-                }
-            }]).toArray((err, result) => {
+            con.collection("student").aggregate([
+                {
+                    $group:
+                    {
+                        _id: {$_id: "$lvlId"},
+
+                    }
+                },
+                {
+                    $sort: {score: 1}
+                },
+            ]).toArray((err, result) => {
                 if (err) {
+                    console.log(err)
                     cb(-1)
                 }
                 else if (result == null) {
