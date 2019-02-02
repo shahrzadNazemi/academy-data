@@ -150,6 +150,7 @@ module.exports.postNotification = (info, cb)=> {
 };
 
 module.exports.postQuestion = (info, cb)=> {
+    console.log(info)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -259,6 +260,7 @@ module.exports.editExam = (info, exId, cb)=> {
 };
 
 module.exports.updateResultByLsnId = (lsnId, info, cb)=> {
+    console.log("info in update result by lesson", info)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -267,41 +269,43 @@ module.exports.updateResultByLsnId = (lsnId, info, cb)=> {
         else {
             var con = db.db('englishAcademy')
             if (info.quizCount) {
-                con.collection("result").findOneAndUpdate({"lsnId": new ObjectID(lsnId)}, {
-                    $inc: {
-                        "quizCount": info.quizCount,
-                        "quizScore": info.quizScore
-                    },
-                    returnOriginal: false
-                }, (err, result)=> {
-                    if (err) {
-                        cb(-1)
+                con.collection("result").updateMany({"lsnId": new ObjectID(lsnId)}, {
+                        $inc: {
+                            "quiz.quizCount": info.quizCount,
+                            "quiz.quizScore": info.quizScore
+                        },
                     }
-                    else if (result.result.n == 1) {
-                        cb(info)
+                    , (err, result)=> {
+                        if (err) {
+                            console.log(err)
+                            cb(-1)
+                        }
+                        else if (result != null) {
+                            cb(result)
 
-                    }
-                    else {
-                        cb(0)
-                    }
-                })
+                        }
+                        else {
+                            cb(0)
+                        }
+                    })
 
             } else {
-                con.collection("result").findOneAndUpdate({"lsnId": new ObjectID(lsnId)}, {
+                con.collection("result").updateMany({"lsnId": new ObjectID(lsnId)}, {
                         $inc: {
-                            "examCount": info.examCount,
-                            "examScore": info.examScore
+                            "exam.examCount": info.examCount,
+                            "exam.examScore": info.examScore
                         },
 
-                        returnOriginal: false
                     }
                     ,
                     (err, result)=> {
                         if (err) {
+                            console.log(err)
+
                             cb(-1)
                         }
-                        else if (result.result.n == 1) {
-                            cb(info)
+                        else if (result != null) {
+                            cb(result)
 
                         }
                         else {
@@ -1782,14 +1786,15 @@ module.exports.postSupporter = (info, cb)=> {
                 "password": info.password
             }, (err, result) => {
                 if (err) {
-                   
-                        if (err.code == 11000) {
-                            cb(-2)
-                        }
-                    else{
-                            cb(-1)
-                        }
-                    
+
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        cb(-1)
+                    }
+
                 }
                 else if (result.length == 0) {
                     cb(0)
@@ -1965,14 +1970,14 @@ module.exports.editSupporter = (info, supId, cb)=> {
             }
             con.collection("supporter").findOneAndUpdate({"_id": new ObjectID(supId)}, {
                 $set: infor
-            },{returnOriginal: false}, (err, result)=> {
+            }, {returnOriginal: false}, (err, result)=> {
                 if (err) {
-                    if(err.code == 11000){
+                    if (err.code == 11000) {
+                        console.log(err)
                         cb(-2)
                     }
-                    else{
+                    else {
                         console.log(err)
-
                         cb(-1)
                     }
                 }
@@ -2239,18 +2244,18 @@ module.exports.deleteSupporter = (supId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-                        con.collection("supporter").findOneAndDelete({"_id": new ObjectID(`${supId}`)}, (err, result)=> {
-                            if (err) {
-                                cb(-1)
-                            }
-                            else if (result.lastErrorObject.n != 0) {
-                                let result = "row deleted"
-                                cb(result)
-                            }
-                            else {
-                                cb(0)
-                            }
-                        })
+            con.collection("supporter").findOneAndDelete({"_id": new ObjectID(`${supId}`)}, (err, result)=> {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result = "row deleted"
+                    cb(result)
+                }
+                else {
+                    cb(0)
+                }
+            })
         }
     })
 };
@@ -2859,8 +2864,25 @@ module.exports.getAllStudents = (cb)=> {
         else {
 
             var con = db.db('englishAcademy')
-            con.collection("student").find().sort({score: 1}).toArray((err, result) => {
+            con.collection("student").aggregate([
+                {
+                    $lookup: {
+                        from: "lesson",
+                        let: {lsnId: "$lastPassedLesson"},
+                        pipeline: [
+                            {
+                                "$match": {
+                                    "$expr": {"$eq": ["$_id", "$$lsnId"]},
+                                }
+                            }
+                        ],
+                        as: "lesson"
+                    }
+                },
+
+            ]).sort({score: 1}).toArray((err, result) => {
                 if (err) {
+                    console.log(err)
                     cb(-1)
                 }
                 else if (result.length == 0) {
@@ -3399,8 +3421,7 @@ module.exports.getStudentByLevel = (lvlId, cb)=> {
 
             con.collection("student").aggregate([
                 {
-                    $group:
-                    {
+                    $group: {
                         _id: {$_id: "$lvlId"},
 
                     }

@@ -66,7 +66,7 @@ module.exports.addQuestion = (QInfo, cb)=> {
             cb(0)
         }
         else {
-            module.exports.getTypeById(QInfo.typeId, (type)=> {
+            module.exports.getTypeByTypeId(QInfo.typeId, (type)=> {
                 if (type == 0 || type == -1) {
                     cb(-1)
                 }
@@ -77,9 +77,13 @@ module.exports.addQuestion = (QInfo, cb)=> {
                         lsnId = QInfo.lesson.value
                         updateInfo.quizCount = 1
                         updateInfo.quizScore = QInfo.score
+                        module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
+                            cb(result)
+                        })
                     }
                     else {
                         module.exports.getExamById(QInfo.exam.value, (exam)=> {
+                            console.log("exam in here", exam)
                             if (exam == 0 || exam == -1) {
                                 cb(result)
                             }
@@ -89,13 +93,14 @@ module.exports.addQuestion = (QInfo, cb)=> {
                                 updateInfo.examScore = QInfo.score
                                 updateInfo.exId = QInfo.exam.value
                                 updateInfo.time = exam.time
+                                module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
+                                    cb(result)
+                                })
                             }
                         })
 
                     }
-                    module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
-                        cb(result)
-                    })
+
                 }
             })
         }
@@ -370,6 +375,7 @@ module.exports.getTextById = (txtId, cb)=> {
 }
 
 module.exports.updateQuestion = (updateInfo, QId, cb)=> {
+
     module.exports.getQuestionById(QId, (question)=> {
         if (question == -1) {
             cb(-1)
@@ -378,55 +384,99 @@ module.exports.updateQuestion = (updateInfo, QId, cb)=> {
             cb(0)
         }
         else {
-            var newQuestion = Object.assign({}, question, updateInfo)
-            mongo.editQuestion(newQuestion, QId, (result)=> {
-                if (result == -1) {
-                    cb(-1)
-                }
-                else if (result == -2) {
-                    cb(-2)
-                }
-                else if (result == -3) {
-                    cb(-3)
-                }
-                else if (result == 0) {
-                    cb(0)
-                }
-                else {
-                    module.exports.getTypeById(newQuestion.typeId, (type)=> {
-                        if (type == 0 || type == -1) {
-                            cb(-1)
-                        }
-                        else {
-                            let lsnId;
-                            let updateInfo = {}
-                            if (type.title == "quiz") {
-                                lsnId = QInfo.lesson.value
-                                updateInfo.quizCount = 1
-                                updateInfo.quizScore = QInfo.score
-                            }
-                            else {
-                                module.exports.getExamById(newQuestion.exam.value, (exam)=> {
-                                    if (exam == 0 || exam == -1) {
-                                        cb(result)
-                                    }
-                                    else {
-                                        lsnId = exam.preLesson.value
-                                        updateInfo.examCount = 1
-                                        updateInfo.examScore = newQuestion.score
-                                        updateInfo.exId = newQuestion.exam.value
-                                        updateInfo.time = exam.time
-                                    }
-                                })
-
-                            }
+            if (updateInfo.score != question.score) {
+                updateInfo.score =  updateInfo.score -question.score 
+                module.exports.getTypeByTypeId(updateInfo.typeId, (type)=> {
+                    if (type == 0 || type == -1) {
+                        cb(-1)
+                    }
+                    else {
+                        let lsnId;
+                        let updateInfo = {}
+                        if (type.title == "quiz") {
+                            lsnId = updateInfo.lesson.value
+                            updateInfo.quizCount = 0
+                            updateInfo.quizScore = updateInfo.score
                             module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
                                 cb(result)
                             })
                         }
-                    })
-                }
-            })
+                        else {
+                            module.exports.getExamById(updateInfo.exam.value, (exam)=> {
+                                console.log("exam in here", exam)
+                                if (exam == 0 || exam == -1) {
+                                    cb(result)
+                                }
+                                else {
+                                    lsnId = exam.preLesson.value
+                                    updateInfo.examCount = 0
+                                    updateInfo.examScore = updateInfo.score
+                                    updateInfo.exId = updateInfo.exam.value
+                                    updateInfo.time = exam.time
+                                    module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
+                                        cb(result)
+                                    })
+                                }
+                            })
+
+                        }
+
+                    }
+                })
+
+            }
+            else {
+                var newQuestion = Object.assign({}, question, updateInfo)
+                mongo.editQuestion(newQuestion, QId, (result)=> {
+                    if (result == -1) {
+                        cb(-1)
+                    }
+                    else if (result == -2) {
+                        cb(-2)
+                    }
+                    else if (result == -3) {
+                        cb(-3)
+                    }
+                    else if (result == 0) {
+                        cb(0)
+                    }
+                    else {
+                        module.exports.getTypeById(newQuestion.typeId, (type)=> {
+                            if (type == 0 || type == -1) {
+                                cb(-1)
+                            }
+                            else {
+                                let lsnId;
+                                let updateInfo = {}
+                                if (type.title == "quiz") {
+                                    lsnId = QInfo.lesson.value
+                                    updateInfo.quizCount = 1
+                                    updateInfo.quizScore = QInfo.score
+                                }
+                                else {
+                                    module.exports.getExamById(newQuestion.exam.value, (exam)=> {
+                                        if (exam == 0 || exam == -1) {
+                                            cb(result)
+                                        }
+                                        else {
+                                            lsnId = exam.preLesson.value
+                                            updateInfo.examCount = 1
+                                            updateInfo.examScore = newQuestion.score
+                                            updateInfo.exId = newQuestion.exam.value
+                                            updateInfo.time = exam.time
+                                        }
+                                    })
+
+                                }
+                                module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
+                                    cb(result)
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+
         }
     })
 };
@@ -531,12 +581,12 @@ module.exports.getLevelById = (lvlId, cb)=> {
 };
 
 module.exports.getLessonById = (lsnId, cb)=> {
-    if(lsnId == 0){
-        module.exports.getFirstLesson((firstLesson)=>{
-            if(firstLesson == 0 || firstLesson == -1){
+    if (lsnId == 0) {
+        module.exports.getFirstLesson((firstLesson)=> {
+            if (firstLesson == 0 || firstLesson == -1) {
                 cb(-1)
             }
-            else{
+            else {
                 console.log(firstLesson)
                 lsnId = firstLesson._id
                 mongo.getLsnById(lsnId, (result)=> {
@@ -592,7 +642,7 @@ module.exports.getLessonById = (lsnId, cb)=> {
             }
         })
     }
-    else{
+    else {
         mongo.getLsnById(lsnId, (result)=> {
             if (result == -1) {
                 cb(-1)
@@ -2374,7 +2424,7 @@ module.exports.answerQuestion = (info, cb)=> {
                 }
                 else {
                     if (info.round || result.examRound == true) {
-                        updateInfo.exam ={}
+                        updateInfo.exam = {}
                         updateInfo.exam.permission = true
                         updateInfo.type = info.type
                         updateInfo.examRound = true
@@ -2562,9 +2612,10 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                 else if (std == 0) {
                                                                     cb(0)
                                                                 }
-                                                                else{
+                                                                else {
                                                                     cb(updatedResult)
-                                                                }})
+                                                                }
+                                                            })
 
                                                         }
                                                         else {
@@ -2662,10 +2713,10 @@ module.exports.answerQuestion = (info, cb)=> {
                                                 cb(0)
                                             }
                                             else {
-                                               let score = updatedResult.quiz.getScore + updatedResult.exam.getScore
+                                                let score = updatedResult.quiz.getScore + updatedResult.exam.getScore
                                                 let updateStu = {}
                                                 updatedResult.score = score
-                                                module.exports.updateStudent( updateStu , info.usrId ,(student)=>{
+                                                module.exports.updateStudent(updateStu, info.usrId, (student)=> {
                                                     cb(updatedResult)
 
                                                 })
@@ -2899,7 +2950,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                     else {
                                                         let studentUpdateInfo = {}
                                                         if (newLesson._id == info.lsnId) {
-                                                            
+
                                                             let score = updatedResult.quiz.getScore + updatedResult.exam.getScore
                                                             studentUpdateInfo.score = score
                                                             studentUpdateInfo.lastPassedLesson = newLesson._id
@@ -2910,9 +2961,10 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                 else if (std == 0) {
                                                                     cb(0)
                                                                 }
-                                                                else{
+                                                                else {
                                                                     cb(updatedResult)
-                                                                }})
+                                                                }
+                                                            })
 
                                                         }
                                                         else {
@@ -3012,7 +3064,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                 let score = updatedResult.quiz.getScore + updatedResult.exam.getScore
                                                 let updateStu = {}
                                                 updateStu.score = score
-                                                module.exports.updateStudent( updateStu , info.usrId ,(student)=>{
+                                                module.exports.updateStudent(updateStu, info.usrId, (student)=> {
                                                     cb(updatedResult)
 
                                                 })
