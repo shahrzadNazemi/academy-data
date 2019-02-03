@@ -2396,6 +2396,42 @@ module.exports.postLesson = (lessonInfo, cb)=> {
     })
 };
 
+module.exports.postCertification = (certInfo, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            certInfo.usrId = new ObjectID(`${certInfo.usrId}`)
+            con.collection("certification").insertOne({
+                "time": certInfo.time,
+                "firstName": certInfo.firstName,
+                "lastName": certInfo.lastName,
+                "zipCode": certInfo.zipCode,
+                "address": certInfo.address,
+                "IDCard": certInfo.IDCard,
+                "personalImg": certInfo.personalImg,
+                "status": "pending"
+            }, (err, result) => {
+
+                if (err) {
+                    console.log(err)
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
 module.exports.postVideo = (videoInfo, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -2810,6 +2846,31 @@ module.exports.getStudentById = (stdId, cb)=> {
     })
 };
 
+module.exports.getCertById = (certId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("certification").findOne({"_id": new ObjectID(`${certId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.getTxtById = (textId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -2967,6 +3028,42 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
 
     }
 };
+
+module.exports.editCertification = (certInfo, certId, cb)=> {
+        MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+            if (err) {
+                console.log("Err", err)
+                cb(-1)
+            }
+            else {
+                var con = db.db('englishAcademy')
+                con.collection("certification").findOneAndUpdate({"_id": new ObjectID(certId)}, {
+                        $set: {
+                            "time": certInfo.time,
+                            "firstName": certInfo.firstName,
+                            "lastName": certInfo.lastName,
+                            "zipCode": certInfo.zipCode,
+                            "address": certInfo.address,
+                            "IDCard": certInfo.IDCard,
+                            "personalImg": certInfo.personalImg,
+                            "status": certInfo.status
+                        }
+                    },
+                    {returnOriginal: false}
+                    , (err, result)=> {
+                        if (err) {
+                            console.log(err)
+                            cb(-1)
+                        }
+                        else {
+                            console.log(result)
+                            cb(result.value)
+                        }
+                    })
+            }
+        })
+};
+
 
 module.exports.getAdmById = (admId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -3158,6 +3255,32 @@ module.exports.getAllTypes = (cb)=> {
         }
     })
 };
+
+module.exports.getAllCerts = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("certification").find({}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 
 module.exports.getAllCategories = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
