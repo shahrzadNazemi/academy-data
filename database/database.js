@@ -1463,6 +1463,21 @@ module.exports.getAllCertification = (cb)=> {
     })
 };
 
+module.exports.getCertificationByUsrId = (usrId ,cb)=> {
+    mongo.getCertByUsrId( usrId ,(result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+
 module.exports.getAllStu = (cb)=> {
     mongo.getAllStudents((result)=> {
         if (result == -1) {

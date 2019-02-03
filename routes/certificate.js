@@ -28,6 +28,20 @@ router.put('/:certId', (req, res)=> {
     });
 });
 
+router.get('/student/:usrId/', (req, res)=> {
+    database.getCertificationByUsrId( req.params.usrId, (updateResult)=> {
+        if (updateResult == -1) {
+            res.status(500).end('')
+        }
+        else if (updateResult == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(updateResult)
+        }
+    })
+});
+
 router.get('/:certId/', (req, res)=> {
     database.getCertificationById( req.params.certId, (updateResult)=> {
         if (updateResult == -1) {

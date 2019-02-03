@@ -2413,7 +2413,8 @@ module.exports.postCertification = (certInfo, cb)=> {
                 "address": certInfo.address,
                 "IDCard": certInfo.IDCard,
                 "personalImg": certInfo.personalImg,
-                "status": "pending"
+                "status": "pending",
+                "usrId":certInfo.usrId
             }, (err, result) => {
 
                 if (err) {
@@ -3037,6 +3038,10 @@ module.exports.editCertification = (certInfo, certId, cb)=> {
             }
             else {
                 var con = db.db('englishAcademy')
+                if(certInfo.usrId){
+                    certInfo.usrId = new ObjectID(`${certInfo.usrId}`)
+
+                }
                 con.collection("certification").findOneAndUpdate({"_id": new ObjectID(certId)}, {
                         $set: {
                             "time": certInfo.time,
@@ -3046,7 +3051,8 @@ module.exports.editCertification = (certInfo, certId, cb)=> {
                             "address": certInfo.address,
                             "IDCard": certInfo.IDCard,
                             "personalImg": certInfo.personalImg,
-                            "status": certInfo.status
+                            "status": certInfo.status,
+                            "usrId":certInfo.usrId
                         }
                     },
                     {returnOriginal: false}
@@ -3647,6 +3653,32 @@ module.exports.getViewByUsrId = (usrId, cb)=> {
         }
     })
 }
+
+module.exports.getCertByUsrId = (usrId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("certification").find({"usrId": new ObjectID(`${usrId}`)}).toArray((err, result) => {
+                if (err) {
+                    console.log(err)
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+}
+
 
 module.exports.deleteType = (typeId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
