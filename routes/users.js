@@ -223,6 +223,7 @@ router.post('/student/placement', (req, res) => {
         }
     })
 });
+
 router.get('/student/username/:username', (req, res) => {
     database.getStuByUsername(req.params.username, (result)=> {
         if (result == -1) {

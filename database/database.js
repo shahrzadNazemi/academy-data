@@ -2666,7 +2666,6 @@ module.exports.getPreviousLesson = (lsnId, cb)=> {
     })
 }
 
-
 module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
     module.exports.getLessonById(lsnId, (lesson)=> {
         if (lesson == 0 || lesson == -1) {
@@ -2702,6 +2701,7 @@ module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
     })
 
 }
+
 module.exports.getQuestionsScoreCountByLesson = (lsnId, cb)=> {
     module.exports.getExamByLessonId(lsnId, (exam)=> {
         console.log("exam", exam)

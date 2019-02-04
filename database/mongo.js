@@ -2941,6 +2941,15 @@ module.exports.getAllStudents = (cb)=> {
                         as: "lesson"
                     }
                 },
+                {
+                    $lookup: {
+                        from: "level",
+                        localField: "lesson.lvlId",
+                        foreignField: "_id",
+                        as: "level"
+                    }
+                }
+
 
             ]).sort({score: 1}).toArray((err, result) => {
                 if (err) {
