@@ -20,6 +20,17 @@ router.post('/', (req, res)=> {
     });
 });
 
+router.get('/student/:usrId', (req, res)=> {
+    database.getExamPassedCount(req.params.usrId,  (getResult)=> {
+        if (getResult == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(getResult)
+        }
+    });
+});
+
 router.get('/:usrId/:lsnId', (req, res)=> {
     database.getResultByLsnUsr(req.params.usrId, req.params.lsnId, (getResult)=> {
         if (getResult == -1) {
@@ -30,6 +41,8 @@ router.get('/:usrId/:lsnId', (req, res)=> {
         }
     });
 });
+
+
 
 router.post('/answerQuestion', (req, res)=> {
     database.answerQuestion(req.body, (result)=> {

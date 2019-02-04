@@ -1250,6 +1250,35 @@ module.exports.getResultByLsnIdUsrId = (usrId, lsnId, cb)=> {
     })
 };
 
+module.exports.getResultByUsrId = (usrId, cb)=> {
+    console.log(usrId)
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("result").find({
+                "usrId": new ObjectID(`${usrId}`),
+                "examTimePassed":{ $ne: null }
+            }).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.getLsnLvlById = (lvlID, cb)=> {
     console.log("lvlId", lvlID)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {

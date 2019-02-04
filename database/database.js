@@ -1370,6 +1370,21 @@ module.exports.getResultByLsnUsr = (usrId, lsnId, cb)=> {
     })
 }
 
+module.exports.getResultByUsr = (usrId, cb)=> {
+    mongo.getResultByUsrId(usrId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+}
+
+
 module.exports.delVideo = (vdId, cb)=> {
     mongo.deleteVideo(vdId, (result)=> {
         if (result == -1) {
@@ -1532,6 +1547,21 @@ module.exports.getExams = (usrId, cb)=> {
         }
     })
 };
+
+module.exports.getExamPassedCount = (usrId, cb)=> {
+   module.exports.getResultByUsr(usrId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 
 module.exports.getNotes = (lsnId, usrId, cb)=> {
     mongo.getAllNotes(lsnId, usrId, (result)=> {
