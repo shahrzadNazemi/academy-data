@@ -223,6 +223,20 @@ router.post('/student/placement', (req, res) => {
         }
     })
 });
+router.get('/student/username/:username', (req, res) => {
+    database.getStuByUsername(req.params.username, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
 
 router.put('/student/:stuId', (req, res) => {
     database.getStuById(req.params.stuId, (student)=> {
@@ -250,6 +264,22 @@ router.put('/student/:stuId', (req, res) => {
                     res.json(result)
                 }
             })
+        }
+    })
+});
+
+
+
+router.get('/student/prCrNxt/lesson/:lsnId', (req, res) => {
+    database.getPrCrNxtLesson(req.params.lsnId ,(result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
         }
     })
 });
@@ -310,19 +340,7 @@ router.get('/student/:stdId', (req, res) => {
     })
 });
 
-router.get('/student/username/:username', (req, res) => {
-    database.getStuByUsername(req.params.username, (result)=> {
-        if (result == -1) {
-            res.status(500).end('')
-        }
-        else if (result == 0) {
-            res.status(404).end('')
-        }
-        else {
-            res.json(result)
-        }
-    })
-});
+
 
 router.delete('/student/:stuId', (req, res) => {
     console.log(req.params.stuId)

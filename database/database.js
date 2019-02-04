@@ -400,7 +400,7 @@ module.exports.updateQuestion = (updateInfo, QId, cb)=> {
         }
         else {
             if (updateInfo.score != question.score) {
-                let updateScoreTotal =  updateInfo.score
+                let updateScoreTotal = updateInfo.score
                 updateInfo.score = updateInfo.score - question.score
                 module.exports.getTypeByTypeId(updateInfo.typeId, (type)=> {
                     if (type == 0 || type == -1) {
@@ -469,7 +469,7 @@ module.exports.updateQuestion = (updateInfo, QId, cb)=> {
                                             }
                                             else {
 
-                                                            cb(result)
+                                                cb(result)
 
 
                                             }
@@ -588,73 +588,72 @@ module.exports.delQuestion = (QId, cb)=> {
             cb(0)
         }
         else {
-            let updateInfo ={}
-                updateInfo.score = -updateInfo.score
-                module.exports.getTypeByTypeId(updateInfo.typeId, (type)=> {
-                    if (type == 0 || type == -1) {
-                        cb(-1)
+            let updateInfo = {}
+            updateInfo.score = -updateInfo.score
+            module.exports.getTypeByTypeId(updateInfo.typeId, (type)=> {
+                if (type == 0 || type == -1) {
+                    cb(-1)
+                }
+                else {
+                    let lsnId;
+                    if (type.title == "quiz") {
+                        lsnId = updateInfo.lesson.value
+                        updateInfo.quizCount = -1
+                        updateInfo.quizScore = updateInfo.score
+                        module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
+                            console.log("done")
+                            // mongo.deleteQuestion(QId, (result)=> {
+                            //     if (result == -1) {
+                            //         cb(-1)
+                            //     }
+                            //     else if (result == 0) {
+                            //         cb(0)
+                            //     }
+                            //     else {
+                            //         cb(result)
+                            //     }
+                            // })
+                        })
                     }
                     else {
-                        let lsnId;
-                        if (type.title == "quiz") {
-                            lsnId = updateInfo.lesson.value
-                            updateInfo.quizCount = -1
-                            updateInfo.quizScore = updateInfo.score
-                            module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
-                                console.log("done")
-                                // mongo.deleteQuestion(QId, (result)=> {
-                                //     if (result == -1) {
-                                //         cb(-1)
-                                //     }
-                                //     else if (result == 0) {
-                                //         cb(0)
-                                //     }
-                                //     else {
-                                //         cb(result)
-                                //     }
-                                // })
-                            })
-                        }
-                        else {
-                            console.log("updateInfo", updateInfo)
-                            module.exports.getExamById(updateInfo.exam.value, (exam)=> {
-                                console.log("exam in here", exam)
-                                if (exam == 0 || exam == -1) {
-                                    cb(result)
-                                }
-                                else {
-                                    lsnId = exam.preLesson.value
-                                    updateInfo.examCount = -1
-                                    updateInfo.examScore = updateInfo.score
-                                    updateInfo.exId = updateInfo.exam.value
-                                    updateInfo.time = exam.time
-                                    module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
-                                        console.log("done")
+                        console.log("updateInfo", updateInfo)
+                        module.exports.getExamById(updateInfo.exam.value, (exam)=> {
+                            console.log("exam in here", exam)
+                            if (exam == 0 || exam == -1) {
+                                cb(result)
+                            }
+                            else {
+                                lsnId = exam.preLesson.value
+                                updateInfo.examCount = -1
+                                updateInfo.examScore = updateInfo.score
+                                updateInfo.exId = updateInfo.exam.value
+                                updateInfo.time = exam.time
+                                module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
+                                    console.log("done")
 
-                                        // mongo.deleteQuestion(QId, (result)=> {
-                                        //     if (result == -1) {
-                                        //         cb(-1)
-                                        //     }
-                                        //     else if (result == 0) {
-                                        //         cb(0)
-                                        //     }
-                                        //     else {
-                                        //         cb(result)
-                                        //     }
-                                        // })
-                                    })
-                                }
-                            })
-
-                        }
+                                    // mongo.deleteQuestion(QId, (result)=> {
+                                    //     if (result == -1) {
+                                    //         cb(-1)
+                                    //     }
+                                    //     else if (result == 0) {
+                                    //         cb(0)
+                                    //     }
+                                    //     else {
+                                    //         cb(result)
+                                    //     }
+                                    // })
+                                })
+                            }
+                        })
 
                     }
-                })
+
+                }
+            })
 
 
         }
     })
-
 
 
 };
@@ -1450,7 +1449,7 @@ module.exports.getCertificationById = (certId, cb)=> {
 };
 
 module.exports.getAllCertification = (cb)=> {
-    mongo.getAllCerts( (result)=> {
+    mongo.getAllCerts((result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -1463,8 +1462,8 @@ module.exports.getAllCertification = (cb)=> {
     })
 };
 
-module.exports.getCertificationByUsrId = (usrId ,cb)=> {
-    mongo.getCertByUsrId( usrId ,(result)=> {
+module.exports.getCertificationByUsrId = (usrId, cb)=> {
+    mongo.getCertByUsrId(usrId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -1999,6 +1998,7 @@ module.exports.getLessonByOrder = (order, cb)=> {
 }
 
 module.exports.getStuByUsername = (username, cb)=> {
+    console.log("user")
     mongo.getUsrByUsrname(username, (user)=> {
         if (user == -1) {
             cb(-1)
@@ -2542,6 +2542,7 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                                         cb(-1)
                                     }
                                     else {
+                                        lessons[0].level = newLevel
                                         cb(lessons[0])
                                     }
                                 })
@@ -2549,7 +2550,7 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                         })
                     }
                     else {
-                        console.log("here")
+                        console.log("here", lesson[0])
                         var index = -1;
                         var val = lesson[0]._id
                         let lastIndex = lessonsOfLevel.find(function (item, i) {
@@ -2560,9 +2561,13 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                         });
                         console.log(lastIndex, index)
                         let newLesson = lessonsOfLevel[index + 1]
-
-
-                        cb(newLesson)
+                        if (newLesson) {
+                            newLesson.level = lesson[0].level
+                            cb(newLesson)
+                        }
+                        else {
+                            cb(lesson[0])
+                        }
                     }
                 }
             })
@@ -2571,6 +2576,132 @@ module.exports.getNextLesson = (lsnId, cb)=> {
     })
 }
 
+module.exports.getPreviousLesson = (lsnId, cb)=> {
+    console.log("lsnasjdbajsd", lsnId)
+    module.exports.getLessonById(lsnId, (lesson)=> {
+        if (lesson == 0) {
+            cb(0)
+        }
+        else if (lesson == -1) {
+            cb(-1)
+        }
+        else {
+            if (lsnId == 0) {
+                cb(lesson[0])
+            }
+            else {
+                module.exports.getLessonByLvlId(lesson[0].lvlId, (lessonsOfLevel)=> {
+                    if (lessonsOfLevel == 0) {
+                        cb(lesson)
+                    }
+                    else if (lessonsOfLevel == -1) {
+                        cb(-1)
+                    }
+                    else {
+                        let length = lessonsOfLevel.length
+                        if (lessonsOfLevel[length - 1]._id == lsnId) {
+                            console.log("firstCondition")
+
+                            if (lessonsOfLevel[length - 2]) {
+                                lessonsOfLevel[length - 2].level = lesson[0].level
+                                cb(lessonsOfLevel[length - 2])
+                            }
+                            else {
+                                module.exports.getLevels((levels)=> {
+                                    if (levels == -1) {
+                                        cb(-1)
+                                    }
+                                    else if (levels == 0) {
+                                        cb(0)
+                                    }
+                                    else {
+                                        let newLevel = lesson[0].level
+                                        console.log("newLevel", newLevel)
+                                        for (var i = 0; i < levels.length; i++) {
+                                            if (levels[i].order < lesson[0].level.order) {
+                                                newLevel = levels[i]
+                                                break;
+                                            }
+                                        }
+                                        console.log("newLevel", newLevel)
+
+                                        module.exports.getLessonByLvlId(newLevel._id, (lessons)=> {
+                                            if (lessons == 0) {
+                                                cb(lesson)
+                                            }
+                                            else if (lessons == -1) {
+                                                cb(-1)
+                                            }
+                                            else {
+                                                lessons[lessons.length - 1].level = newLevel
+                                                cb(lessons[lessons.length - 1])
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        }
+                        else {
+                            console.log("here")
+                            var index = -1;
+                            var val = lesson[0]._id
+                            let lastIndex = lessonsOfLevel.find(function (item, i) {
+                                if (item._id.equals(val)) {
+                                    index = i;
+                                    return i;
+                                }
+                            });
+                            console.log(lastIndex, index)
+                            let newLesson = lessonsOfLevel[index - 1]
+
+
+                            cb(newLesson)
+                        }
+                    }
+                })
+
+            }
+
+        }
+    })
+}
+
+
+module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
+    module.exports.getLessonById(lsnId, (lesson)=> {
+        if (lesson == 0 || lesson == -1) {
+            cb(-1)
+        }
+        else {
+            let prCrNextLesson = []
+           
+            module.exports.getPreviousLesson(lsnId, (prLesson)=> {
+                if (prLesson == 0 || prLesson == -1) {
+                    cb(-1)
+                }
+                else {
+                    delete lesson[0].video
+                    delete lesson[0].sound
+                    delete lesson[0].text
+                    if (!prLesson._id.equals(lesson[0]._id) )
+                        prCrNextLesson.push(prLesson)
+                    prCrNextLesson.push(lesson[0])
+                    module.exports.getNextLesson(lsnId, (nxtLesson)=> {
+                        if (nxtLesson == 0 || nxtLesson == -1) {
+                            cb(-1)
+                        }
+                        else {
+                            if (!nxtLesson._id.equals( lesson[0]._id))
+                                prCrNextLesson.push(nxtLesson)
+                            cb(prCrNextLesson)
+                        }
+                    })
+                }
+            })
+        }
+    })
+
+}
 module.exports.getQuestionsScoreCountByLesson = (lsnId, cb)=> {
     module.exports.getExamByLessonId(lsnId, (exam)=> {
         console.log("exam", exam)
