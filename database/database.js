@@ -500,7 +500,7 @@ module.exports.updateQuestion = (updateInfo, QId, cb)=> {
                         cb(0)
                     }
                     else {
-                        module.exports.getTypeById(newQuestion.typeId, (type)=> {
+                        module.exports.getTypeByTypeId(newQuestion.typeId, (type)=> {
                             if (type == 0 || type == -1) {
                                 cb(-1)
                             }

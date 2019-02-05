@@ -2398,6 +2398,10 @@ module.exports.postLesson = (lessonInfo, cb)=> {
             if (typeof lessonInfo.order == "string") {
                 lessonInfo.order = parseInt(lessonInfo.order)
             }
+            if (typeof lessonInfo.deadline == "string") {
+                lessonInfo.deadline = parseInt(lessonInfo.deadline)
+            }
+
             var con = db.db('englishAcademy')
             lessonInfo.lvlId = new ObjectID(`${lessonInfo.lvlId}`)
             con.collection("lesson").insertOne({
@@ -2815,6 +2819,9 @@ module.exports.postStudent = (stuInfo, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
+            if( stuInfo.score && typeof stuInfo.score == "string"){
+                stuInfo.score = parseInt(stuInfo.score)
+            }
             con.collection("student").insertOne({
                 "username": stuInfo.username,
                 "password": stuInfo.password,
