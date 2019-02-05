@@ -2152,7 +2152,6 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                 cb(0)
             }
             else {
-                console.log("lessssssss" , lesson)
                 lesson = lesson[0]
                 module.exports.getLevelById(lesson.lvlId, (level)=> {
 
@@ -2285,7 +2284,6 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                             let stu = {}
                                             stu.lastPassedLesson = lastPassedLesson[0]._id
                                             let newStudent = Object.assign({}, student[0], stu)
-                                            console.log("new", newStudent)
                                             module.exports.updateStudent(newStudent, student[0]._id, (result)=> {
                                                 if (result == -1) {
                                                     cb(-1)
@@ -2294,6 +2292,8 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                     cb(0)
                                                 }
                                                 else {
+                                                    if(lesson[0] != undefined)
+                                                        lesson = lesson[0]
                                                     lesson.level = level
                                                     let newView = {}
                                                     newView.lsnId = lesson._id
@@ -2312,10 +2312,11 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                         newView.sound[i].viewed = false
                                                     }
                                                     module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
-                                                        console.log("lesson", lesson)
+                                                        console.log("lessonAfter UpdateView", lesson)
                                                         let resultInfo = {}
                                                         resultInfo.usrId = student[0]._id
                                                         resultInfo.lsnId = lesson._id
+                                                        // resultInfo.lsnId = 0
                                                         resultInfo.quiz = {}
                                                         resultInfo.quiz.time = lesson.deadline
                                                         resultInfo.quiz.questionTrue = 0;
@@ -3495,13 +3496,24 @@ module.exports.answerQuestion = (info, cb)=> {
 module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
     console.log("update ubsndjsjbancbanbcanbsnabnbansbdhagxhabxnsa", updateInfo)
     if (!updateInfo.answer) {
+        console.log("here")
         if (lsnId != 0) {
             module.exports.getResultByLsnUsr(usrId, lsnId, (lastResult)=> {
                 if (lastResult == -1) {
                     cb(-1)
                 }
                 else if (lastResult == 0) {
-                    cb(0)
+                  module.exports.updateResult(usrId , 0 , updateInfo , (updateResult)=>{
+                      if(updateResult == -1){
+                          cb(-1)
+                      }
+                      else if(updateResult == 0){
+                          cb(0)
+                      }
+                      else{
+                          cb(updateResult)
+                      }
+                  })
                 }
                 else {
                     module.exports.getExamByLessonId(lsnId, (exam)=> {
