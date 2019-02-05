@@ -508,9 +508,9 @@ module.exports.updateQuestion = (updateInfo, QId, cb)=> {
                                 let lsnId;
                                 let updateInfo = {}
                                 if (type.title == "quiz") {
-                                    lsnId = QInfo.lesson.value
+                                    lsnId = newQuestion.lesson.value
                                     updateInfo.quizCount = 1
-                                    updateInfo.quizScore = QInfo.score
+                                    updateInfo.quizScore = newQuestion.score
                                 }
                                 else {
                                     module.exports.getExamById(newQuestion.exam.value, (exam)=> {
