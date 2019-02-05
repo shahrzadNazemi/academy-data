@@ -2152,6 +2152,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                 cb(0)
             }
             else {
+                console.log("lessssssss" , lesson)
                 lesson = lesson[0]
                 module.exports.getLevelById(lesson.lvlId, (level)=> {
 
@@ -2298,16 +2299,16 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                     newView.lsnId = lesson._id
                                                     newView.video = []
                                                     newView.sound = []
-                                                    for (var i = 0; i < lesson[0].video.length; i++) {
+                                                    for (var i = 0; i < lesson.video.length; i++) {
                                                         newView.video[i] = {}
 
-                                                        newView.video[i]._id = lesson[0].video[i]._id
+                                                        newView.video[i]._id = lesson.video[i]._id
                                                         newView.video[i].viewed = false
                                                     }
-                                                    for (var i = 0; i < lesson[0].sound.length; i++) {
+                                                    for (var i = 0; i < lesson.sound.length; i++) {
                                                         newView.sound[i] = {}
 
-                                                        newView.sound[i]._id = lesson[0].sound[i]._id
+                                                        newView.sound[i]._id = lesson.sound[i]._id
                                                         newView.sound[i].viewed = false
                                                     }
                                                     module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
