@@ -149,6 +149,28 @@ module.exports.getNotificationById = (NId, cb)=> {
     })
 };
 
+module.exports.getStuPlacement = (usrId, cb)=> {
+    mongo.getViewByUsrId(usrId, (view)=> {
+        if (view == -1) {
+            cb(-1)
+        }
+        else if (view == 0) {
+            cb(0)
+        }
+        else {
+            let place =0
+            if(view[0].lsnId == 0){
+                place = 0
+            }
+            else{
+                place = 1
+            }
+            cb(place)
+        }
+    })
+};
+
+
 module.exports.addExam = (exInfo, cb)=> {
     mongo.postExam(exInfo, (result)=> {
         if (result == -1) {

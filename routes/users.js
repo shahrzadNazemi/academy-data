@@ -224,6 +224,23 @@ router.post('/student/placement', (req, res) => {
     })
 });
 
+router.get('/student/placement/:usrId', (req, res) => {
+    database.getStuPlacement(req.params.usrId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            console.log("result", result)
+
+            res.json(result)
+        }
+    })
+});
+
+
 router.get('/student/username/:username', (req, res) => {
     database.getStuByUsername(req.params.username, (result)=> {
         if (result == -1) {
