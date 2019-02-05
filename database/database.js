@@ -1,5 +1,6 @@
 let mongo = require('./mongo')
 let mongoose = require('./mongoose')
+let logger = require('../util/logger')
 
 
 module.exports.loginForAdmin = (loginInfo, cb)=> {
@@ -83,7 +84,6 @@ module.exports.addQuestion = (QInfo, cb)=> {
                     }
                     else {
                         module.exports.getExamById(QInfo.exam.value, (exam)=> {
-                            console.log("exam in here", exam)
                             if (exam == 0 || exam == -1) {
                                 cb(result)
                             }
@@ -460,9 +460,7 @@ module.exports.updateQuestion = (updateInfo, QId, cb)=> {
                             })
                         }
                         else {
-                            console.log("updateInfo", updateInfo)
                             module.exports.getExamById(updateInfo.exam.value, (exam)=> {
-                                console.log("exam in here", exam)
                                 if (exam == 0 || exam == -1) {
                                     cb(result)
                                 }
@@ -623,7 +621,6 @@ module.exports.delQuestion = (QId, cb)=> {
                         updateInfo.quizCount = -1
                         updateInfo.quizScore = updateInfo.score
                         module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
-                            console.log("done")
                             // mongo.deleteQuestion(QId, (result)=> {
                             //     if (result == -1) {
                             //         cb(-1)
@@ -638,9 +635,7 @@ module.exports.delQuestion = (QId, cb)=> {
                         })
                     }
                     else {
-                        console.log("updateInfo", updateInfo)
                         module.exports.getExamById(updateInfo.exam.value, (exam)=> {
-                            console.log("exam in here", exam)
                             if (exam == 0 || exam == -1) {
                                 cb(result)
                             }
@@ -651,7 +646,6 @@ module.exports.delQuestion = (QId, cb)=> {
                                 updateInfo.exId = updateInfo.exam.value
                                 updateInfo.time = exam.time
                                 module.exports.updateResultByLesson(lsnId, updateInfo, (updated)=> {
-                                    console.log("done")
 
                                     // mongo.deleteQuestion(QId, (result)=> {
                                     //     if (result == -1) {
@@ -732,7 +726,6 @@ module.exports.getLessonById = (lsnId, cb)=> {
                 cb(-1)
             }
             else {
-                console.log(firstLesson)
                 lsnId = firstLesson._id
                 mongo.getLsnById(lsnId, (result)=> {
                     if (result == -1) {
@@ -1190,7 +1183,6 @@ module.exports.updateLesson = (updateInfo, lsnId, cb)=> {
         else {
             let forbidden = false
             let forbidden1 = false
-            console.log(lesson)
             for (var i = 0; i < lesson.length; i++) {
                 if (lesson[i].order == updateInfo.order) {
                     if (lesson[i]._id != lsnId)
@@ -1984,7 +1976,6 @@ module.exports.getFirstLesson = (cb) => {
                 }
                 else {
                     lesson.level = level
-                    console.log("Firstlesson", lesson)
                     cb(lesson)
                 }
             })
@@ -2050,7 +2041,6 @@ module.exports.getLessonByOrder = (order, cb)=> {
 }
 
 module.exports.getStuByUsername = (username, cb)=> {
-    console.log("user")
     mongo.getUsrByUsrname(username, (user)=> {
         if (user == -1) {
             cb(-1)
@@ -2117,7 +2107,6 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                             newView.sound[i].viewed = false
                                         }
                                         module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
-                                            console.log("here")
                                             let resultInfo = {}
                                             resultInfo.usrId = student[0]._id
                                             resultInfo.lsnId = lesson._id
@@ -2218,7 +2207,6 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                     newView.sound[i].viewed = false
                                                                 }
                                                                 module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
-                                                                    console.log("lesson", lesson)
                                                                     let resultInfo = {}
                                                                     resultInfo.usrId = student[0]._id
                                                                     resultInfo.lsnId = lesson._id
@@ -2312,7 +2300,6 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                         newView.sound[i].viewed = false
                                                     }
                                                     module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
-                                                        console.log("lessonAfter UpdateView", lesson)
                                                         let resultInfo = {}
                                                         resultInfo.usrId = student[0]._id
                                                         resultInfo.lsnId = lesson._id
@@ -2367,7 +2354,6 @@ module.exports.addResult = (resultInfo, cb)=> {
             }
             else if (exam == 0) {
                 module.exports.getQuestionsScoreCountByLesson(resultInfo.lsnId, (data)=> {
-                    console.log("d", data)
                     if (data == -1) {
                         cb(-1)
                     }
@@ -2405,7 +2391,6 @@ module.exports.addResult = (resultInfo, cb)=> {
                             resultInfo.quiz.quizCount = data[0].count
                         }
                         module.exports.getQuestionsScoreCountByLesson(resultInfo.lsnId, (data)=> {
-                            console.log("d1", data)
 
                             if (data == -1) {
                                 cb(-1)
@@ -2460,9 +2445,7 @@ module.exports.addResult = (resultInfo, cb)=> {
                 resultInfo.exam.getScore = 0
                 resultInfo.exam._id = exam._id
                 resultInfo.exam.permission = false
-                console.log("lsnIdddddd", resultInfo.lsnId)
                 module.exports.getQuestionsScoreCountByLesson(resultInfo.lsnId, (data)=> {
-                    console.log("d1", data)
 
                     if (data == -1) {
                         cb(-1)
@@ -2569,7 +2552,6 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                 else {
                     let length = lessonsOfLevel.length
                     if (lessonsOfLevel[length - 1]._id == lsnId) {
-                        console.log("firstCondition")
                         module.exports.getLevels((levels)=> {
                             if (levels == -1) {
                                 cb(-1)
@@ -2579,14 +2561,12 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                             }
                             else {
                                 let newLevel = lesson[0].level
-                                console.log("newLevel", newLevel)
                                 for (var i = 0; i < levels.length; i++) {
                                     if (levels[i].order > lesson[0].level.order) {
                                         newLevel = levels[i]
                                         break;
                                     }
                                 }
-                                console.log("newLevel", newLevel)
 
                                 module.exports.getLessonByLvlId(newLevel._id, (lessons)=> {
                                     if (lessons == 0) {
@@ -2604,7 +2584,6 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                         })
                     }
                     else {
-                        console.log("here", lesson[0])
                         var index = -1;
                         var val = lesson[0]._id
                         let lastIndex = lessonsOfLevel.find(function (item, i) {
@@ -2613,7 +2592,6 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                                 return i;
                             }
                         });
-                        console.log(lastIndex, index)
                         let newLesson = lessonsOfLevel[index + 1]
                         if (newLesson) {
                             newLesson.level = lesson[0].level
@@ -2631,7 +2609,6 @@ module.exports.getNextLesson = (lsnId, cb)=> {
 }
 
 module.exports.getPreviousLesson = (lsnId, cb)=> {
-    console.log("lsnasjdbajsd", lsnId)
     module.exports.getLessonById(lsnId, (lesson)=> {
         if (lesson == 0) {
             cb(0)
@@ -2654,8 +2631,6 @@ module.exports.getPreviousLesson = (lsnId, cb)=> {
                     else {
                         let length = lessonsOfLevel.length
                         if (lessonsOfLevel[length - 1]._id == lsnId) {
-                            console.log("firstCondition")
-
                             if (lessonsOfLevel[length - 2]) {
                                 lessonsOfLevel[length - 2].level = lesson[0].level
                                 cb(lessonsOfLevel[length - 2])
@@ -2670,15 +2645,12 @@ module.exports.getPreviousLesson = (lsnId, cb)=> {
                                     }
                                     else {
                                         let newLevel = lesson[0].level
-                                        console.log("newLevel", newLevel)
                                         for (var i = 0; i < levels.length; i++) {
                                             if (levels[i].order < lesson[0].level.order) {
                                                 newLevel = levels[i]
                                                 break;
                                             }
                                         }
-                                        console.log("newLevel", newLevel)
-
                                         module.exports.getLessonByLvlId(newLevel._id, (lessons)=> {
                                             if (lessons == 0) {
                                                 cb(lesson)
@@ -2696,7 +2668,6 @@ module.exports.getPreviousLesson = (lsnId, cb)=> {
                             }
                         }
                         else {
-                            console.log("here")
                             var index = -1;
                             var val = lesson[0]._id
                             let lastIndex = lessonsOfLevel.find(function (item, i) {
@@ -2705,7 +2676,6 @@ module.exports.getPreviousLesson = (lsnId, cb)=> {
                                     return i;
                                 }
                             });
-                            console.log(lastIndex, index)
                             let newLesson = lessonsOfLevel[index - 1]
 
 
@@ -2758,7 +2728,6 @@ module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
 
 module.exports.getQuestionsScoreCountByLesson = (lsnId, cb)=> {
     module.exports.getExamByLessonId(lsnId, (exam)=> {
-        console.log("exam", exam)
         if (exam == -1) {
             cb(-1)
         }
@@ -2816,9 +2785,7 @@ module.exports.answerQuestion = (info, cb)=> {
 
                             updateInfo.exam.newScore = 0
 
-                            console.log(result.exam.questionTrue, result.exam.examCount)
                             if ((result.exam.questionTrue + 1) / result.exam.examCount > 0.6) {
-                                console.log("result", result)
                                 let updateInf = {}
                                 updateInf.quiz = {}
                                 updateInfo.exam.questionTrue = 0
@@ -2919,7 +2886,6 @@ module.exports.answerQuestion = (info, cb)=> {
                                 })
                             }
                             else {
-                                console.log("lo")
                                 updateInfo.exam = {}
                                 updateInfo.examRound = true
                                 updateInfo.answer = true
@@ -2953,7 +2919,6 @@ module.exports.answerQuestion = (info, cb)=> {
                         updateInfo.exam.questionTrue = 1
                         updateInfo.answer = true
                         updateInfo.type = info.type
-                        console.log("gfgfhjgjg", info)
                         module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
                             if (result == -1) {
                                 cb(-1)
@@ -2963,7 +2928,6 @@ module.exports.answerQuestion = (info, cb)=> {
                             }
                             else {
                                 if (info.type == "exam") {
-                                    console.log("result")
                                     if ((result.exam.questionTrue + 1) / result.exam.examCount > 0.6) {
                                         updateInfo.exam = {}
                                         updateInfo.exam.permission = true
@@ -3084,7 +3048,6 @@ module.exports.answerQuestion = (info, cb)=> {
                                         })
                                     }
                                     else {
-                                        console.log("lo2")
 
                                         // updateInfo.round = false
                                         updateInfo.answer = true
@@ -3166,9 +3129,7 @@ module.exports.answerQuestion = (info, cb)=> {
 
                             updateInfo.quiz.newScore = 0
 
-                            console.log(result.quiz.questionTrue, result.quiz.quizCount)
                             if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
-                                console.log("result", result)
                                 let updateInf = {}
                                 updateInf.quiz = {}
 
@@ -3268,7 +3229,6 @@ module.exports.answerQuestion = (info, cb)=> {
                                 })
                             }
                             else {
-                                console.log("lo")
                                 updateInfo.quiz = {}
 
                                 updateInfo.round = true
@@ -3301,7 +3261,6 @@ module.exports.answerQuestion = (info, cb)=> {
                         updateInfo.quiz.questionTrue = 1
                         updateInfo.answer = true
                         updateInfo.type = info.type
-                        console.log("gfgfhjgjg", info)
                         module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
                             if (result == -1) {
                                 cb(-1)
@@ -3311,7 +3270,6 @@ module.exports.answerQuestion = (info, cb)=> {
                             }
                             else {
                                 if (info.type == "quiz") {
-                                    console.log("result")
                                     if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
                                         updateInfo.exam = {}
                                         updateInfo.exam.permission = true
@@ -3432,9 +3390,6 @@ module.exports.answerQuestion = (info, cb)=> {
                                         })
                                     }
                                     else {
-                                        console.log("lo2")
-
-                                        // updateInfo.round = false
                                         updateInfo.answer = true
                                         updateInfo.quiz.newScore = info.score
                                         updateInfo.timePassed = new Date().getTime()
@@ -3494,9 +3449,8 @@ module.exports.answerQuestion = (info, cb)=> {
 }
 
 module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
-    console.log("update ubsndjsjbancbanbcanbsnabnbansbdhagxhabxnsa", updateInfo)
+    logger.info("updateInfo in updateResult" , updateInfo)
     if (!updateInfo.answer) {
-        console.log("here")
         if (lsnId != 0) {
             module.exports.getResultByLsnUsr(usrId, lsnId, (lastResult)=> {
                 if (lastResult == -1) {
@@ -3533,7 +3487,6 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                             updateInfo.quiz.getScore = 0
                             updateInfo.quiz.permission = false
                             module.exports.getQuestionsScoreCountByLesson(lsnId, (data)=> {
-                                console.log("d", data)
                                 if (data == -1) {
                                     cb(-1)
                                 }
@@ -3579,7 +3532,6 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                                         }
                                     });
                                     // module.exports.getQuestionsScoreCountByLesson(lsnId, (data)=> {
-                                    //     console.log("d1", data)
                                     //
                                     //     if (data == -1) {
                                     //         cb(-1)
@@ -3648,7 +3600,6 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                             updateInfo.quiz.getScore = 0
                             updateInfo.quiz.permission = false
                             module.exports.getQuestionsScoreCountByLesson(lsnId, (data)=> {
-                                console.log("d1", data)
                                 if (data == -1) {
                                     cb(-1)
                                 }
@@ -3716,9 +3667,10 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                     cb(0)
                 }
                 else {
-                    module.exports.updateResult(usrId, updateInfo.lsnId, updateInfo, (res)=> {
-                        cb(updatedInfo)
-                    })
+                    // module.exports.updateResult(usrId, updateInfo.lsnId, updateInfo, (res)=> {
+                    //     cb(updatedInfo)
+                    // })
+                    cb(updatedInfo)
                 }
             });
         }
@@ -3739,7 +3691,6 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                 let newResult = Object.assign({}, lastResult, updateInfo)
                 newResult.exam = newExam
                 newResult.quiz = newQuiz
-                console.log(newResult)
                 mongo.editResult(usrId, lsnId, newResult, (updatedInfo)=> {
                     if (updatedInfo == -1) {
                         cb(-1)
