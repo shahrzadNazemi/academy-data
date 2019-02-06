@@ -1,8 +1,8 @@
 let db = require('./database/database')
 
-let lsnId = "5c484e1852faa438c36c3da1"
+let lsnId = "5c592204502538783d9467c0"
 let usrId = "5c4ea5eec7887440c0ff73cf"
-db.getResultByUsr(usrId , (lesson)=>{
+db.getPreviousLesson(lsnId , (lesson)=>{
     console.log("lesson",lesson)
 })
 // var moment = require('moment')
