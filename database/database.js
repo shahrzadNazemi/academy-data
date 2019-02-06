@@ -2701,6 +2701,7 @@ module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
             cb(-1)
         }
         else {
+            lesson[0].position = "current"
             let prCrNextLesson = []
            
             module.exports.getPreviousLesson(lsnId, (prLesson)=> {
@@ -2711,17 +2712,25 @@ module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
                     delete lesson[0].video
                     delete lesson[0].sound
                     delete lesson[0].text
-                   logger.info("darse ghbli",prLesson)
-                    if (!prLesson._id.equals(lesson[0]._id) )
+                    if (!prLesson._id.equals(lesson[0]._id) ){
+                        prLesson.position = "previous"
                         prCrNextLesson.push(prLesson)
-                    prCrNextLesson.push(lesson[0])
+
+                    }
+                    else{
+                        prCrNextLesson.push(lesson[0])
+
+                    }
                     module.exports.getNextLesson(lsnId, (nxtLesson)=> {
                         if (nxtLesson == 0 || nxtLesson == -1) {
                             cb(-1)
                         }
                         else {
-                            if (!nxtLesson._id.equals( lesson[0]._id))
+                            if (!nxtLesson._id.equals( lesson[0]._id)){
+                                nxtLesson.position = "next"
                                 prCrNextLesson.push(nxtLesson)
+
+                            }
                             cb(prCrNextLesson)
                         }
                     })
