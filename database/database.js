@@ -2701,9 +2701,9 @@ module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
             cb(-1)
         }
         else {
-            lesson[0].position = "current"
+
             let prCrNextLesson = []
-           
+
             module.exports.getPreviousLesson(lsnId, (prLesson)=> {
                 if (prLesson == 0 || prLesson == -1) {
                     cb(-1)
@@ -2717,10 +2717,8 @@ module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
                         prCrNextLesson.push(prLesson)
 
                     }
-                    else{
-                        prCrNextLesson.push(lesson[0])
-
-                    }
+                    lesson[0].position = "current"
+                    prCrNextLesson.push(lesson[0])
                     module.exports.getNextLesson(lsnId, (nxtLesson)=> {
                         if (nxtLesson == 0 || nxtLesson == -1) {
                             cb(-1)
