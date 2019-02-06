@@ -500,7 +500,6 @@ module.exports.editTrick = (info, trckId, cb)=> {
 };
 
 module.exports.editViewByUsrId = (info, usrId, cb)=> {
-    console.log("usrIdIneditView", usrId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -512,7 +511,8 @@ module.exports.editViewByUsrId = (info, usrId, cb)=> {
                 $set: {
                     "lsnId": info.lsnId,
                     "video": info.video,
-                    "sound": info.sound
+                    "sound": info.sound,
+                    "viewPermission":info.viewPermission
                 }
             }, (err, result)=> {
                 if (err) {
