@@ -1817,7 +1817,8 @@ module.exports.postSupporter = (info, cb)=> {
             con.collection("supporter").insertOne({
                 "name": info.name,
                 "username": info.username,
-                "password": info.password
+                "password": info.password,
+                "avatarUrl":info.avatarUrl
             }, (err, result) => {
                 if (err) {
 
@@ -2000,7 +2001,9 @@ module.exports.editSupporter = (info, supId, cb)=> {
             let infor = {
                 "name": info.name,
                 "username": info.username,
-                "password": info.password
+                "password": info.password,
+                "avatarUrl":info.avatarUrl
+
             }
             con.collection("supporter").findOneAndUpdate({"_id": new ObjectID(supId)}, {
                 $set: infor
