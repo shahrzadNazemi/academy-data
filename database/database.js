@@ -3536,6 +3536,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                     })
                 }
                 else {
+                    logger.info("lastresult in UpdateResult" , lastResult)
                     module.exports.getExamByLessonId(lsnId, (exam)=> {
                         if (exam == -1) {
                             cb(-1)
@@ -3733,7 +3734,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                     cb(0)
                 }
                 else {
-                    console.log("herein=0")
+                    console.log("herein=0" , )
                     module.exports.getExamByLessonId(updateInfo.lsnId, (exam)=> {
                         console.log("exam", exam)
                         if (exam == -1) {
@@ -3786,6 +3787,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                                         updateInfo.quiz.quizScore = data[0].totalScore
                                         updateInfo.quiz.quizCount = data[0].count
                                     }
+                                    console.log("here in lsnId" , updateInfo)
                                     mongo.editResult(usrId, lsnId, updateInfo, (updatedInfo)=> {
                                         if (updatedInfo == -1) {
                                             cb(-1)

@@ -2,6 +2,7 @@ let MongoClient = require('mongodb').MongoClient;
 let config = require('../util/config')
 let ObjectID = require('mongodb').ObjectID;
 let assert = require('assert')
+let logger = require('../util/logger')
 
 module.exports.adminLogin = (loginInfo, cb)=> {
     console.log(loginInfo)
@@ -2100,6 +2101,7 @@ module.exports.editNote = (info, ntId, cb)=> {
 
 
 module.exports.editResult = (usrId, lsnId, info, cb)=> {
+    logger.info("editResultInfo in mongo file" , info)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -2170,6 +2172,8 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
 
             }
             else if (lsnId == 0) {
+                console.log("hey in lsnId =0")
+
                 con.collection("result").findOneAndUpdate({
                         "lsnId": lsnId,
                         "usrId": new ObjectID(usrId)
@@ -2189,13 +2193,40 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             console.log(err)
                             cb(-1)
                         }
-                        else {
+                            else if(result.lastErrorObject.n ==0){
+                            con.collection("result").findOneAndUpdate({
+                                    "lsnId": new ObjectID(info.lsnId),
+                                    "usrId": new ObjectID(usrId)
+                                }, {
+                                    $set: {
+                                        "usrId": info.usrId,
+                                        "lsnId": info.lsnId,
+                                        "passedLesson": info.passedLesson,
+                                        "timePassed": info.timePassed,
+                                        "quiz": info.quiz,
+                                        "exam": info.exam,
+                                        "round": info.round
+                                    }
+                                },
+                                {returnOriginal: false}, (err, result)=> {
+                                    if (err) {
+                                        console.log(err)
+                                        cb(-1)
+                                    }
+                                    else {
 
+                                        cb(result)
+                                    }
+                                })
+                        }
+                        else {
+                            logger.info("jere" , result)
                             cb(result)
                         }
                     })
             }
             else {
+                console.log("hey in else")
                 con.collection("result").findOneAndUpdate({
                         "lsnId": new ObjectID(lsnId),
                         "usrId": new ObjectID(usrId)
