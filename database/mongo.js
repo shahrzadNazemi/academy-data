@@ -3104,7 +3104,7 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                         }
                         else {
                             console.log(result)
-                            cb(result)
+                            cb(result.value)
                         }
                     })
             }
