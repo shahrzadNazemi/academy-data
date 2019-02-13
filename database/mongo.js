@@ -38,6 +38,7 @@ module.exports.adminLogin = (loginInfo, cb)=> {
                     })
                 }
                 else {
+                    result[0].role = "admin"
                     cb(result[0])
                 }
             })
@@ -507,6 +508,9 @@ module.exports.editViewByUsrId = (info, usrId, cb)=> {
             cb(-1)
         }
         else {
+            if(info.viewPermission == undefined){
+                info.viewPermission = false
+            }
             var con = db.db('englishAcademy')
             con.collection("view").updateOne({"usrId": new ObjectID(usrId)}, {
                 $set: {
