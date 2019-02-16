@@ -383,7 +383,25 @@ module.exports.getTktByStuId = (stuId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("ticket").find({"usrId": new ObjectID(`${stuId}`)}).toArray((err, result) => {
+            con.collection("ticket").aggregate([
+                {$match: {"usrId": new ObjectID(`${stuId}`)}},
+                {
+                    $lookup: {
+                        from: "supporter",
+                        localField: "supId",
+                        foreignField: "_id",
+                        as: "supporter"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "ticketType",
+                        localField: "depId",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+            ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
