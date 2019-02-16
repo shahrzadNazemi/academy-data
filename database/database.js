@@ -232,6 +232,12 @@ module.exports.getAllTickets = (supId , cb)=> {
     })
 };
 
+module.exports.closeTicket = (now)=>{
+    let pass = moment(now).subtract(3, 'days')
+    mongo.closeTkt(pass)
+
+}
+
 
 
 

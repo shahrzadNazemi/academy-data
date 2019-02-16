@@ -401,6 +401,9 @@ module.exports.getTktByStuId = (stuId, cb)=> {
                         as: "department"
                     }
                 },
+                {
+                    $sort: {time: -1}
+                },
             ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
