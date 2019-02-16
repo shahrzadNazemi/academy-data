@@ -52,6 +52,17 @@ module.exports.addLevel = (levelInfo, cb)=> {
     })
 };
 
+module.exports.addTicket = (tktInfo, cb)=> {
+    mongo.postTicket(tktInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.addQuestion = (QInfo, cb)=> {
     mongo.postQuestion(QInfo, (result)=> {
         if (result == -1) {
@@ -149,6 +160,65 @@ module.exports.getNotificationById = (NId, cb)=> {
     })
 };
 
+module.exports.getTicketById = (tktId, cb)=> {
+    mongo.getTktById(tktId, (ticket)=> {
+        if (ticket == -1) {
+            cb(-1)
+        }
+        else if (ticket == 0) {
+            cb(0)
+        }
+        else {
+            cb(ticket)
+        }
+    })
+};
+
+module.exports.getTicketByStuId = (stuId, cb)=> {
+    mongo.getTktByStuId(stuId, (ticket)=> {
+        if (ticket == -1) {
+            cb(-1)
+        }
+        else if (ticket == 0) {
+            cb(0)
+        }
+        else {
+            cb(ticket)
+        }
+    })
+};
+
+module.exports.getTicketBySupId = (supId, cb)=> {
+    mongo.getTktBySupId(supId, (ticket)=> {
+        if (ticket == -1) {
+            cb(-1)
+        }
+        else if (ticket == 0) {
+            cb(0)
+        }
+        else {
+            cb(ticket)
+        }
+    })
+};
+
+module.exports.getAllTickets = (cb)=> {
+    mongo.getTkts((ticket)=> {
+        if (ticket == -1) {
+            cb(-1)
+        }
+        else if (ticket == 0) {
+            cb(0)
+        }
+        else {
+            cb(ticket)
+        }
+    })
+};
+
+
+
+
 module.exports.getStuPlacement = (usrId, cb)=> {
     mongo.getViewByUsrId(usrId, (view)=> {
         if (view == -1) {
@@ -237,6 +307,47 @@ module.exports.updateNotification = (notifInfo, NId, cb)=> {
     })
 };
 
+module.exports.updateTicket = (tktInfo, tktId, cb)=> {
+    module.exports.getTicketById(tktId, (ticket)=> {
+        if (ticket == -1) {
+            cb(-1)
+        }
+        else if (ticket == 0) {
+            cb(0)
+        }
+        else {
+            logger.info("lastMSG" , ticket)
+            let newMsg;
+            if(tktInfo.newMsg){
+                newMsg =ticket.msg
+                newMsg.push(tktInfo.msg)
+            }
+            else{
+                let mk = []
+                mk.push(tktInfo.msg)
+                 newMsg = Object.assign([] , ticket.msg , mk)
+            }
+
+            logger.info("newMSG in updateTicket" , newMsg)
+            let newTicket = Object.assign({}, ticket, tktInfo)
+            newTicket.msg = newMsg
+            mongo.editTicket(newTicket, tktId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.updateText = (updateInfo, txtId, cb)=> {
     module.exports.getTextById(txtId, (text)=> {
         if (text == -1) {
@@ -276,6 +387,21 @@ module.exports.addType = (typeInfo, cb)=> {
         }
     })
 };
+
+module.exports.addTypeOfTicket = (typeInfo, cb)=> {
+    mongo.postTypeOfTicket(typeInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 
 module.exports.addCategory = (categoryInfo, cb)=> {
     mongo.postCategory(categoryInfo, (result)=> {
@@ -1836,6 +1962,21 @@ module.exports.getAllTpe = (cb)=> {
         }
     })
 };
+
+module.exports.getAllTktTypes = (cb)=> {
+    mongo.getAllTicketTypes((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 
 module.exports.getAllCats = (cb)=> {
     mongo.getAllCategories((result)=> {

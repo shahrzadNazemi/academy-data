@@ -321,6 +321,85 @@ module.exports.updateResultByLsnId = (lsnId, info, cb)=> {
     })
 };
 
+module.exports.getTktById = (tktId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("ticket").findOne({"_id": new ObjectID(`${tktId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getTktBySupId = (supId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if(supId!= 0){
+                supId = new ObjectID(`${supId}`)
+            }
+            if(supId == 0){
+                supId =0
+            }
+            con.collection("ticket").find({"supId":supId}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getTktByStuId = (stuId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("ticket").find({"usrId": new ObjectID(`${stuId}`)}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.postView = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -357,6 +436,47 @@ module.exports.postView = (info, cb)=> {
         }
     })
 };
+
+module.exports.postTicket = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (info.usrId != undefined && info.usrId != "") {
+                info.usrId = new ObjectID(`${info.usrId}`)
+            }
+            if (info.typeId != undefined && info.typeId != "") {
+                info.typeId = new ObjectID(info.typeId)
+            }
+            logger.info("info in postTicket" , info)
+
+            var con = db.db('englishAcademy')
+            con.collection("ticket").insertOne({
+                "usrId": info.usrId,
+                "supId": 0,
+                "status": "open",
+                "msg": [info.msg],
+                "time": info.time,
+                "typeId":info.typeId
+            }, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    console.log(result.insertedId)
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
 
 module.exports.editViewToInsert = (info, lsnId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -501,6 +621,63 @@ module.exports.editTrick = (info, trckId, cb)=> {
     })
 };
 
+module.exports.editTicket = (info, tktId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (info.usrId != undefined && info.usrId != "") {
+                info.usrId = new ObjectID(`${info.usrId}`)
+            }
+            if (info.supId != 0 && info.supId != "" && info.supId != undefined) {
+                info.supId = new ObjectID(`${info.supId}`)
+            }
+            // if (info.newMsg) {
+            //     for(var i=0;i<info.msg.length;i++){
+            //         if(info.msg[i]._id == undefined){
+            //                 info.msg._id = new ObjectID()
+            //         }
+            //     }
+            //
+            // }
+            if (info.typeId != undefined && info.typeId != "") {
+                info.typeId = new ObjectID(info.typeId)
+            }
+            logger.info("info in update ticket" , info)
+            con.collection("ticket").findOneAndUpdate({"_id": new ObjectID(tktId)}, {
+                    $set: {
+                        "usrId": info.usrId,
+                        "supId": info.supId,
+                        "status": info.status,
+                        "msg": info.msg,
+                        "time": info.time,
+                        "typeId":info.typeId
+
+                    }
+                }, {returnOriginal: false}
+                , (err, result)=> {
+                    if (err) {
+                        console.log("updateView db Error", err);
+                        cb(-1)
+                    }
+                    else if (result.value != null) {
+                        cb(result.value)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+
+
+        }
+    })
+};
+
+
 module.exports.editViewByUsrId = (info, usrId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -508,7 +685,7 @@ module.exports.editViewByUsrId = (info, usrId, cb)=> {
             cb(-1)
         }
         else {
-            if(info.viewPermission == undefined){
+            if (info.viewPermission == undefined) {
                 info.viewPermission = false
             }
             var con = db.db('englishAcademy')
@@ -517,7 +694,7 @@ module.exports.editViewByUsrId = (info, usrId, cb)=> {
                     "lsnId": info.lsnId,
                     "video": info.video,
                     "sound": info.sound,
-                    "viewPermission":info.viewPermission
+                    "viewPermission": info.viewPermission
                 }
             }, (err, result)=> {
                 if (err) {
@@ -572,6 +749,42 @@ module.exports.postType = (info, cb)=> {
         }
     })
 };
+
+module.exports.postTypeOfTicket = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("ticketType").insertOne({
+                "title": info.title,
+            }, (err, result) => {
+                if (err != null) {
+                    if (err.code == 11000) {
+                        cb(-2)
+                    }
+                }
+                else {
+                    if (err) {
+                        cb(-1)
+                    }
+                    else if (result.length == 0) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result.insertedId)
+                    }
+                }
+
+            })
+
+        }
+    })
+};
+
 
 module.exports.postCategory = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -1266,7 +1479,7 @@ module.exports.getResultByUsrId = (usrId, cb)=> {
             var con = db.db('englishAcademy')
             con.collection("result").find({
                 "usrId": new ObjectID(`${usrId}`),
-                "examTimePassed":{ $ne: null }
+                "examTimePassed": {$ne: null}
             }).toArray((err, result) => {
                 if (err) {
                     cb(-1)
@@ -1730,6 +1943,31 @@ module.exports.getAllLevels = (cb)=> {
     })
 };
 
+module.exports.getTkts = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("ticket").find().toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.getAllNotifications = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -1818,7 +2056,7 @@ module.exports.postSupporter = (info, cb)=> {
                 "name": info.name,
                 "username": info.username,
                 "password": info.password,
-                "avatarUrl":info.avatarUrl
+                "avatarUrl": info.avatarUrl
             }, (err, result) => {
                 if (err) {
 
@@ -2002,7 +2240,7 @@ module.exports.editSupporter = (info, supId, cb)=> {
                 "name": info.name,
                 "username": info.username,
                 "password": info.password,
-                "avatarUrl":info.avatarUrl
+                "avatarUrl": info.avatarUrl
 
             }
             con.collection("supporter").findOneAndUpdate({"_id": new ObjectID(supId)}, {
@@ -2108,7 +2346,7 @@ module.exports.editNote = (info, ntId, cb)=> {
 
 
 module.exports.editResult = (usrId, lsnId, info, cb)=> {
-    logger.info("editResultInfo in mongo file" , info)
+    logger.info("editResultInfo in mongo file", info)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -2200,7 +2438,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             console.log(err)
                             cb(-1)
                         }
-                            else if(result.lastErrorObject.n ==0){
+                        else if (result.lastErrorObject.n == 0) {
                             con.collection("result").findOneAndUpdate({
                                     "lsnId": new ObjectID(info.lsnId),
                                     "usrId": new ObjectID(usrId)
@@ -2227,7 +2465,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                                 })
                         }
                         else {
-                            logger.info("jere" , result)
+                            logger.info("jere", result)
                             cb(result)
                         }
                     })
@@ -2485,7 +2723,7 @@ module.exports.postCertification = (certInfo, cb)=> {
                 "IDCard": certInfo.IDCard,
                 "personalImg": certInfo.personalImg,
                 "status": "pending",
-                "usrId":certInfo.usrId
+                "usrId": certInfo.usrId
             }, (err, result) => {
 
                 if (err) {
@@ -2581,6 +2819,7 @@ module.exports.postTrick = (trickInfo, cb)=> {
         }
     })
 };
+
 
 module.exports.postSound = (soundInfo, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -2857,7 +3096,7 @@ module.exports.postStudent = (stuInfo, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if( stuInfo.score && typeof stuInfo.score == "string"){
+            if (stuInfo.score && typeof stuInfo.score == "string") {
                 stuInfo.score = parseInt(stuInfo.score)
             }
             con.collection("student").insertOne({
@@ -3114,43 +3353,43 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
 };
 
 module.exports.editCertification = (certInfo, certId, cb)=> {
-        MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
-            if (err) {
-                console.log("Err", err)
-                cb(-1)
-            }
-            else {
-                var con = db.db('englishAcademy')
-                if(certInfo.usrId){
-                    certInfo.usrId = new ObjectID(`${certInfo.usrId}`)
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (certInfo.usrId) {
+                certInfo.usrId = new ObjectID(`${certInfo.usrId}`)
 
-                }
-                con.collection("certification").findOneAndUpdate({"_id": new ObjectID(certId)}, {
-                        $set: {
-                            "time": certInfo.time,
-                            "firstName": certInfo.firstName,
-                            "lastName": certInfo.lastName,
-                            "zipCode": certInfo.zipCode,
-                            "address": certInfo.address,
-                            "IDCard": certInfo.IDCard,
-                            "personalImg": certInfo.personalImg,
-                            "status": certInfo.status,
-                            "usrId":certInfo.usrId
-                        }
-                    },
-                    {returnOriginal: false}
-                    , (err, result)=> {
-                        if (err) {
-                            console.log(err)
-                            cb(-1)
-                        }
-                        else {
-                            console.log(result)
-                            cb(result.value)
-                        }
-                    })
             }
-        })
+            con.collection("certification").findOneAndUpdate({"_id": new ObjectID(certId)}, {
+                    $set: {
+                        "time": certInfo.time,
+                        "firstName": certInfo.firstName,
+                        "lastName": certInfo.lastName,
+                        "zipCode": certInfo.zipCode,
+                        "address": certInfo.address,
+                        "IDCard": certInfo.IDCard,
+                        "personalImg": certInfo.personalImg,
+                        "status": certInfo.status,
+                        "usrId": certInfo.usrId
+                    }
+                },
+                {returnOriginal: false}
+                , (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else {
+                        console.log(result)
+                        cb(result.value)
+                    }
+                })
+        }
+    })
 };
 
 
@@ -3344,6 +3583,32 @@ module.exports.getAllTypes = (cb)=> {
         }
     })
 };
+
+module.exports.getAllTicketTypes = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("ticketType").find({}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 
 module.exports.getAllCerts = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
