@@ -2051,12 +2051,16 @@ module.exports.postSupporter = (info, cb)=> {
             cb(-1)
         }
         else {
+            if (info.department != undefined && info.department != "") {
+                info.department = new ObjectID(info.department)
+            }
             var con = db.db('englishAcademy')
             con.collection("supporter").insertOne({
                 "name": info.name,
                 "username": info.username,
                 "password": info.password,
-                "avatarUrl": info.avatarUrl
+                "avatarUrl": info.avatarUrl,
+                "department":info.department
             }, (err, result) => {
                 if (err) {
 
@@ -2235,12 +2239,17 @@ module.exports.editSupporter = (info, supId, cb)=> {
             cb(-1)
         }
         else {
+            if (info.department != undefined && info.department != "") {
+                info.department = new ObjectID(info.department)
+            }
             var con = db.db('englishAcademy')
             let infor = {
                 "name": info.name,
                 "username": info.username,
                 "password": info.password,
-                "avatarUrl": info.avatarUrl
+                "avatarUrl": info.avatarUrl,
+                "department":info.department
+
 
             }
             con.collection("supporter").findOneAndUpdate({"_id": new ObjectID(supId)}, {
