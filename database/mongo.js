@@ -551,6 +551,36 @@ module.exports.editViewToInsert = (info, lsnId, cb)=> {
     })
 };
 
+module.exports.closeTkt = (pass , cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+                con.collection("ticket").updateMany({time: {$lt: pass} }, {
+                    $set:{
+                        "status":"close"
+                    }
+                }, (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else if (result.result.n == 1) {
+                        cb(info)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+        }
+    })
+};
+
+
 module.exports.editViewTosetTrue = (id, usrId, type, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {

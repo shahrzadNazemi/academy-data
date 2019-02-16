@@ -1,6 +1,7 @@
 let mongo = require('./mongo')
 let mongoose = require('./mongoose')
 let logger = require('../util/logger')
+let moment = require('moment')
 
 
 module.exports.loginForAdmin = (loginInfo, cb)=> {
@@ -234,7 +235,9 @@ module.exports.getAllTickets = (supId , cb)=> {
 
 module.exports.closeTicket = (now)=>{
     let pass = moment(now).subtract(3, 'days')
-    mongo.closeTkt(pass)
+    mongo.closeTkt(pass , (resul)=>{
+        console.log(resul)
+    })
 
 }
 
@@ -345,9 +348,15 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
                 newMsg.push(tktInfo.msg)
             }
             else{
-                let mk = []
-                mk.push(tktInfo.msg)
-                 newMsg = Object.assign([] , ticket.msg , mk)
+                if(tktInfo.msg){
+                    let mk = []
+                    mk.push(tktInfo.msg)
+                    newMsg = Object.assign([] , ticket.msg , mk)
+                }
+                else{
+                    newMsg = ticket.msg
+                }
+
             }
 
             logger.info("newMSG in updateTicket" , newMsg)
