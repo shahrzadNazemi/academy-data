@@ -122,11 +122,10 @@ router.get('/:tktId', (req, res)=> {
             res.json(ticket)
         }
     })
-})
-;
+});
 
-router.get('/', (req, res)=> {
-    database.getAllTickets((ticket)=> {
+router.get('/all/:supId', (req, res)=> {
+    database.getAllTickets(req.params.supId ,(ticket)=> {
         if (ticket == -1) {
             res.status(500).end('')
         }

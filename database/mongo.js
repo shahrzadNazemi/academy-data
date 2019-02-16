@@ -447,8 +447,8 @@ module.exports.postTicket = (info, cb)=> {
             if (info.usrId != undefined && info.usrId != "") {
                 info.usrId = new ObjectID(`${info.usrId}`)
             }
-            if (info.typeId != undefined && info.typeId != "") {
-                info.typeId = new ObjectID(info.typeId)
+            if (info.depId != undefined && info.depId != "") {
+                info.depId = new ObjectID(info.depId)
             }
             logger.info("info in postTicket" , info)
 
@@ -459,7 +459,7 @@ module.exports.postTicket = (info, cb)=> {
                 "status": "open",
                 "msg": [info.msg],
                 "time": info.time,
-                "typeId":info.typeId
+                "depId":info.depId
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -643,8 +643,8 @@ module.exports.editTicket = (info, tktId, cb)=> {
             //     }
             //
             // }
-            if (info.typeId != undefined && info.typeId != "") {
-                info.typeId = new ObjectID(info.typeId)
+            if (info.depId != undefined && info.depId != "") {
+                info.depId = new ObjectID(info.depId)
             }
             logger.info("info in update ticket" , info)
             con.collection("ticket").findOneAndUpdate({"_id": new ObjectID(tktId)}, {
@@ -654,7 +654,7 @@ module.exports.editTicket = (info, tktId, cb)=> {
                         "status": info.status,
                         "msg": info.msg,
                         "time": info.time,
-                        "typeId":info.typeId
+                        "depId":info.depId
 
                     }
                 }, {returnOriginal: false}
@@ -1943,7 +1943,7 @@ module.exports.getAllLevels = (cb)=> {
     })
 };
 
-module.exports.getTkts = (cb)=> {
+module.exports.getTkts = (depId , cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -1951,7 +1951,17 @@ module.exports.getTkts = (cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("ticket").find().toArray((err, result) => {
+            con.collection("ticket").aggregate([
+                {$match: {"depId": new ObjectID(`${depId}`)}},
+                {
+                    $lookup: {
+                        from: "student",
+                        localField: "usrId",
+                        foreignField: "_id",
+                        as: "student"
+                    }
+                },
+            ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }

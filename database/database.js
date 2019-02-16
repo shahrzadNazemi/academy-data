@@ -202,16 +202,32 @@ module.exports.getTicketBySupId = (supId, cb)=> {
     })
 };
 
-module.exports.getAllTickets = (cb)=> {
-    mongo.getTkts((ticket)=> {
-        if (ticket == -1) {
+module.exports.getAllTickets = (supId , cb)=> {
+    module.exports.getSupportById(supId , (supporter)=>{
+        if(supporter == -1){
             cb(-1)
         }
-        else if (ticket == 0) {
+        else if(supporter ==0){
             cb(0)
         }
-        else {
-            cb(ticket)
+        else{
+            logger.info("supporter" , supporter)
+            mongo.getTkts(supporter.department , (ticket)=> {
+                if (ticket == -1) {
+                    cb(-1)
+                }
+                else if (ticket == 0) {
+                    cb(0)
+                }
+                else {
+                    for(var i=0;i<ticket.length ;i++){
+                        ticket[i].student = ticket[i].student[0]
+                        delete ticket[i].student[0]
+                        ticket[i].supporter = supporter
+                    }
+                    cb(ticket)
+                }
+            })
         }
     })
 };
