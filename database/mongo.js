@@ -2214,7 +2214,16 @@ module.exports.getAllSupporters = (cb)=> {
         else {
             var con = db.db('englishAcademy')
 
-            con.collection("supporter").find().toArray((err, result) => {
+            con.collection("supporter").aggregate([
+                {
+                    $lookup: {
+                        from: "ticketType",
+                        localField: "department",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+            ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -3468,7 +3477,17 @@ module.exports.getSupById = (supId, cb)=> {
                 supId = JSON.stringify(supId)
             }
             var con = db.db('englishAcademy')
-            con.collection("supporter").findOne({"_id": new ObjectID(`${supId}`)}, (err, result) => {
+            con.collection("supporter").aggregate([
+                {$match: {"_id": new ObjectID(`${supId}`)}},
+                {
+                    $lookup: {
+                        from: "ticketType",
+                        localField: "department",
+                        foreignField: "_id",
+                        as: "department"
+                    }
+                },
+            ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -3476,6 +3495,11 @@ module.exports.getSupById = (supId, cb)=> {
                     cb(0)
                 }
                 else {
+                    logger.info("result" , result)
+result = result[0]
+                    result.department = result.department[0]
+
+
                     cb(result)
                 }
             })
