@@ -720,8 +720,8 @@ module.exports.postType = (info, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if (info.category._id) {
-                info.category._id = new ObjectID(info.category._id)
+            if (info.category.value) {
+                info.category.value = new ObjectID(info.category.value)
             }
             con.collection("type").insertOne({
                 "title": info.title,
