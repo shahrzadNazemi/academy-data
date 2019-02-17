@@ -346,6 +346,7 @@ module.exports.getTktById = (tktId, cb)=> {
 };
 
 module.exports.getTktBySupId = (supId, cb)=> {
+    logger.info("supId" , supId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
