@@ -341,6 +341,8 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
         }
         else {
             logger.info("lastMSG", ticket.msg)
+            logger.info("tktInfo", tktInfo.msg)
+
 
             let newMsg;
             if (tktInfo.newMsg) {
@@ -353,7 +355,7 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
                 if (tktInfo.msg) {
                     let fk ;
                     for(var i=0;i<ticket.msg.length;i++){
-                        if(ticket.msg[i]._id == tktInfo.msg._id){
+                        if(ticket.msg[i]._id==tktInfo.msg._id){
                             fk = Object.assign(ticket.msg[i] ,tktInfo.msg )
 
                         }

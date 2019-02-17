@@ -701,6 +701,9 @@ module.exports.editTicket = (info, tktId, cb)=> {
             if (info.depId != undefined && info.depId != "") {
                 info.depId = new ObjectID(info.depId)
             }
+            if (info.msg != undefined && info.msg != "") {
+                info.msg_id = new ObjectID(info.msg_id)
+            }
             logger.info("info in update ticket" , info)
             con.collection("ticket").findOneAndUpdate({"_id": new ObjectID(tktId)}, {
                     $set: {
