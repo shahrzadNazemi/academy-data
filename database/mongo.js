@@ -493,7 +493,6 @@ module.exports.postTicket = (info, cb)=> {
                     cb(0)
                 }
                 else {
-                    info.msg =[info.msg]
                     info._id = result.insertedId
                     cb(info)
                 }
