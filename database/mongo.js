@@ -712,7 +712,7 @@ module.exports.editTicket = (info, tktId, cb)=> {
                 info.depId = new ObjectID(info.depId)
             }
             if (info.msg != undefined && info.msg != "") {
-                info.msg_id = new ObjectID(info.msg_id)
+                info.msg._id = new ObjectID(info.msg._id)
             }
             logger.info("info in update ticket" , info)
             con.collection("ticket").findOneAndUpdate({"_id": new ObjectID(tktId)}, {
