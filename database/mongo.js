@@ -471,6 +471,10 @@ module.exports.postTicket = (info, cb)=> {
             if (info.depId != undefined && info.depId != "") {
                 info.depId = new ObjectID(info.depId)
             }
+            if (info.msg != undefined && info.msg != "") {
+                info.msg._id = new ObjectID()
+                info.msg.image = ""
+            }
             logger.info("info in postTicket" , info)
 
             var con = db.db('englishAcademy')
@@ -489,8 +493,8 @@ module.exports.postTicket = (info, cb)=> {
                     cb(0)
                 }
                 else {
-                    console.log(result.insertedId)
-                    cb(result.insertedId)
+                    info._id = result.insertedId
+                    cb(info)
                 }
             })
 

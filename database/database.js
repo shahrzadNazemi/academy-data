@@ -2,6 +2,7 @@ let mongo = require('./mongo')
 let mongoose = require('./mongoose')
 let logger = require('../util/logger')
 let moment = require('moment')
+let ObjectID = require('mongodb').ObjectID;
 
 
 module.exports.loginForAdmin = (loginInfo, cb)=> {
@@ -203,17 +204,17 @@ module.exports.getTicketBySupId = (supId, cb)=> {
     })
 };
 
-module.exports.getAllTickets = (supId , cb)=> {
-    module.exports.getSupportById(supId , (supporter)=>{
-        if(supporter == -1){
+module.exports.getAllTickets = (supId, cb)=> {
+    module.exports.getSupportById(supId, (supporter)=> {
+        if (supporter == -1) {
             cb(-1)
         }
-        else if(supporter ==0){
+        else if (supporter == 0) {
             cb(0)
         }
-        else{
-            logger.info("supporter" , supporter)
-            mongo.getTkts(supporter.department._id , (ticket)=> {
+        else {
+            logger.info("supporter", supporter)
+            mongo.getTkts(supporter.department._id, (ticket)=> {
                 if (ticket == -1) {
                     cb(-1)
                 }
@@ -221,7 +222,7 @@ module.exports.getAllTickets = (supId , cb)=> {
                     cb(0)
                 }
                 else {
-                    for(var i=0;i<ticket.length ;i++){
+                    for (var i = 0; i < ticket.length; i++) {
                         ticket[i].student = ticket[i].student[0]
                         delete ticket[i].student[0]
                         ticket[i].supporter = supporter
@@ -233,15 +234,13 @@ module.exports.getAllTickets = (supId , cb)=> {
     })
 };
 
-module.exports.closeTicket = (now)=>{
+module.exports.closeTicket = (now)=> {
     let pass = moment(now).subtract(3, 'days')
-    mongo.closeTkt(pass , (resul)=>{
+    mongo.closeTkt(pass, (resul)=> {
         console.log(resul)
     })
 
 }
-
-
 
 
 module.exports.getStuPlacement = (usrId, cb)=> {
@@ -341,25 +340,35 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
             cb(0)
         }
         else {
-            logger.info("lastMSG" , ticket)
+            logger.info("lastMSG", ticket.msg)
+
             let newMsg;
-            if(tktInfo.newMsg){
-                newMsg =ticket.msg
+            if (tktInfo.newMsg) {
+                tktInfo.msg._id = new ObjectId()
+                tktInfo.msg.time = new Date().getTime()
+                newMsg = ticket.msg
                 newMsg.push(tktInfo.msg)
             }
-            else{
-                if(tktInfo.msg){
-                    let mk = []
-                    mk.push(tktInfo.msg)
-                    newMsg = Object.assign([] , ticket.msg , mk)
+            else {
+                if (tktInfo.msg) {
+                    let fk ;
+                    for(var i=0;i<ticket.msg.length;i++){
+                        if(ticket.msg[i]._id == tktInfo.msg._id){
+                            fk = Object.assign(ticket.msg[i] ,tktInfo.msg )
+
+                        }
+                    }
+                    logger.info("fk" , fk)
+                    newMsg = ticket.msg
+
                 }
-                else{
+                else {
                     newMsg = ticket.msg
                 }
 
             }
 
-            logger.info("newMSG in updateTicket" , newMsg)
+            logger.info("newMSG in updateTicket", newMsg)
             let newTicket = Object.assign({}, ticket, tktInfo)
             newTicket.msg = newMsg
             mongo.editTicket(newTicket, tktId, (result)=> {
@@ -2513,7 +2522,7 @@ module.exports.updateViewByUsrId = (updateInfo, usrId, cb)=> {
             cb(0)
         }
         else {
-            let newView = Object.assign( lastView, updateInfo)
+            let newView = Object.assign(lastView, updateInfo)
             logger.info("newView in updateViewByUsrId", newView)
             mongo.editViewByUsrId(newView, usrId, (updated)=> {
                 if (updated == -1) {
@@ -3708,7 +3717,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                     })
                 }
                 else {
-                    logger.info("lastresult in UpdateResult" , lastResult)
+                    logger.info("lastresult in UpdateResult", lastResult)
                     module.exports.getExamByLessonId(lsnId, (exam)=> {
                         if (exam == -1) {
                             cb(-1)
@@ -3906,7 +3915,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                     cb(0)
                 }
                 else {
-                    console.log("herein=0" , )
+                    console.log("herein=0",)
                     module.exports.getExamByLessonId(updateInfo.lsnId, (exam)=> {
                         console.log("exam", exam)
                         if (exam == -1) {
@@ -3959,7 +3968,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                                         updateInfo.quiz.quizScore = data[0].totalScore
                                         updateInfo.quiz.quizCount = data[0].count
                                     }
-                                    console.log("here in lsnId" , updateInfo)
+                                    console.log("here in lsnId", updateInfo)
                                     mongo.editResult(usrId, lsnId, updateInfo, (updatedInfo)=> {
                                         if (updatedInfo == -1) {
                                             cb(-1)
