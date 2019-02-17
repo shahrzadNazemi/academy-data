@@ -346,7 +346,7 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
 
             let newMsg;
             if (tktInfo.newMsg) {
-                tktInfo.msg._id = new ObjectId()
+                tktInfo.msg._id = new ObjectID()
                 tktInfo.msg.time = new Date().getTime()
                 newMsg = ticket.msg
                 newMsg.push(tktInfo.msg)
