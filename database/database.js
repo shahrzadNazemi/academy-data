@@ -199,6 +199,10 @@ module.exports.getTicketBySupId = (supId, cb)=> {
             cb(0)
         }
         else {
+            for (var i = 0; i < ticket.length; i++) {
+                ticket[i].student = ticket[i].student[0]
+                delete ticket[i].student[0]
+            }
             cb(ticket)
         }
     })

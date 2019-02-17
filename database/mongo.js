@@ -359,7 +359,17 @@ module.exports.getTktBySupId = (supId, cb)=> {
             if(supId == 0){
                 supId =0
             }
-            con.collection("ticket").find({"supId":supId}).toArray((err, result) => {
+            con.collection("ticket").aggregate([
+                {$match: {"supId":supId}},
+                {
+                    $lookup: {
+                        from: "student",
+                        localField: "usrId",
+                        foreignField: "_id",
+                        as: "student"
+                    }
+                },
+            ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
