@@ -485,6 +485,14 @@ module.exports.postTicket = (info, cb)=> {
                 info.msg._id = new ObjectID()
                 info.msg.image = ""
             }
+            info.msg = {
+                "sender": info.msg.sender,
+                "title": info.msg.title,
+                "description": info.msg.description,
+                "_id": info.msg._id,
+                "time": info.msg.time,
+                "image": info.msg.image
+            }
             logger.info("info in postTicket" , info)
 
             var con = db.db('englishAcademy')
@@ -714,6 +722,14 @@ module.exports.editTicket = (info, tktId, cb)=> {
             if (info.msg != undefined && info.msg != "") {
                 info.msg._id = new ObjectID(info.msg._id)
             }
+            // info.msg = {
+            //     "sender": info.msg.sender,
+            //     "title": info.msg.title,
+            //     "description": info.msg.description,
+            //     "_id": info.msg._id,
+            //     "time": info.msg.time,
+            //     "image": info.msg.image
+            // }
             logger.info("info in update ticket" , info)
             con.collection("ticket").findOneAndUpdate({"_id": new ObjectID(tktId)}, {
                     $set: {
