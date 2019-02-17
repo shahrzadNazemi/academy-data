@@ -119,7 +119,24 @@ router.get('/:tktId', (req, res)=> {
         }
     
         else {
-            res.json(ticket)
+            database.getStuById(ticket.usrId , (student)=>{
+                if(student == -1 || student ==0){
+                    ticket.student = {}
+                }
+                else {
+                    ticket.student = student
+                    database.getSupportById(ticket.supId , (supporter)=>{
+                        if(supporter == -1 || supporter==0){
+                            ticket.supporter ={}
+                        }
+                        else{
+                            ticket.supporter = supporter
+                        }
+                        res.json(ticket)
+
+                    })
+                }
+            })
         }
     })
 });
