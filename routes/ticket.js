@@ -41,7 +41,6 @@ router.get('/type', (req, res)=> {
 });
 
 
-
 router.put('/:tktId', (req, res)=> {
     database.updateTicket(req.body, req.params.tktId, (result)=> {
         if (result == -1) {
@@ -117,19 +116,19 @@ router.get('/:tktId', (req, res)=> {
         else if (ticket == 0) {
             res.status(404).end('')
         }
-    
+
         else {
-            database.getStuById(ticket.usrId , (student)=>{
-                if(student == -1 || student ==0){
+            database.getStuById(ticket.usrId, (student)=> {
+                if (student == -1 || student == 0) {
                     ticket.student = {}
                 }
                 else {
                     ticket.student = student
-                    database.getSupportById(ticket.supId , (supporter)=>{
-                        if(supporter == -1 || supporter==0){
-                            ticket.supporter ={}
+                    database.getSupportById(ticket.supId, (supporter)=> {
+                        if (supporter == -1 || supporter == 0) {
+                            ticket.supporter = {}
                         }
-                        else{
+                        else {
                             ticket.supporter = supporter
                         }
                         res.json(ticket)
@@ -142,7 +141,7 @@ router.get('/:tktId', (req, res)=> {
 });
 
 router.get('/all/:supId', (req, res)=> {
-    database.getAllTickets(req.params.supId ,(ticket)=> {
+    database.getAllTickets(req.params.supId, (ticket)=> {
         if (ticket == -1) {
             res.status(500).end('')
         }

@@ -385,7 +385,13 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
                     cb(0)
                 }
                 else {
-                    cb(result)
+                    if(tktInfo.newMsg){
+                        tktInfo.msg.ticket = result
+                        cb(tktInfo.msg)
+                    }
+                    else{
+                        cb(result)
+                    }
                 }
             })
 
