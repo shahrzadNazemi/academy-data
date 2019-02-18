@@ -344,6 +344,21 @@ router.get('/student/level/:lvlId', (req, res) => {
     })
 });
 
+router.get('/student/lesson/:lsnId', (req, res) => {
+    database.getStuByLesson(req.params.lsnId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
 router.get('/student/:stdId', (req, res) => {
     database.getStuById(req.params.stdId, (result)=> {
         if (result == -1) {

@@ -3273,6 +3273,47 @@ module.exports.getStudentById = (stdId, cb)=> {
     })
 };
 
+module.exports.getStudentByLesson = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if(lsnId == 0){
+                lsnId =0
+            }
+            else {
+                lsnId = new ObjectID(`${lsnId}`)
+            }
+            con.collection("result").aggregate([
+                {$match: {"lsnId":lsnId}},
+                {
+                    $lookup: {
+                        from: "student",
+                        localField: "usrId",
+                        foreignField: "_id",
+                        as: "student"
+                    }
+
+                }]).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.getCertById = (certId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
