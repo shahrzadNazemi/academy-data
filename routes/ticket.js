@@ -55,6 +55,21 @@ router.put('/:tktId', (req, res)=> {
     })
 });
 
+router.put('/:tktId/view', (req, res)=> {
+    database.updateTicketView(req.params.tktId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
 router.delete('/:tktId', (req, res)=> {
     database.delExam(req.params.exId, (exam)=> {
         if (exam == -1) {

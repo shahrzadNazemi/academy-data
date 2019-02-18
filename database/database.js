@@ -359,7 +359,7 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
                 if (tktInfo.msg) {
                     let fk ;
                     for(var i=0;i<ticket.msg.length;i++){
-                        if(ticket.msg[i]._id==tktInfo.msg._id){
+                        if(ticket.msg[i]._id == tktInfo.msg._id){
                             fk = Object.assign(ticket.msg[i] ,tktInfo.msg )
 
                         }
@@ -398,6 +398,35 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
         }
     })
 };
+
+module.exports.updateTicketView = (tktId, cb)=> {
+    module.exports.getTicketById(tktId, (ticket)=> {
+        if (ticket == -1) {
+            cb(-1)
+        }
+        else if (ticket == 0) {
+            cb(0)
+        }
+        else {
+           for(var i=0;i<ticket.msg.length;i++){
+               ticket.msg[i].viewed = true
+           }
+            mongo.editTicket(ticket, tktId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                        cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 
 
 module.exports.updateText = (updateInfo, txtId, cb)=> {

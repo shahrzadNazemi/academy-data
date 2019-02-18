@@ -346,7 +346,7 @@ module.exports.getTktById = (tktId, cb)=> {
 };
 
 module.exports.getTktBySupId = (supId, cb)=> {
-    logger.info("supId" , supId)
+    logger.info("supId", supId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -354,14 +354,14 @@ module.exports.getTktBySupId = (supId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if(supId!= 0){
+            if (supId != 0) {
                 supId = new ObjectID(`${supId}`)
             }
-            if(supId == 0){
-                supId =0
+            if (supId == 0) {
+                supId = 0
             }
             con.collection("ticket").aggregate([
-                {$match: {"supId":supId}},
+                {$match: {"supId": supId}},
                 {
                     $lookup: {
                         from: "student",
@@ -493,9 +493,9 @@ module.exports.postTicket = (info, cb)=> {
                 "_id": info.msg._id,
                 "time": info.msg.time,
                 "image": info.msg.image,
-                "viewed":false
+                "viewed": false
             }
-            logger.info("info in postTicket" , info)
+            logger.info("info in postTicket", info)
 
             var con = db.db('englishAcademy')
             con.collection("ticket").insertOne({
@@ -504,7 +504,7 @@ module.exports.postTicket = (info, cb)=> {
                 "status": "open",
                 "msg": [info.msg],
                 "time": info.time,
-                "depId":info.depId
+                "depId": info.depId
             }, (err, result) => {
                 if (err) {
                     cb(-1)
@@ -575,7 +575,7 @@ module.exports.editViewToInsert = (info, lsnId, cb)=> {
     })
 };
 
-module.exports.closeTkt = (pass , cb)=> {
+module.exports.closeTkt = (pass, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -583,23 +583,23 @@ module.exports.closeTkt = (pass , cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-                con.collection("ticket").updateMany({time: {$lt: pass} }, {
-                    $set:{
-                        "status":"close"
-                    }
-                }, (err, result)=> {
-                    if (err) {
-                        console.log(err)
-                        cb(-1)
-                    }
-                    else if (result.result.n == 1) {
-                        cb(info)
+            con.collection("ticket").updateMany({time: {$lt: pass}}, {
+                $set: {
+                    "status": "close"
+                }
+            }, (err, result)=> {
+                if (err) {
+                    console.log(err)
+                    cb(-1)
+                }
+                else if (result.result.n == 1) {
+                    cb(info)
 
-                    }
-                    else {
-                        cb(0)
-                    }
-                })
+                }
+                else {
+                    cb(0)
+                }
+            })
         }
     })
 };
@@ -732,7 +732,7 @@ module.exports.editTicket = (info, tktId, cb)=> {
             //     "time": info.msg.time,
             //     "image": info.msg.image
             // }
-            logger.info("info in update ticket" , info)
+            logger.info("info in update ticket", info)
             con.collection("ticket").findOneAndUpdate({"_id": new ObjectID(tktId)}, {
                     $set: {
                         "usrId": info.usrId,
@@ -740,7 +740,7 @@ module.exports.editTicket = (info, tktId, cb)=> {
                         "status": info.status,
                         "msg": info.msg,
                         "time": info.time,
-                        "depId":info.depId
+                        "depId": info.depId
 
                     }
                 }, {returnOriginal: false}
@@ -2029,7 +2029,7 @@ module.exports.getAllLevels = (cb)=> {
     })
 };
 
-module.exports.getTkts = (depId , cb)=> {
+module.exports.getTkts = (depId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -2156,7 +2156,7 @@ module.exports.postSupporter = (info, cb)=> {
                 "username": info.username,
                 "password": info.password,
                 "avatarUrl": info.avatarUrl,
-                "department":info.department
+                "department": info.department
             }, (err, result) => {
                 if (err) {
 
@@ -2353,7 +2353,7 @@ module.exports.editSupporter = (info, supId, cb)=> {
                 "username": info.username,
                 "password": info.password,
                 "avatarUrl": info.avatarUrl,
-                "department":info.department
+                "department": info.department
 
 
             }
@@ -3282,14 +3282,14 @@ module.exports.getStudentByLesson = (lsnId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if(lsnId == 0){
-                lsnId =0
+            if (lsnId == 0) {
+                lsnId = 0
             }
             else {
                 lsnId = new ObjectID(`${lsnId}`)
             }
             con.collection("result").aggregate([
-                {$match: {"lsnId":lsnId}},
+                {$match: {"lsnId": lsnId}},
                 {
                     $lookup: {
                         from: "student",
@@ -3604,8 +3604,8 @@ module.exports.getSupById = (supId, cb)=> {
                     cb(0)
                 }
                 else {
-                    logger.info("result" , result)
-result = result[0]
+                    logger.info("result", result)
+                    result = result[0]
                     result.department = result.department[0]
 
 
