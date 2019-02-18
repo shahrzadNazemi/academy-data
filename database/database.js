@@ -357,14 +357,14 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
             }
             else {
                 if (tktInfo.msg) {
-                    let fk ;
-                    for(var i=0;i<ticket.msg.length;i++){
-                        if(ticket.msg[i]._id == tktInfo.msg._id){
-                            fk = Object.assign(ticket.msg[i] ,tktInfo.msg )
+                    let fk;
+                    for (var i = 0; i < ticket.msg.length; i++) {
+                        if (ticket.msg[i]._id == tktInfo.msg._id) {
+                            fk = Object.assign(ticket.msg[i], tktInfo.msg)
 
                         }
                     }
-                    logger.info("fk" , fk)
+                    logger.info("fk", fk)
                     newMsg = ticket.msg
 
                 }
@@ -385,11 +385,11 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
                     cb(0)
                 }
                 else {
-                    if(tktInfo.newMsg){
+                    if (tktInfo.newMsg) {
                         tktInfo.msg.ticket = result
                         cb(tktInfo.msg)
                     }
-                    else{
+                    else {
                         cb(result)
                     }
                 }
@@ -408,9 +408,9 @@ module.exports.updateTicketView = (tktId, cb)=> {
             cb(0)
         }
         else {
-           for(var i=0;i<ticket.msg.length;i++){
-               ticket.msg[i].viewed = true
-           }
+            for (var i = 0; i < ticket.msg.length; i++) {
+                ticket.msg[i].viewed = true
+            }
             mongo.editTicket(ticket, tktId, (result)=> {
                 if (result == -1) {
                     cb(-1)
@@ -419,10 +419,38 @@ module.exports.updateTicketView = (tktId, cb)=> {
                     cb(0)
                 }
                 else {
-                        cb(result)
+                    cb(result)
                 }
             })
 
+        }
+    })
+};
+
+module.exports.updateTypeOfTicket = (depInfo, tktId, cb)=> {
+    mongo.editTypeOfTicket(depInfo, tktId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.deleteTypeOfTicket = (depId, cb)=> {
+    mongo.delTypeOfTicket(depId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
         }
     })
 };

@@ -29,6 +29,29 @@ router.post('/type', (req, res)=> {
     })
 });
 
+router.put('/type/:depId', (req, res)=> {
+    database.updateTypeOfTicket(req.body,req.params.depId , (addResult)=> {
+        if (addResult == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addResult)
+        }
+    })
+});
+
+router.delete('/type/:depId', (req, res)=> {
+    database.deleteTypeOfTicket(req.params.depId, (addResult)=> {
+        if (addResult == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addResult)
+        }
+    })
+});
+
+
 router.get('/type', (req, res)=> {
     database.getAllTktTypes((addResult)=> {
         if (addResult == -1) {

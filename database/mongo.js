@@ -696,6 +696,39 @@ module.exports.editTrick = (info, trckId, cb)=> {
     })
 };
 
+module.exports.editTypeOfTicket = (info, depId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("ticketType").findOneAndUpdate({"_id": new ObjectID(depId)}, {
+                    $set: {
+                        "title": info.title,
+                    }
+                }, {returnOriginal: false}
+                , (err, result)=> {
+                    if (err) {
+                        console.log("updateView db Error", err);
+                        cb(-1)
+                    }
+                    else if (result.value != null) {
+                        cb(result.value)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+
+
+        }
+    })
+};
+
+
 module.exports.editTicket = (info, tktId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -1138,6 +1171,33 @@ module.exports.deleteQuestion = (QId, cb)=> {
         }
     })
 };
+
+module.exports.delTypeOfTicket = (depId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("ticketType").findOneAndDelete({"_id": new ObjectID(`${depId}`)}, (err, result)=> {
+                console.log(result.lastErrorObject.n)
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result1 = "row deleted"
+                    cb(result1)
+                }
+                else {
+                    cb(0)
+                }
+            })
+
+        }
+    })
+};
+
 
 module.exports.deleteNotification = (NId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
