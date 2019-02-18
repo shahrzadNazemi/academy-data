@@ -492,7 +492,8 @@ module.exports.postTicket = (info, cb)=> {
                 "description": info.msg.description,
                 "_id": info.msg._id,
                 "time": info.msg.time,
-                "image": info.msg.image
+                "image": info.msg.image,
+                "viewed":false
             }
             logger.info("info in postTicket" , info)
 
