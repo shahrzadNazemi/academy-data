@@ -19,7 +19,6 @@ module.exports.loginForAdmin = (loginInfo, cb)=> {
     })
 };
 
-
 module.exports.loginForStudent = (loginInfo, cb)=> {
     mongo.studentLogin(loginInfo, (result)=> {
         if (result == -1) {
@@ -246,7 +245,6 @@ module.exports.closeTicket = (now)=> {
 
 }
 
-
 module.exports.getStuPlacement = (usrId, cb)=> {
     mongo.getViewByUsrId(usrId, (view)=> {
         if (view == -1) {
@@ -267,7 +265,6 @@ module.exports.getStuPlacement = (usrId, cb)=> {
         }
     })
 };
-
 
 module.exports.addExam = (exInfo, cb)=> {
     mongo.postExam(exInfo, (result)=> {
@@ -455,8 +452,6 @@ module.exports.deleteTypeOfTicket = (depId, cb)=> {
     })
 };
 
-
-
 module.exports.updateText = (updateInfo, txtId, cb)=> {
     module.exports.getTextById(txtId, (text)=> {
         if (text == -1) {
@@ -510,7 +505,6 @@ module.exports.addTypeOfTicket = (typeInfo, cb)=> {
         }
     })
 };
-
 
 module.exports.addCategory = (categoryInfo, cb)=> {
     mongo.postCategory(categoryInfo, (result)=> {
@@ -568,7 +562,6 @@ module.exports.addCertificate = (certInfo, cb)=> {
     })
 };
 
-
 module.exports.updateLevel = (updateInfo, lvlId, cb)=> {
     mongo.editLevel(updateInfo, lvlId, (result)=> {
         if (result == -1) {
@@ -602,7 +595,6 @@ module.exports.updateNote = (updateNote, ntId, cb)=> {
         }
     })
 };
-
 
 module.exports.getQuestionById = (QId, cb)=> {
     mongo.getQstById(QId, (question)=> {
@@ -1134,7 +1126,6 @@ module.exports.addSupporter = (data, cb)=> {
     })
 };
 
-
 module.exports.getAdmins = (cb)=> {
     mongo.getAllAdmins((admins)=> {
         if (admins == -1) {
@@ -1162,7 +1153,6 @@ module.exports.getSupporters = (cb)=> {
         }
     })
 };
-
 
 module.exports.getVideoByLVLLSN = (lvlId, lsnId, cb)=> {
     mongo.getVDByLVLLSN(lvlId, lsnId, (result)=> {
@@ -1248,7 +1238,6 @@ module.exports.updateSupporter = (updateInfo, supId, cb)=> {
     })
 };
 
-
 module.exports.delAdmin = (admId, cb)=> {
     mongo.deleteAdmin(admId, (result)=> {
         if (result == -1) {
@@ -1279,7 +1268,6 @@ module.exports.delSupporter = (supId, cb)=> {
         }
     })
 };
-
 
 module.exports.delStudent = (stuId, cb)=> {
     mongo.deleteStudent(stuId, (result)=> {
@@ -1633,7 +1621,6 @@ module.exports.getResultByUsr = (usrId, cb)=> {
     })
 }
 
-
 module.exports.delVideo = (vdId, cb)=> {
     mongo.deleteVideo(vdId, (result)=> {
         if (result == -1) {
@@ -1811,7 +1798,6 @@ module.exports.getExamPassedCount = (usrId, cb)=> {
     })
 };
 
-
 module.exports.getNotes = (lsnId, usrId, cb)=> {
     mongo.getAllNotes(lsnId, usrId, (result)=> {
         if (result == -1) {
@@ -1887,7 +1873,6 @@ module.exports.updateCertificate = (updateInfo, certId, cb)=> {
         }
     })
 };
-
 
 module.exports.updateViewToInsert = (updateInfo, lsnId, cb)=> {
     mongo.editViewToInsert(updateInfo, lsnId, (result)=> {
@@ -1978,7 +1963,6 @@ module.exports.getSupportById = (supId, cb)=> {
     })
 };
 
-
 module.exports.getStuByLevel = (lvlId, cb)=> {
     mongo.getStudentByLevel(lvlId, (result)=> {
         if (result == -1) {
@@ -2006,7 +1990,6 @@ module.exports.getStuByLesson = (lsnId, cb)=> {
         }
     })
 };
-
 
 module.exports.getAllLessons = (cb)=> {
     mongo.getAllLess((result)=> {
@@ -2100,7 +2083,6 @@ module.exports.getAllTktTypes = (cb)=> {
         }
     })
 };
-
 
 module.exports.getAllCats = (cb)=> {
     mongo.getAllCategories((result)=> {
@@ -2799,6 +2781,20 @@ module.exports.getExamByLessonId = (lsnId, cb)=> {
 
 module.exports.getTypeByTypeId = (typeId, cb)=> {
     mongo.getTypeById(typeId, (type)=> {
+        if (type == -1) {
+            cb(-1)
+        }
+        else if (type == 0) {
+            cb(0)
+        }
+        else {
+            cb(type)
+        }
+    })
+}
+
+module.exports.getTicketTypeById = (depId, cb)=> {
+    mongo.getDepartmentById(depId, (type)=> {
         if (type == -1) {
             cb(-1)
         }
@@ -4223,6 +4219,3 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
     }
 
 }
-
-
-

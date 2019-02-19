@@ -71,26 +71,34 @@ router.get('/:tktId', (req, res)=> {
         else if (ticket == 0) {
             res.status(404).end('')
         }
-
         else {
-            database.getStuById(ticket.usrId, (student)=> {
-                if (student == -1 || student == 0) {
-                    ticket.student = {}
-                }
-                else {
-                    logger.info("student" , ticket)
-                    ticket.student = student
-                    database.getSupportById(ticket.supId, (supporter)=> {
-                        if (supporter == -1 || supporter == 0) {
-                            ticket.supporter = {}
-                        }
-                        else {
-                            ticket.supporter = supporter
-                        }
-                        res.json(ticket)
+            database.getTicketTypeById(ticket.depId  , (department)=>{
+                if(department ==0 || department ==-1){
+                    ticket.department = {}
 
-                    })
                 }
+                else{
+                    ticket.department = department
+                }
+                database.getStuById(ticket.usrId, (student)=> {
+                    if (student == -1 || student == 0) {
+                        ticket.student = {}
+                    }
+                    else {
+                        logger.info("student" , ticket)
+                        ticket.student = student
+                        database.getSupportById(ticket.supId, (supporter)=> {
+                            if (supporter == -1 || supporter == 0) {
+                                ticket.supporter = {}
+                            }
+                            else {
+                                ticket.supporter = supporter
+                            }
+                            res.json(ticket)
+
+                        })
+                    }
+                })
             })
         }
     })

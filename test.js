@@ -11,5 +11,5 @@ var moment = require('moment')
 // moment().subtract(3, 'days'
 let pass = moment(1548757139576.0).subtract(3, 'days')
 let now = new Date().getTime()
-console.log(moment(1548757139576).format("YYYY:MM:D HH:mm:ss"))
+console.log(moment(1550390396538.0).format("YYYY:MM:D HH:mm:ss"))
 console.log(moment(pass).format("YYYY:MM:D HH:mm:ss"))

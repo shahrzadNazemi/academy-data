@@ -431,7 +431,6 @@ module.exports.getTktByStuId = (stuId, cb)=> {
     })
 };
 
-
 module.exports.postView = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -522,7 +521,6 @@ module.exports.postTicket = (info, cb)=> {
     })
 };
 
-
 module.exports.editViewToInsert = (info, lsnId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -603,7 +601,6 @@ module.exports.closeTkt = (pass, cb)=> {
         }
     })
 };
-
 
 module.exports.editViewTosetTrue = (id, usrId, type, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -728,7 +725,6 @@ module.exports.editTypeOfTicket = (info, depId, cb)=> {
     })
 };
 
-
 module.exports.editTicket = (info, tktId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -795,7 +791,6 @@ module.exports.editTicket = (info, tktId, cb)=> {
         }
     })
 };
-
 
 module.exports.editViewByUsrId = (info, usrId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -903,7 +898,6 @@ module.exports.postTypeOfTicket = (info, cb)=> {
         }
     })
 };
-
 
 module.exports.postCategory = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -1197,7 +1191,6 @@ module.exports.delTypeOfTicket = (depId, cb)=> {
         }
     })
 };
-
 
 module.exports.deleteNotification = (NId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -1642,7 +1635,6 @@ module.exports.getResultByUsrId = (usrId, cb)=> {
     })
 };
 
-
 module.exports.getLsnLvlById = (lvlID, cb)=> {
     console.log("lvlId", lvlID)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -1991,30 +1983,6 @@ module.exports.getSoundById = (sndId, cb)=> {
     })
 };
 
-// module.exports.getSoundById = (sndId, cb)=> {
-//     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
-//         if (err) {
-//             console.log("Err", err)
-//             cb(-1)
-//         }
-//         else {
-//             var con = db.db('englishAcademy')
-//             con.collection("sound").findOne({"_id": new ObjectID(`${sndId}`)}, (err, result) => {
-//                 if (err) {
-//                     cb(-1)
-//                 }
-//                 else if (result == null) {
-//                     cb(0)
-//                 }
-//                 else {
-//                     cb(result)
-//                 }
-//             })
-//
-//         }
-//     })
-// };
-
 module.exports.getSoundByLsn = (lsnId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -2122,7 +2090,6 @@ module.exports.getTkts = (depId, cb)=> {
         }
     })
 };
-
 
 module.exports.getAllNotifications = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -2240,7 +2207,6 @@ module.exports.postSupporter = (info, cb)=> {
         }
     })
 };
-
 
 module.exports.postText = (textInfo, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -2367,7 +2333,6 @@ module.exports.getAllSupporters = (cb)=> {
     })
 };
 
-
 module.exports.editAdmin = (info, admId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -2438,7 +2403,6 @@ module.exports.editSupporter = (info, supId, cb)=> {
         }
     })
 };
-
 
 module.exports.editText = (info, txtId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -2517,7 +2481,6 @@ module.exports.editNote = (info, ntId, cb)=> {
         }
     })
 };
-
 
 module.exports.editResult = (usrId, lsnId, info, cb)=> {
     logger.info("editResultInfo in mongo file", info)
@@ -2676,7 +2639,6 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
     })
 };
 
-
 module.exports.deleteAdmin = (admId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -2739,7 +2701,6 @@ module.exports.deleteSupporter = (supId, cb)=> {
     })
 };
 
-
 module.exports.deleteTrick = (trckId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -2789,7 +2750,6 @@ module.exports.deleteNote = (ntId, cb)=> {
     })
 
 };
-
 
 module.exports.deleteLesson = (lsnId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -2994,7 +2954,6 @@ module.exports.postTrick = (trickInfo, cb)=> {
     })
 };
 
-
 module.exports.postSound = (soundInfo, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -3108,7 +3067,6 @@ module.exports.editVideo = (videoInfo, vdId, cb)=> {
         }
     })
 };
-
 
 module.exports.editSound = (info, sndId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -3374,7 +3332,6 @@ module.exports.getStudentByLesson = (lsnId, cb)=> {
     })
 };
 
-
 module.exports.getCertById = (certId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -3399,6 +3356,29 @@ module.exports.getCertById = (certId, cb)=> {
     })
 };
 
+module.exports.getDepartmentById = (depId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("ticketType").findOne({"_id": new ObjectID(`${depId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
 
 module.exports.getTxtById = (textId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -3607,7 +3587,6 @@ module.exports.editCertification = (certInfo, certId, cb)=> {
     })
 };
 
-
 module.exports.getAdmById = (admId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -3682,7 +3661,6 @@ module.exports.getSupById = (supId, cb)=> {
         }
     })
 };
-
 
 module.exports.deleteVideo = (vdId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -3845,7 +3823,6 @@ module.exports.getAllTicketTypes = (cb)=> {
     })
 };
 
-
 module.exports.getAllCerts = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -3870,7 +3847,6 @@ module.exports.getAllCerts = (cb)=> {
         }
     })
 };
-
 
 module.exports.getAllCategories = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -4263,7 +4239,6 @@ module.exports.getCertByUsrId = (usrId, cb)=> {
     })
 }
 
-
 module.exports.deleteType = (typeId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -4287,21 +4262,3 @@ module.exports.deleteType = (typeId, cb)=> {
         }
     })
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

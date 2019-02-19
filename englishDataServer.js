@@ -24,10 +24,6 @@ var cron = require('./util/cronJobHelper')
 
 
 
-
-
-
-
 app.use('/api/users' , user);
 app.use('/api/level' , level);
 app.use('/api/lesson' , lesson);
@@ -39,9 +35,6 @@ app.use('/api/notification', notification);
 app.use('/api/trick', trick);
 app.use('/api/certificate', certificate);
 app.use('/api/ticket', ticket);
-
-
-
 
 
 
