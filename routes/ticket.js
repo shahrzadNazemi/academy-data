@@ -30,7 +30,7 @@ router.post('/type', (req, res)=> {
 });
 
 router.put('/type/:depId', (req, res)=> {
-    database.updateTypeOfTicket(req.body,req.params.depId , (addResult)=> {
+    database.updateTypeOfTicket(req.body, req.params.depId, (addResult)=> {
         if (addResult == -1) {
             res.status(500).end('')
         }
@@ -72,20 +72,22 @@ router.get('/:tktId', (req, res)=> {
             res.status(404).end('')
         }
         else {
-            database.getTicketTypeById(ticket.depId  , (department)=>{
-                if(department ==0 || department ==-1){
+            database.getTicketTypeById(ticket.depId, (department)=> {
+                if (department == 0 || department == -1) {
                     ticket.department = {}
 
                 }
-                else{
-                    ticket.department = department
+                else {
+                    ticket.department = {}
+                    ticket.department.value = department._id
+                    ticket.department.label = department.title
                 }
                 database.getStuById(ticket.usrId, (student)=> {
                     if (student == -1 || student == 0) {
                         ticket.student = {}
                     }
                     else {
-                        logger.info("student" , ticket)
+                        logger.info("student", ticket)
                         ticket.student = student
                         database.getSupportById(ticket.supId, (supporter)=> {
                             if (supporter == -1 || supporter == 0) {
