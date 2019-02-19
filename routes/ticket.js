@@ -63,6 +63,38 @@ router.get('/type', (req, res)=> {
     })
 });
 
+router.get('/:tktId', (req, res)=> {
+    database.getTicketById(req.params.tktId, (ticket)=> {
+        if (ticket == -1) {
+            res.status(500).end('')
+        }
+        else if (ticket == 0) {
+            res.status(404).end('')
+        }
+
+        else {
+            database.getStuById(ticket.usrId, (student)=> {
+                if (student == -1 || student == 0) {
+                    ticket.student = {}
+                }
+                else {
+                    logger.info("student" , ticket)
+                    ticket.student = student
+                    database.getSupportById(ticket.supId, (supporter)=> {
+                        if (supporter == -1 || supporter == 0) {
+                            ticket.supporter = {}
+                        }
+                        else {
+                            ticket.supporter = supporter
+                        }
+                        res.json(ticket)
+
+                    })
+                }
+            })
+        }
+    })
+});
 
 router.put('/:tktId', (req, res)=> {
     database.updateTicket(req.body, req.params.tktId, (result)=> {
@@ -146,37 +178,6 @@ router.get('/supporter/:supId', (req, res)=> {
 
 });
 
-router.get('/:tktId', (req, res)=> {
-    database.getTicketById(req.params.tktId, (ticket)=> {
-        if (ticket == -1) {
-            res.status(500).end('')
-        }
-        else if (ticket == 0) {
-            res.status(404).end('')
-        }
-
-        else {
-            database.getStuById(ticket.usrId, (student)=> {
-                if (student == -1 || student == 0) {
-                    ticket.student = {}
-                }
-                else {
-                    ticket.student = student
-                    database.getSupportById(ticket.supId, (supporter)=> {
-                        if (supporter == -1 || supporter == 0) {
-                            ticket.supporter = {}
-                        }
-                        else {
-                            ticket.supporter = supporter
-                        }
-                        res.json(ticket)
-
-                    })
-                }
-            })
-        }
-    })
-});
 
 router.get('/all/:supId', (req, res)=> {
     database.getAllTickets(req.params.supId, (ticket)=> {

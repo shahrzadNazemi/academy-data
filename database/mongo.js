@@ -3645,9 +3645,15 @@ module.exports.getSupById = (supId, cb)=> {
             if (typeof supId == 'number') {
                 supId = JSON.stringify(supId)
             }
+            if(supId ==0){
+                supId =0
+            }
+            else{
+                supId = new ObjectID(`${supId}`)
+            }
             var con = db.db('englishAcademy')
             con.collection("supporter").aggregate([
-                {$match: {"_id": new ObjectID(`${supId}`)}},
+                {$match: {"_id": supId}},
                 {
                     $lookup: {
                         from: "ticketType",
@@ -3660,7 +3666,7 @@ module.exports.getSupById = (supId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result == null) {
+                else if (result.length == 0) {
                     cb(0)
                 }
                 else {
