@@ -3306,7 +3306,7 @@ module.exports.getStudentByLesson = (lsnId, cb)=> {
             else {
                 lsnId = new ObjectID(`${lsnId}`)
             }
-            con.collection("result").aggregate([
+            con.collection("view").aggregate([
                 {$match: {"lsnId": lsnId}},
                 {
                     $lookup: {
@@ -3314,6 +3314,15 @@ module.exports.getStudentByLesson = (lsnId, cb)=> {
                         localField: "usrId",
                         foreignField: "_id",
                         as: "student"
+                    }
+
+                },
+                {
+                    $lookup: {
+                        from: "lesson",
+                        localField: "lsnId",
+                        foreignField: "_id",
+                        as: "lesson"
                     }
 
                 }]).toArray((err, result) => {

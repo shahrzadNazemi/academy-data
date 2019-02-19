@@ -1989,17 +1989,20 @@ module.exports.getStuByLevel = (lvlId, cb)=> {
     })
 };
 
-module.exports.getStuByLesson = (lsnId, cb)=> {
-    mongo.getStudentByLesson(lsnId, (result)=> {
-        if (result == -1) {
-            cb(-1)
-        }
-        else if (result == 0) {
-            cb(0)
-        }
-        else {
-            cb(result)
-        }
+module.exports.getStuByLesson = (usrId, cb)=> {
+    module.exports.getViewOfUsr(usrId , (view)=>{
+        mongo.getStudentByLesson(view[0].lsnId, (result)=> {
+            if (result == -1) {
+                cb(-1)
+            }
+            else if (result == 0) {
+                cb(0)
+            }
+            else {
+                cb(result)
+            }
+        })
+
     })
 };
 

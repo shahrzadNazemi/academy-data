@@ -129,7 +129,20 @@ router.put('/:tktId/view', (req, res)=> {
             res.status(404).end('')
         }
         else {
-            res.json(result)
+            database.getTicketTypeById(result.depId , (department)=>{
+                if (department == 0 || department == -1) {
+                    result.department = {}
+                    res.json(result)
+
+                }
+                else {
+                    result.department = {}
+                    result.department.value = department._id
+                    result.department.label = department.title
+                    res.json(result)
+
+                }
+            })
         }
     })
 });

@@ -344,8 +344,8 @@ router.get('/student/level/:lvlId', (req, res) => {
     })
 });
 
-router.get('/student/lesson/:lsnId', (req, res) => {
-    database.getStuByLesson(req.params.lsnId, (result)=> {
+router.get('/student/:usrId/lesson', (req, res) => {
+    database.getStuByLesson(req.params.usrId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
