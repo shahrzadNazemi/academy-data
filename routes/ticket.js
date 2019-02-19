@@ -73,15 +73,15 @@ router.get('/:tktId', (req, res)=> {
         }
         else {
             database.getTicketTypeById(ticket.depId, (department)=> {
-                if (department == 0 || department == -1) {
-                    ticket.department = {}
-
-                }
-                else {
-                    ticket.department = {}
-                    ticket.department.value = department._id
-                    ticket.department.label = department.title
-                }
+                    if (department == 0 || department == -1) {
+                        ticket.department = {}
+    
+                    }
+                    else {
+                        ticket.department = {}
+                        ticket.department.value = department._id
+                        ticket.department.label = department.title
+                    }
                 database.getStuById(ticket.usrId, (student)=> {
                     if (student == -1 || student == 0) {
                         ticket.student = {}

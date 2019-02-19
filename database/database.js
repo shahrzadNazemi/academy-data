@@ -341,6 +341,17 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
             cb(0)
         }
         else {
+            module.exports.getTicketTypeById(ticket.depId , (department)=>{
+                if (department == 0 || department == -1) {
+                    ticket.department = {}
+
+                }
+                else {
+                    ticket.department = {}
+                    ticket.department.value = department._id
+                    ticket.department.label = department.title
+                }
+            })
             logger.info("lastMSG", ticket.msg)
             logger.info("tktInfo", tktInfo.msg)
 
@@ -382,11 +393,12 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
                     cb(0)
                 }
                 else {
-                    if (tktInfo.newMsg) {
+                    if (tktInfo.newMsg) {result.department = ticket.department
                         tktInfo.msg.ticket = result
                         cb(tktInfo.msg)
                     }
                     else {
+                        result.department = ticket.department
                         cb(result)
                     }
                 }
