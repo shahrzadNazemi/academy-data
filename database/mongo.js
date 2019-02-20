@@ -345,6 +345,31 @@ module.exports.getTktById = (tktId, cb)=> {
     })
 };
 
+module.exports.getTktBydepId = (depId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("ticket").find({"depId": new ObjectID(`${depId}`)}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.getTktBySupId = (supId, cb)=> {
     logger.info("supId", supId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {

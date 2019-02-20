@@ -189,6 +189,21 @@ module.exports.getTicketByStuId = (stuId, cb)=> {
     })
 };
 
+module.exports.getTicketByDepId = (depId, cb)=> {
+    mongo.getTktBydepId(depId, (ticket)=> {
+        if (ticket == -1) {
+            cb(-1)
+        }
+        else if (ticket == 0) {
+            cb(0)
+        }
+        else {
+            cb(ticket)
+        }
+    })
+};
+
+
 module.exports.getTicketBySupId = (supId, cb)=> {
     mongo.getTktBySupId(supId, (ticket)=> {
         if (ticket == -1) {
@@ -341,7 +356,7 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
             cb(0)
         }
         else {
-            module.exports.getTicketTypeById(ticket.depId , (department)=>{
+            module.exports.getTicketTypeById(ticket.depId, (department)=> {
                 if (department == 0 || department == -1) {
                     ticket.department = {}
 
@@ -393,7 +408,8 @@ module.exports.updateTicket = (tktInfo, tktId, cb)=> {
                     cb(0)
                 }
                 else {
-                    if (tktInfo.newMsg) {result.department = ticket.department
+                    if (tktInfo.newMsg) {
+                        result.department = ticket.department
                         tktInfo.msg.ticket = result
                         cb(tktInfo.msg)
                     }
@@ -451,15 +467,26 @@ module.exports.updateTypeOfTicket = (depInfo, tktId, cb)=> {
 };
 
 module.exports.deleteTypeOfTicket = (depId, cb)=> {
-    mongo.delTypeOfTicket(depId, (result)=> {
-        if (result == -1) {
+    module.exports.getTicketByDepId(depId, (ticket)=> {
+        logger.info(ticket)
+        if (ticket == -1) {
             cb(-1)
         }
-        else if (result == 0) {
-            cb(0)
+        else if (ticket == 0) {
+            mongo.delTypeOfTicket(depId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
         }
         else {
-            cb(result)
+            cb(-3)
         }
     })
 };
@@ -1990,7 +2017,7 @@ module.exports.getStuByLevel = (lvlId, cb)=> {
 };
 
 module.exports.getStuByLesson = (usrId, cb)=> {
-    module.exports.getViewOfUsr(usrId , (view)=>{
+    module.exports.getViewOfUsr(usrId, (view)=> {
         mongo.getStudentByLesson(view[0].lsnId, (result)=> {
             if (result == -1) {
                 cb(-1)
