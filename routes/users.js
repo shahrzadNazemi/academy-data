@@ -157,6 +157,74 @@ router.get('/supporter/:supId', (req, res) => {
 });
 
 
+router.put('/chatAdmin/:caId', (req, res) => {
+    database.updateChatAdmin(req.body, req.params.caId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.get('/chatAdmin', (req, res) => {
+    database.getChatAdmins((result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.delete('/chatAdmin/:caId', (req, res) => {
+    database.delChatAdmin(req.params.caId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.post('/chatAdmin', (req, res)=> {
+    database.addChatAdmin(req.body, (addedSupport)=> {
+        if (addedSupport == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addedSupport)
+        }
+    })
+});
+
+router.get('/chatAdmin/:caId', (req, res) => {
+    database.getChatAdminById(req.params.caId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
 
 router.post('/student', (req, res)=> {
     database.addStudent(req.body, (result)=> {
@@ -343,6 +411,7 @@ router.get('/student/level/:lvlId', (req, res) => {
         }
     })
 });
+
 
 router.get('/student/:usrId/lesson', (req, res) => {
     database.getStuByLesson(req.params.usrId, (result)=> {

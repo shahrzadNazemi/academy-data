@@ -1264,7 +1264,74 @@ module.exports.updateAdmin = (updateInfo, admId, cb)=> {
 };
 
 module.exports.updateSupporter = (updateInfo, supId, cb)=> {
-    mongo.editSupporter(updateInfo, supId, (result)=> {
+    module.exports.getSupportById(supId , (support)=>{
+        if(support ==-1){
+            cb(-1)
+        }
+        else if(support ==0){
+            cb(0)
+        }
+        else{
+            let newSupporter = Object.assign({} , support , updateInfo)
+            mongo.editSupporter(newSupporter, supId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
+    module.exports.getChatAdminById(caId , (support)=>{
+        if(support ==-1){
+            cb(-1)
+        }
+        else if(support ==0){
+            cb(0)
+        }
+        else{
+            if(typeof support.chatrooms == "string"){
+                support.chatrooms = JSON.parse(support.chatrooms)
+            }
+            if(typeof updateInfo.chatrooms == "string"){
+                updateInfo.chatrooms = JSON.parse(updateInfo.chatrooms)
+            }
+            logger.info("updateInfo" , updateInfo)
+
+            let newChatrooms = Object.assign([] , support.chatrooms , updateInfo.chatrooms)
+            let newChatAdmin = Object.assign({} , support , updateInfo)
+            newChatAdmin.chatrooms = newChatrooms
+
+            logger.info("newChatAdmin" , newChatAdmin)
+            logger.info("caId" , caId)
+
+            mongo.editChatAdmin(newChatAdmin, caId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+
+};
+
+module.exports.getChatAdminById = (caId, cb)=> {
+    mongo.getChatAdmnById(caId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -1273,6 +1340,45 @@ module.exports.updateSupporter = (updateInfo, supId, cb)=> {
         }
         else {
             cb(result)
+        }
+    })
+};
+
+module.exports.getChatAdmins = (cb)=> {
+    mongo.getAllChatAdmins((sups)=> {
+        if (sups == -1) {
+            cb(-1)
+        }
+        else if (sups == 0) {
+            cb(0)
+        }
+        else {
+            cb(sups)
+        }
+    })
+};
+
+module.exports.delChatAdmin = (caId, cb)=> {
+    mongo.deleteChatAdmin(caId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.addChatAdmin = (data, cb)=> {
+    mongo.postChatAdmin(data, (added)=> {
+        if (added == -1) {
+            cb(-1)
+        }
+        else {
+            cb(added)
         }
     })
 };
@@ -2001,6 +2107,8 @@ module.exports.getSupportById = (supId, cb)=> {
         }
     })
 };
+
+
 
 module.exports.getStuByLevel = (lvlId, cb)=> {
     mongo.getStudentByLevel(lvlId, (result)=> {
