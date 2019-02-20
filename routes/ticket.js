@@ -63,6 +63,18 @@ router.get('/type', (req, res)=> {
     })
 });
 
+router.get('/type/:depId', (req, res)=> {
+    database.getTicketTypeById(req.params.depId ,(addResult)=> {
+        if (addResult == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addResult)
+        }
+    })
+});
+
+
 router.get('/:tktId', (req, res)=> {
     database.getTicketById(req.params.tktId, (ticket)=> {
         if (ticket == -1) {
