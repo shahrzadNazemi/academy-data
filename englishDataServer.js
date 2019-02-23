@@ -21,6 +21,8 @@ let trick = require('./routes/trick')
 let certificate = require('./routes/certificate')
 let ticket = require('./routes/ticket')
 var cron = require('./util/cronJobHelper')
+let chatroom = require('./routes/chatroom')
+
 
 
 
@@ -35,6 +37,8 @@ app.use('/api/notification', notification);
 app.use('/api/trick', trick);
 app.use('/api/certificate', certificate);
 app.use('/api/ticket', ticket);
+app.use('/api/chatroom', chatroom);
+
 
 
 

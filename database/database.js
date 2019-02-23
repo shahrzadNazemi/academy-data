@@ -1264,15 +1264,15 @@ module.exports.updateAdmin = (updateInfo, admId, cb)=> {
 };
 
 module.exports.updateSupporter = (updateInfo, supId, cb)=> {
-    module.exports.getSupportById(supId , (support)=>{
-        if(support ==-1){
+    module.exports.getSupportById(supId, (support)=> {
+        if (support == -1) {
             cb(-1)
         }
-        else if(support ==0){
+        else if (support == 0) {
             cb(0)
         }
-        else{
-            let newSupporter = Object.assign({} , support , updateInfo)
+        else {
+            let newSupporter = Object.assign({}, support, updateInfo)
             mongo.editSupporter(newSupporter, supId, (result)=> {
                 if (result == -1) {
                     cb(-1)
@@ -1290,28 +1290,28 @@ module.exports.updateSupporter = (updateInfo, supId, cb)=> {
 };
 
 module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
-    module.exports.getChatAdminById(caId , (support)=>{
-        if(support ==-1){
+    module.exports.getChatAdminById(caId, (support)=> {
+        if (support == -1) {
             cb(-1)
         }
-        else if(support ==0){
+        else if (support == 0) {
             cb(0)
         }
-        else{
-            if(typeof support.chatrooms == "string"){
+        else {
+            if (typeof support.chatrooms == "string") {
                 support.chatrooms = JSON.parse(support.chatrooms)
             }
-            if(typeof updateInfo.chatrooms == "string"){
+            if (typeof updateInfo.chatrooms == "string") {
                 updateInfo.chatrooms = JSON.parse(updateInfo.chatrooms)
             }
-            logger.info("updateInfo" , updateInfo)
+            logger.info("updateInfo", updateInfo)
 
-            let newChatrooms = Object.assign([] , support.chatrooms , updateInfo.chatrooms)
-            let newChatAdmin = Object.assign({} , support , updateInfo)
+            let newChatrooms = Object.assign([], support.chatrooms, updateInfo.chatrooms)
+            let newChatAdmin = Object.assign({}, support, updateInfo)
             newChatAdmin.chatrooms = newChatrooms
 
-            logger.info("newChatAdmin" , newChatAdmin)
-            logger.info("caId" , caId)
+            logger.info("newChatAdmin", newChatAdmin)
+            logger.info("caId", caId)
 
             mongo.editChatAdmin(newChatAdmin, caId, (result)=> {
                 if (result == -1) {
@@ -2109,7 +2109,6 @@ module.exports.getSupportById = (supId, cb)=> {
 };
 
 
-
 module.exports.getStuByLevel = (lvlId, cb)=> {
     mongo.getStudentByLevel(lvlId, (result)=> {
         if (result == -1) {
@@ -2142,17 +2141,17 @@ module.exports.getStuByLesson = (usrId, cb)=> {
 };
 
 module.exports.getStuByLessonLsnId = (lsnId, cb)=> {
-        mongo.getStudentByLesson(lsnId, (result)=> {
-            if (result == -1) {
-                cb(-1)
-            }
-            else if (result == 0) {
-                cb(0)
-            }
-            else {
-                cb(result)
-            }
-        })
+    mongo.getStudentByLesson(lsnId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
 };
 
 
@@ -4384,3 +4383,98 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
     }
 
 }
+
+
+module.exports.updateChatroom = (updateInfo, chId, cb)=> {
+    module.exports.getChatroomById(chId, (chatroom)=> {
+        if (chatroom == -1) {
+            cb(-1)
+        }
+        else if (chatroom == 0) {
+            cb(0)
+        }
+        else {
+            let newChatroom = Object.assign({}, chatroom, updateInfo)
+            mongo.editChatRoom(newChatroom, chId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+
+};
+
+module.exports.getChatroomById = (chId, cb)=> {
+    mongo.getChatrmById(chId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getChatroomByChatAdmin = (caId, cb)=> {
+    mongo.getChatRoomByChtAdmn(caId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getAllChatrooms = (cb)=> {
+    mongo.getAllChatrooms((sups)=> {
+        if (sups == -1) {
+            cb(-1)
+        }
+        else if (sups == 0) {
+            cb(0)
+        }
+        else {
+            cb(sups)
+        }
+    })
+};
+
+module.exports.delChatroom = (caId, cb)=> {
+    mongo.deleteChatRoom(caId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.addChatroom = (data, cb)=> {
+    mongo.postChatRoom(data, (added)=> {
+        if (added == -1) {
+            cb(-1)
+        }
+        else {
+            cb(added)
+        }
+    })
+};
