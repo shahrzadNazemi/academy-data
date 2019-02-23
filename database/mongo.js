@@ -4505,7 +4505,6 @@ module.exports.editChatRoom = (info, chId, cb)=> {
             var con = db.db('englishAcademy')
             let infor = {
                 "title": info.title,
-                "count": info.count,
                 "lesson": info.lesson,
                 "avatarUrl": info.avatarUrl,
                 "level": info.level
@@ -4564,7 +4563,6 @@ module.exports.postChatRoom = (info, cb)=> {
             cb(-1)
         }
         else {
-            info.count = 0
             if (info.lesson != {}) {
                 info.lesson.value = new ObjectID(info.lesson.value)
             }
@@ -4578,7 +4576,6 @@ module.exports.postChatRoom = (info, cb)=> {
             var con = db.db('englishAcademy')
             con.collection("chatRoom").insertOne({
                 "title": info.title,
-                "count": info.count,
                 "lesson": info.lesson,
                 "avatarUrl": info.avatarUrl,
                 "level": info.level
