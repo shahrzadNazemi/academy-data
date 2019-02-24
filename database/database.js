@@ -1982,8 +1982,6 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
                     cb(result)
                 }
             })
-
-
         }
     })
 };
@@ -2497,48 +2495,69 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                             }
                             else {
                                 let stu = {}
-                                stu.lastPassedLesson = lesson._id
-                                let newStudent = Object.assign({}, student[0], stu)
-                                module.exports.updateStudent(newStudent, student[0]._id, (result)=> {
-                                    if (result == -1) {
-                                        cb(-1)
-                                    }
-                                    else if (result == 0) {
-                                        cb(0)
+                                stu.chatrooms = []
+                                module.exports.getChatRoomByLessonId(lesson._id, (lessonChat)=> {
+                                    if (lessonChat == 0 || lessonChat == -1) {
+                                        stu.chatrooms.push({})
                                     }
                                     else {
-                                        let newView = {}
-                                        newView.lsnId = lesson._id
-                                        newView.video = []
-                                        newView.sound = []
-                                        for (var i = 0; i < lesson.video.length; i++) {
-                                            newView.video[i] = {}
-                                            newView.video[i]._id = lesson.video[i]._id
-                                            newView.video[i].viewed = false
-                                        }
-                                        for (var i = 0; i < lesson.sound.length; i++) {
-                                            newView.sound[i] = {}
-                                            newView.sound[i]._id = lesson.sound[i]._id
-                                            newView.sound[i].viewed = false
-                                        }
-                                        module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
-                                            let resultInfo = {}
-                                            resultInfo.usrId = student[0]._id
-                                            resultInfo.lsnId = lesson._id
-                                            resultInfo.quiz = {}
-                                            resultInfo.quiz.time = lesson.deadline
-                                            resultInfo.quiz.questionTrue = 0;
-                                            resultInfo.quiz.getScore = 0
-                                            resultInfo.quiz.permission = true
-                                            resultInfo.exam = {}
-                                            resultInfo.timePassed = ""
-                                            resultInfo.passedLesson = false
-                                            module.exports.updateResult(student[0]._id, 0, resultInfo, (addedResult)=> {
-                                                cb(lesson)
-                                            })
-                                        })
+                                        stu.chatrooms.push(lessonChat)
+
                                     }
+                                    module.exports.getChatRoomByLevelId(lesson.lvlId, (lessonChat)=> {
+                                        if (lessonChat == 0 || lessonChat == -1) {
+                                            stu.chatrooms.push({})
+                                        }
+                                        else {
+                                            stu.chatrooms.push(lessonChat)
+
+                                        }
+                                        stu.lastPassedLesson = lesson._id
+                                        let newStudent = Object.assign({}, student[0], stu)
+                                        module.exports.updateStudent(newStudent, student[0]._id, (result)=> {
+                                            if (result == -1) {
+                                                cb(-1)
+                                            }
+                                            else if (result == 0) {
+                                                cb(0)
+                                            }
+                                            else {
+                                                let newView = {}
+                                                newView.lsnId = lesson._id
+                                                newView.video = []
+                                                newView.sound = []
+                                                for (var i = 0; i < lesson.video.length; i++) {
+                                                    newView.video[i] = {}
+                                                    newView.video[i]._id = lesson.video[i]._id
+                                                    newView.video[i].viewed = false
+                                                }
+                                                for (var i = 0; i < lesson.sound.length; i++) {
+                                                    newView.sound[i] = {}
+                                                    newView.sound[i]._id = lesson.sound[i]._id
+                                                    newView.sound[i].viewed = false
+                                                }
+                                                module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
+                                                    let resultInfo = {}
+                                                    resultInfo.usrId = student[0]._id
+                                                    resultInfo.lsnId = lesson._id
+                                                    resultInfo.quiz = {}
+                                                    resultInfo.quiz.time = lesson.deadline
+                                                    resultInfo.quiz.questionTrue = 0;
+                                                    resultInfo.quiz.getScore = 0
+                                                    resultInfo.quiz.permission = true
+                                                    resultInfo.exam = {}
+                                                    resultInfo.timePassed = ""
+                                                    resultInfo.passedLesson = false
+                                                    module.exports.updateResult(student[0]._id, 0, resultInfo, (addedResult)=> {
+                                                        cb(lesson)
+                                                    })
+                                                })
+                                            }
+                                        })
+                                    })
+
                                 })
+
                             }
                         })
 
@@ -2596,50 +2615,71 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                     }
                                                     else {
                                                         let stu = {}
-                                                        stu.lastPassedLesson = lesson1._id
-                                                        let newStudent = Object.assign({}, student[0], stu)
-                                                        module.exports.updateStudent(newStudent, student[0]._id, (result)=> {
-                                                            if (result == -1) {
-                                                                cb(-1)
-                                                            }
-                                                            else if (result == 0) {
-                                                                cb(0)
+                                                        stu.chatrooms = []
+                                                        module.exports.getChatRoomByLessonId(lesson1._id, (lessonChat)=> {
+                                                            if (lessonChat == 0 || lessonChat == -1) {
+                                                                stu.chatrooms.push({})
                                                             }
                                                             else {
-                                                                let newView = {}
-                                                                newView.lsnId = lesson._id
-                                                                newView.video = []
-                                                                newView.sound = []
-                                                                for (var i = 0; i < lesson.video.length; i++) {
-                                                                    newView.video[i] = {}
-                                                                    newView.video[i]._id = lesson.video[i]._id
-                                                                    newView.video[i].viewed = false
-                                                                }
-                                                                for (var i = 0; i < lesson.sound.length; i++) {
-                                                                    newView.sound[i] = {}
+                                                                stu.chatrooms.push(lessonChat)
 
-                                                                    newView.sound[i]._id = lesson.sound[i]._id
-                                                                    newView.sound[i].viewed = false
-                                                                }
-                                                                module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
-                                                                    let resultInfo = {}
-                                                                    resultInfo.usrId = student[0]._id
-                                                                    resultInfo.lsnId = lesson._id
-                                                                    resultInfo.quiz = {}
-                                                                    resultInfo.quiz.time = lesson.deadline
-                                                                    resultInfo.quiz.questionTrue = 0;
-                                                                    resultInfo.quiz.getScore = 0
-                                                                    resultInfo.quiz.permission = true
-                                                                    resultInfo.exam = {}
-                                                                    resultInfo.timePassed = ""
-                                                                    resultInfo.passedLesson = false
-
-                                                                    module.exports.updateResult(student[0]._id, lesson._id, resultInfo, (addedResult)=> {
-                                                                        cb(lesson)
-                                                                    })
-                                                                })
                                                             }
+                                                            module.exports.getChatRoomByLevelId(lesson1.lvlId, (lessonChat)=> {
+                                                                if (lessonChat == 0 || lessonChat == -1) {
+                                                                    stu.chatrooms.push({})
+                                                                }
+                                                                else {
+                                                                    stu.chatrooms.push(lessonChat)
+
+                                                                }
+                                                                stu.lastPassedLesson = lesson1._id
+                                                                let newStudent = Object.assign({}, student[0], stu)
+                                                                module.exports.updateStudent(newStudent, student[0]._id, (result)=> {
+                                                                    if (result == -1) {
+                                                                        cb(-1)
+                                                                    }
+                                                                    else if (result == 0) {
+                                                                        cb(0)
+                                                                    }
+                                                                    else {
+                                                                        let newView = {}
+                                                                        newView.lsnId = lesson._id
+                                                                        newView.video = []
+                                                                        newView.sound = []
+                                                                        for (var i = 0; i < lesson.video.length; i++) {
+                                                                            newView.video[i] = {}
+                                                                            newView.video[i]._id = lesson.video[i]._id
+                                                                            newView.video[i].viewed = false
+                                                                        }
+                                                                        for (var i = 0; i < lesson.sound.length; i++) {
+                                                                            newView.sound[i] = {}
+
+                                                                            newView.sound[i]._id = lesson.sound[i]._id
+                                                                            newView.sound[i].viewed = false
+                                                                        }
+                                                                        module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
+                                                                            let resultInfo = {}
+                                                                            resultInfo.usrId = student[0]._id
+                                                                            resultInfo.lsnId = lesson._id
+                                                                            resultInfo.quiz = {}
+                                                                            resultInfo.quiz.time = lesson.deadline
+                                                                            resultInfo.quiz.questionTrue = 0;
+                                                                            resultInfo.quiz.getScore = 0
+                                                                            resultInfo.quiz.permission = true
+                                                                            resultInfo.exam = {}
+                                                                            resultInfo.timePassed = ""
+                                                                            resultInfo.passedLesson = false
+
+                                                                            module.exports.updateResult(student[0]._id, lesson._id, resultInfo, (addedResult)=> {
+                                                                                cb(lesson)
+                                                                            })
+                                                                        })
+                                                                    }
+                                                                })
+                                                            })
                                                         })
+
+
                                                     }
 
                                                 })
@@ -2685,53 +2725,73 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                         }
                                         else {
                                             let stu = {}
-                                            stu.lastPassedLesson = lastPassedLesson[0]._id
-                                            let newStudent = Object.assign({}, student[0], stu)
-                                            module.exports.updateStudent(newStudent, student[0]._id, (result)=> {
-                                                if (result == -1) {
-                                                    cb(-1)
-                                                }
-                                                else if (result == 0) {
-                                                    cb(0)
+                                            stu.chatrooms = []
+                                            module.exports.getChatRoomByLessonId(lastPassedLesson[0]._id, (lessonChat)=> {
+                                                if (lessonChat == 0 || lessonChat == -1) {
+                                                    stu.chatrooms.push({})
                                                 }
                                                 else {
-                                                    if (lesson[0] != undefined)
-                                                        lesson = lesson[0]
-                                                    lesson.level = level
-                                                    let newView = {}
-                                                    newView.lsnId = lesson._id
-                                                    newView.video = []
-                                                    newView.sound = []
-                                                    for (var i = 0; i < lesson.video.length; i++) {
-                                                        newView.video[i] = {}
+                                                    stu.chatrooms.push(lessonChat)
 
-                                                        newView.video[i]._id = lesson.video[i]._id
-                                                        newView.video[i].viewed = false
-                                                    }
-                                                    for (var i = 0; i < lesson.sound.length; i++) {
-                                                        newView.sound[i] = {}
-
-                                                        newView.sound[i]._id = lesson.sound[i]._id
-                                                        newView.sound[i].viewed = false
-                                                    }
-                                                    module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
-                                                        let resultInfo = {}
-                                                        resultInfo.usrId = student[0]._id
-                                                        resultInfo.lsnId = lesson._id
-                                                        // resultInfo.lsnId = 0
-                                                        resultInfo.quiz = {}
-                                                        resultInfo.quiz.time = lesson.deadline
-                                                        resultInfo.quiz.questionTrue = 0;
-                                                        resultInfo.quiz.getScore = 0
-                                                        resultInfo.quiz.permission = true
-                                                        resultInfo.exam = {}
-                                                        resultInfo.timePassed = ""
-                                                        resultInfo.passedLesson = false
-                                                        module.exports.updateResult(student[0]._id, lesson._id, resultInfo, (addedResult)=> {
-                                                            cb(lesson)
-                                                        })
-                                                    })
                                                 }
+                                                module.exports.getChatRoomByLevelId(lastPassedLesson[0].lvlId, (lessonChat)=> {
+                                                    if (lessonChat == 0 || lessonChat == -1) {
+                                                        stu.chatrooms.push({})
+                                                    }
+                                                    else {
+                                                        stu.chatrooms.push(lessonChat)
+
+                                                    }
+                                                    stu.lastPassedLesson = lastPassedLesson[0]._id
+                                                    let newStudent = Object.assign({}, student[0], stu)
+                                                    module.exports.updateStudent(newStudent, student[0]._id, (result)=> {
+                                                        if (result == -1) {
+                                                            cb(-1)
+                                                        }
+                                                        else if (result == 0) {
+                                                            cb(0)
+                                                        }
+                                                        else {
+                                                            if (lesson[0] != undefined)
+                                                                lesson = lesson[0]
+                                                            lesson.level = level
+                                                            let newView = {}
+                                                            newView.lsnId = lesson._id
+                                                            newView.video = []
+                                                            newView.sound = []
+                                                            for (var i = 0; i < lesson.video.length; i++) {
+                                                                newView.video[i] = {}
+
+                                                                newView.video[i]._id = lesson.video[i]._id
+                                                                newView.video[i].viewed = false
+                                                            }
+                                                            for (var i = 0; i < lesson.sound.length; i++) {
+                                                                newView.sound[i] = {}
+
+                                                                newView.sound[i]._id = lesson.sound[i]._id
+                                                                newView.sound[i].viewed = false
+                                                            }
+                                                            module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
+                                                                let resultInfo = {}
+                                                                resultInfo.usrId = student[0]._id
+                                                                resultInfo.lsnId = lesson._id
+                                                                // resultInfo.lsnId = 0
+                                                                resultInfo.quiz = {}
+                                                                resultInfo.quiz.time = lesson.deadline
+                                                                resultInfo.quiz.questionTrue = 0;
+                                                                resultInfo.quiz.getScore = 0
+                                                                resultInfo.quiz.permission = true
+                                                                resultInfo.exam = {}
+                                                                resultInfo.timePassed = ""
+                                                                resultInfo.passedLesson = false
+                                                                module.exports.updateResult(student[0]._id, lesson._id, resultInfo, (addedResult)=> {
+                                                                    cb(lesson)
+                                                                })
+                                                            })
+                                                        }
+                                                    })
+                                                })
+
                                             })
                                         }
 
@@ -3602,7 +3662,6 @@ module.exports.answerQuestion = (info, cb)=> {
             updateInfo.answer = true
             updateInfo.timePassed = new Date().getTime()
             updateInfo.questionTrue = 1
-
             module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
                 if (result == -1) {
                     cb(-1)
@@ -3783,20 +3842,67 @@ module.exports.answerQuestion = (info, cb)=> {
                                                     else {
                                                         let studentUpdateInfo = {}
                                                         if (newLesson._id == info.lsnId) {
-
                                                             let score = updatedResult.quiz.getScore + updatedResult.exam.getScore
                                                             studentUpdateInfo.score = score
                                                             studentUpdateInfo.lastPassedLesson = newLesson._id
-                                                            module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
-                                                                if (std == -1) {
-                                                                    cb(-1)
-                                                                }
-                                                                else if (std == 0) {
-                                                                    cb(0)
+                                                            studentUpdateInfo.chatrooms = [{}]
+                                                            module.exports.getChatRoomByLessonId(newLesson._id, (lessonChat)=> {
+                                                                if (lessonChat == 0 || lessonChat == -1) {
+                                                                    studentUpdateInfo.chatrooms.push({})
                                                                 }
                                                                 else {
-                                                                    cb(updatedResult)
+                                                                    studentUpdateInfo.chatrooms.push(lessonChat)
+
                                                                 }
+                                                                module.exports.getChatRoomByLevelId(studentUpdateInfo.lvlId, (lessonChat)=> {
+                                                                    if (lessonChat == 0 || lessonChat == -1) {
+                                                                        studentUpdateInfo.chatrooms.push({})
+                                                                    }
+                                                                    else {
+                                                                        studentUpdateInfo.chatrooms.push(lessonChat)
+                                                                    }
+                                                                    module.exports.updateStudent(studentUpdateInfo, info.usrId, (result)=> {
+                                                                        if (result == -1) {
+                                                                            cb(-1)
+                                                                        }
+                                                                        else if (result == 0) {
+                                                                            cb(0)
+                                                                        }
+                                                                        else {
+                                                                            let newView = {}
+                                                                            newView.lsnId = lesson._id
+                                                                            newView.video = []
+                                                                            newView.sound = []
+                                                                            for (var i = 0; i < lesson.video.length; i++) {
+                                                                                newView.video[i] = {}
+                                                                                newView.video[i]._id = lesson.video[i]._id
+                                                                                newView.video[i].viewed = false
+                                                                            }
+                                                                            for (var i = 0; i < lesson.sound.length; i++) {
+                                                                                newView.sound[i] = {}
+                                                                                newView.sound[i]._id = lesson.sound[i]._id
+                                                                                newView.sound[i].viewed = false
+                                                                            }
+                                                                            module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
+                                                                                let resultInfo = {}
+                                                                                resultInfo.usrId = student[0]._id
+                                                                                resultInfo.lsnId = lesson._id
+                                                                                resultInfo.quiz = {}
+                                                                                resultInfo.quiz.time = lesson.deadline
+                                                                                resultInfo.quiz.questionTrue = 0;
+                                                                                resultInfo.quiz.getScore = 0
+                                                                                resultInfo.quiz.permission = true
+                                                                                resultInfo.exam = {}
+                                                                                resultInfo.timePassed = ""
+                                                                                resultInfo.passedLesson = false
+                                                                                module.exports.updateResult(student[0]._id, 0, resultInfo, (addedResult)=> {
+                                                                                    cb(lesson)
+                                                                                })
+                                                                            })
+                                                                        }
+                                                                    })
+                                                                })
+
                                                             })
 
                                                         }
@@ -3811,63 +3917,74 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                     let score = updatedResult.quiz.getScore + updatedResult.exam.getScore
                                                                     studentUpdateInfo.score = score
                                                                     studentUpdateInfo.lastPassedLesson = newLesson._id
-                                                                    module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
-                                                                        if (std == -1) {
-                                                                            cb(-1)
-                                                                        }
-                                                                        else if (std == 0) {
-                                                                            cb(0)
+                                                                    studentUpdateInfo.chatrooms = []
+                                                                    module.exports.getChatRoomByLessonId(info.lsnId, (lessonChat)=> {
+                                                                        if (lessonChat == 0 || lessonChat == -1) {
+                                                                            studentUpdateInfo.chatrooms.push({})
                                                                         }
                                                                         else {
-                                                                            let newView = {}
-                                                                            newView.video = []
-                                                                            newView.sound = []
-                                                                            for (var i = 0; i < lessonDEtails[0].video.length; i++) {
-                                                                                newView.video[i] = {}
-                                                                                newView.video[i]._id = lessonDEtails[0].video[i]._id
-                                                                                newView.video[i].viewed = false
+                                                                            studentUpdateInfo.chatrooms.push(lessonChat)
+
+                                                                        }
+                                                                        module.exports.getChatRoomByLessonId(newLesson._id, (lessonChat1)=> {
+                                                                            if (lessonChat1 == 0 || lessonChat1 == -1) {
+                                                                                studentUpdateInfo.chatrooms.push({})
+                                                                            }
+                                                                            else {
+                                                                                studentUpdateInfo.chatrooms.push(lessonChat1)
 
                                                                             }
-                                                                            for (var i = 0; i < lessonDEtails[0].sound.length; i++) {
-                                                                                newView.sound[i] = {}
-                                                                                newView.sound[i]._id = lessonDEtails[0].sound[i]._id
-                                                                                newView.sound[i].viewed = false
+                                                                        module.exports.getChatRoomByLevelId(newLesson.lvlId, (lessonChat2)=> {
+                                                                            if (lessonChat2 == 0 || lessonChat2 == -1) {
+                                                                                studentUpdateInfo.chatrooms.push({})
                                                                             }
-                                                                            newView.lsnId = newLesson._id
-                                                                            newView.viewPermission = false;
-
-                                                                            module.exports.updateViewByUsrId(newView, info.usrId, (updatedResult)=> {
-                                                                                if (updatedResult == -1) {
+                                                                            else {
+                                                                                studentUpdateInfo.chatrooms.push(lessonChat2)
+                                                                            }
+                                                                            module.exports.updateStudent(studentUpdateInfo, info.usrId, (result)=> {
+                                                                                if (result == -1) {
                                                                                     cb(-1)
                                                                                 }
-                                                                                else if (updatedResult == 0) {
+                                                                                else if (result == 0) {
                                                                                     cb(0)
                                                                                 }
                                                                                 else {
-                                                                                    let newResult = {}
-                                                                                    newResult.usrId = info.usrId
-                                                                                    newResult.lsnId = newLesson._id
-                                                                                    newResult.quiz = {}
-                                                                                    newResult.quiz.time = newLesson.deadline
-                                                                                    newResult.quiz.questionTrue = 0;
-                                                                                    newResult.quiz.getScore = 0
-                                                                                    newResult.quiz.permission = true
-                                                                                    newResult.exam = {}
-                                                                                    newResult.timePassed = ""
-                                                                                    newResult.passedLesson = false
-                                                                                    module.exports.addResult(newResult, (addedResult)=> {
-                                                                                        if (addedResult == -1) {
-                                                                                            cb(-1)
-                                                                                        }
-                                                                                        else {
-                                                                                            cb(addedResult)
-                                                                                        }
+                                                                                    let newView = {}
+                                                                                    newView.lsnId = lesson._id
+                                                                                    newView.video = []
+                                                                                    newView.sound = []
+                                                                                    for (var i = 0; i < lesson.video.length; i++) {
+                                                                                        newView.video[i] = {}
+                                                                                        newView.video[i]._id = lesson.video[i]._id
+                                                                                        newView.video[i].viewed = false
+                                                                                    }
+                                                                                    for (var i = 0; i < lesson.sound.length; i++) {
+                                                                                        newView.sound[i] = {}
+                                                                                        newView.sound[i]._id = lesson.sound[i]._id
+                                                                                        newView.sound[i].viewed = false
+                                                                                    }
+                                                                                    module.exports.updateViewByUsrId(newView, student[0]._id, (updated)=> {
+                                                                                        let resultInfo = {}
+                                                                                        resultInfo.usrId = student[0]._id
+                                                                                        resultInfo.lsnId = lesson._id
+                                                                                        resultInfo.quiz = {}
+                                                                                        resultInfo.quiz.time = lesson.deadline
+                                                                                        resultInfo.quiz.questionTrue = 0;
+                                                                                        resultInfo.quiz.getScore = 0
+                                                                                        resultInfo.quiz.permission = true
+                                                                                        resultInfo.exam = {}
+                                                                                        resultInfo.timePassed = ""
+                                                                                        resultInfo.passedLesson = false
+                                                                                        module.exports.updateResult(student[0]._id, 0, resultInfo, (addedResult)=> {
+                                                                                            cb(lesson)
+                                                                                        })
                                                                                     })
                                                                                 }
                                                                             })
+                                                                        })
 
-                                                                        }
                                                                     })
+                                                                })
                                                                 }
                                                             })
 
@@ -4426,6 +4543,49 @@ module.exports.getChatroomById = (chId, cb)=> {
     })
 };
 
+module.exports.getUserOfChatroom = (chId, cb)=> {
+    mongo.getusersOfChatroom(chId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+
+module.exports.getChatRoomByLessonId = (lsnId, cb)=> {
+    mongo.getChatrmBylsnId(lsnId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getChatRoomByLevelId = (lvlId, cb)=> {
+    mongo.getChatrmByLvlId(lvlId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 module.exports.getChatroomByChatAdmin = (caId, cb)=> {
     mongo.getChatRoomByChtAdmn(caId, (result)=> {
         if (result == -1) {
@@ -4470,6 +4630,103 @@ module.exports.delChatroom = (caId, cb)=> {
 
 module.exports.addChatroom = (data, cb)=> {
     mongo.postChatRoom(data, (added)=> {
+        if (added == -1) {
+            cb(-1)
+        }
+        else {
+            cb(added)
+        }
+    })
+};
+
+
+
+
+
+
+module.exports.updateMessage = (updateInfo, msgId, cb)=> {
+    module.exports.getMsgById(msgId, (chatroom)=> {
+        if (chatroom == -1) {
+            cb(-1)
+        }
+        else if (chatroom == 0) {
+            cb(0)
+        }
+        else {
+            let newMessage = Object.assign({}, chatroom, updateInfo)
+            mongo.editMessage(newMessage, msgId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+        }
+    })
+};
+
+module.exports.delMessageOfChatRoom = (chId, cb)=> {
+    mongo.deletechatRoomMessages(chId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getMsgOfChatroom = (chId, cb)=> {
+    mongo.getMessagOfChatroom(chId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getMsgById = (msgId, cb)=> {
+    mongo.getMessageById(msgId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.delMessage = (msgId, cb)=> {
+    mongo.deleteMsgById(msgId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.addMessage = (data, cb)=> {
+    mongo.postMessage(data, (added)=> {
         if (added == -1) {
             cb(-1)
         }

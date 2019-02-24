@@ -3452,7 +3452,8 @@ module.exports.postStudent = (stuInfo, cb)=> {
                 "avatarUrl": stuInfo.avatarUrl,
                 "score": stuInfo.score,
                 "lastPassedLesson": stuInfo.lastPassedLesson,
-                "passedLessonScore": stuInfo.passedLessonScore
+                "passedLessonScore": stuInfo.passedLessonScore,
+                "chatrooms": []
 
             }, (err, result) => {
                 if (err != null) {
@@ -3740,9 +3741,8 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                             "avatarUrl": stuInfo.avatarUrl,
                             "score": stuInfo.score,
                             "lastPassedLesson": stuInfo.lastPassedLesson,
-                            "passedLessonScore": stuInfo.passedLessonScore
-
-
+                            "passedLessonScore": stuInfo.passedLessonScore,
+                            "chatrooms": stuInfo.chatrooms
                         }
                     },
                     {returnOriginal: false}
@@ -4484,7 +4484,6 @@ module.exports.deleteType = (typeId, cb)=> {
     })
 };
 
-
 module.exports.editChatRoom = (info, chId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -4492,14 +4491,10 @@ module.exports.editChatRoom = (info, chId, cb)=> {
             cb(-1)
         }
         else {
-            if (info.lesson != {}) {
+            if (!Object.keys(info.lesson).length == 0) {
                 info.lesson.value = new ObjectID(info.lesson.value)
             }
-
-            else if (info.level != {}) {
-                // if(typeof info.chatrooms == "string"){
-                //     info.chatrooms == JSON.parse(info.chatRooms)
-                // }
+            else if (!Object.keys(info.level).length == 0) {
                 info.level.value = new ObjectID(info.level.value)
             }
             var con = db.db('englishAcademy')
@@ -4507,7 +4502,9 @@ module.exports.editChatRoom = (info, chId, cb)=> {
                 "title": info.title,
                 "lesson": info.lesson,
                 "avatarUrl": info.avatarUrl,
-                "level": info.level
+                "level": info.level,
+                "startTime":info.startTime,
+                "endTime":info.endTime
             }
             con.collection("chatRoom").findOneAndUpdate({"_id": new ObjectID(chId)}, {
                 $set: infor
@@ -4563,14 +4560,11 @@ module.exports.postChatRoom = (info, cb)=> {
             cb(-1)
         }
         else {
-            if (info.lesson != {}) {
+
+            if (!Object.keys(info.lesson).length == 0) {
                 info.lesson.value = new ObjectID(info.lesson.value)
             }
-
-            else if (info.level != {}) {
-                // if(typeof info.chatrooms == "string"){
-                //     info.chatrooms == JSON.parse(info.chatRooms)
-                // }
+            else if (!Object.keys(info.level).length == 0) {
                 info.level.value = new ObjectID(info.level.value)
             }
             var con = db.db('englishAcademy')
@@ -4578,7 +4572,9 @@ module.exports.postChatRoom = (info, cb)=> {
                 "title": info.title,
                 "lesson": info.lesson,
                 "avatarUrl": info.avatarUrl,
-                "level": info.level
+                "level": info.level,
+                "startTime":info.startTime,
+                "endTime":info.endTime
             }, (err, result) => {
                 if (err) {
 
@@ -4659,6 +4655,107 @@ module.exports.getChatrmById = (chId, cb)=> {
         }
     })
 };
+
+module.exports.getusersOfChatroom = (chId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof chId == 'number') {
+                chId = JSON.stringify(chId)
+            }
+            chId = new ObjectID(`${chId}`)
+            var con = db.db('englishAcademy')
+            con.collection("student").find({chatrooms:{$elemMatch: {"_id":chId}}}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
+module.exports.getChatrmBylsnId = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof lsnId == 'number') {
+                lsnId = JSON.stringify(lsnId)
+            }
+            lsnId = new ObjectID(`${lsnId}`)
+            var con = db.db('englishAcademy')
+            con.collection("chatRoom").findOne({"lesson.value": lsnId}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getChatrmByLvlId = (lvlId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof lvlId == 'number') {
+                lvlId = JSON.stringify(lvlId)
+            }
+            lvlId = new ObjectID(`${lvlId}`)
+            var con = db.db('englishAcademy')
+            con.collection("chatRoom").findOne({"level.value": lvlId}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 //no need
 module.exports.getChatRoomByChtAdmn = (caId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -4697,3 +4794,210 @@ module.exports.getChatRoomByChtAdmn = (caId, cb)=> {
         }
     })
 };
+
+
+
+module.exports.editMessage = (info, msgId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (info.usrId ) {
+                info.usrId = new ObjectID(info.usrId)
+            }
+            if (info.chId ) {
+                info.chId = new ObjectID(info.chId)
+            }
+            var con = db.db('englishAcademy')
+            let infor = {
+                "content": info.content,
+                "usrId": info.usrId,
+                "chId": info.chId,
+                "pinned": info.pinned,
+                "warned":info.warned,
+                "marked":info.marked
+            }
+            con.collection("message").findOneAndUpdate({"_id": new ObjectID(msgId)}, {
+                $set: infor
+            }, {returnOriginal: false}, (err, result)=> {
+                if (err) {
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        console.log(err)
+                        cb(-1)
+                    }
+                }
+                else {
+
+                    cb(result.value)
+                }
+            })
+        }
+    })
+};
+
+module.exports.postMessage = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (info.usrId ) {
+                info.usrId = new ObjectID(info.usrId)
+            }
+            if (info.chId ) {
+                info.chId = new ObjectID(info.chId)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("message").insertOne({
+                "content": info.content,
+                "usrId": info.usrId,
+                "chId": info.chId,
+                "pinned": false,
+                "warned":false,
+                "marked":false
+            }, (err, result) => {
+                if (err) {
+
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        cb(-1)
+                    }
+
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.deletechatRoomMessages = (chId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("message").findOneAndDelete({"chId": new ObjectID(`${chId}`)}, (err, result)=> {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result = "row deleted"
+                    cb(result)
+                }
+                else {
+                    cb(0)
+                }
+            })
+        }
+    })
+};
+
+module.exports.deleteMsgById = (msgId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("message").findOneAndDelete({"_id": new ObjectID(`${msgId}`)}, (err, result)=> {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result = "row deleted"
+                    cb(result)
+                }
+                else {
+                    cb(0)
+                }
+            })
+        }
+    })
+};
+
+module.exports.getMessageById = (msgId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof msgId == 'number') {
+                msgId = JSON.stringify(msgId)
+            }
+            msgId = new ObjectID(`${msgId}`)
+            var con = db.db('englishAcademy')
+            con.collection("message").findOne({"_id": msgId}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getMessagOfChatroom = (chId, cb)=> {
+    logger.info("chId",chId)
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof chId == 'number') {
+                chId = JSON.stringify(chId)
+            }
+            chId = new ObjectID(`${chId}`)
+            var con = db.db('englishAcademy')
+            con.collection("message").find({"chId": chId}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
