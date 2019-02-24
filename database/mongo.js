@@ -4567,6 +4567,12 @@ module.exports.postChatRoom = (info, cb)=> {
             else if (!Object.keys(info.level).length == 0) {
                 info.level.value = new ObjectID(info.level.value)
             }
+            if(typeof info.startTime == "string" ){
+                info.startTime = parseInt(info.startTime)
+            }
+            if(typeof info.endTime == "string" ){
+                info.endTime = parseInt(info.endTime)
+            }
             var con = db.db('englishAcademy')
             con.collection("chatRoom").insertOne({
                 "title": info.title,
