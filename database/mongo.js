@@ -4830,7 +4830,7 @@ module.exports.editMessage = (info, msgId, cb)=> {
             }
             var con = db.db('englishAcademy')
             let infor = {
-                "content": info.content,
+                "msg": info.msg,
                 "usrId": info.usrId,
                 "chId": info.chId,
                 "pinned": info.pinned,
@@ -4874,7 +4874,7 @@ module.exports.postMessage = (info, cb)=> {
             }
             var con = db.db('englishAcademy')
             con.collection("message").insertOne({
-                "content": info.content,
+                "msg": info.msg,
                 "usrId": info.usrId,
                 "chId": info.chId,
                 "pinned": false,
@@ -4998,11 +4998,22 @@ module.exports.getMessagOfChatroom = (chId, cb)=> {
             }
             chId = new ObjectID(`${chId}`)
             var con = db.db('englishAcademy')
-            con.collection("message").find({"chId": chId}).toArray((err, result) => {
+            con.collection("message").aggregate([
+                {$match: {"chId": chId}},
+                {
+                    $lookup: {
+                        from: "student",
+                        localField: "usrId",
+                        foreignField: "_id",
+                        as: "student"
+                    }
+                },
+                {$unwind: '$student'},
+            ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {

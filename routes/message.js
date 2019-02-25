@@ -17,6 +17,9 @@ router.post('/', (req, res)=> {
 });
 
 router.put('/:msgId', (req, res)=> {
+    if(req.body.pinned){
+        
+    }
     database.updateMessage(req.body, req.params.msgId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
