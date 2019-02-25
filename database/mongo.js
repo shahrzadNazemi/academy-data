@@ -5019,3 +5019,73 @@ module.exports.getMessagOfChatroom = (chId, cb)=> {
     })
 };
 
+module.exports.getMarkChat = (chId, cb)=> {
+    logger.info("chId",chId)
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof chId == 'number') {
+                chId = JSON.stringify(chId)
+            }
+            chId = new ObjectID(`${chId}`)
+            var con = db.db('englishAcademy')
+            con.collection("message").find({"chId": chId , "marked":true}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getPinChat = (chId, cb)=> {
+    logger.info("chId",chId)
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof chId == 'number') {
+                chId = JSON.stringify(chId)
+            }
+            chId = new ObjectID(`${chId}`)
+            var con = db.db('englishAcademy')
+            con.collection("message").findOne({"chId": chId , "pinned":true},(err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
+

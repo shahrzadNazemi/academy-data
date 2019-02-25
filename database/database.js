@@ -4717,7 +4717,42 @@ module.exports.getMsgOfChatroom = (chId, cb)=> {
             cb(0)
         }
         else {
-            cb(result)
+            mongo.getMarkChat(chId , (mark)=>{
+                if(mark ==0 || mark == -1){
+                    result[0].mark = []
+                    mongo.getPinChat(chId , (pin)=>{
+                        if(pin ==-1 || pin == 0){
+                            result[0].pin = {}
+                            cb(result)
+
+                        }
+                        else{
+                            result[0].pin = pin
+                            cb(result)
+
+                        }
+
+                    })
+                }
+                else{
+                    result[0].mark = mark
+                    mongo.getPinChat(chId , (pin)=>{
+                        if(pin ==-1 || pin == 0){
+                            result[0].pin = {}
+                            cb(result)
+
+                        }
+                        else{
+                            result[0].pin = pin
+                            cb(result)
+
+                        }
+
+                    })
+
+                }
+
+            })
         }
     })
 };
