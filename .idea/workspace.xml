@@ -1473,8 +1473,8 @@
       <file leaf-file-name="mongo.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/database/mongo.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3">
-              <caret line="5011" column="51" selection-start-line="5011" selection-start-column="51" selection-end-line="5011" selection-end-column="51" />
+            <state relative-caret-position="-17">
+              <caret line="5010" column="32" selection-start-line="5010" selection-start-column="32" selection-end-line="5010" selection-end-column="32" />
               <folding>
                 <element signature="e#250#2262#0" expanded="false" />
                 <element signature="e#357#2259#0" expanded="false" />
@@ -2959,18 +2959,18 @@
                 <element signature="e#146070#146278#0" expanded="false" />
                 <element signature="e#146142#146163#0" expanded="false" />
                 <element signature="e#146494#146560#0" expanded="false" />
-                <element signature="e#147579#147625#0" expanded="false" />
-                <element signature="e#147667#147712#0" expanded="false" />
-                <element signature="e#147806#147827#0" expanded="false" />
-                <element signature="e#148022#148951#0" expanded="false" />
-                <element signature="e#148150#148216#0" expanded="false" />
-                <element signature="e#148549#148595#0" expanded="false" />
-                <element signature="e#148641#148686#0" expanded="false" />
-                <element signature="e#148780#148801#0" expanded="false" />
-                <element signature="e#149123#149189#0" expanded="false" />
-                <element signature="e#149516#149562#0" expanded="false" />
-                <element signature="e#149604#149649#0" expanded="false" />
-                <element signature="e#149743#149764#0" expanded="false" />
+                <element signature="e#147573#147619#0" expanded="false" />
+                <element signature="e#147661#147706#0" expanded="false" />
+                <element signature="e#147800#147821#0" expanded="false" />
+                <element signature="e#148016#148945#0" expanded="false" />
+                <element signature="e#148144#148210#0" expanded="false" />
+                <element signature="e#148543#148589#0" expanded="false" />
+                <element signature="e#148635#148680#0" expanded="false" />
+                <element signature="e#148774#148795#0" expanded="false" />
+                <element signature="e#149117#149183#0" expanded="false" />
+                <element signature="e#149510#149556#0" expanded="false" />
+                <element signature="e#149598#149643#0" expanded="false" />
+                <element signature="e#149737#149758#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -3701,16 +3701,16 @@
       <workItem from="1550742640572" duration="2797000" />
       <workItem from="1550898487747" duration="11806000" />
       <workItem from="1550985192586" duration="17336000" />
-      <workItem from="1551071678217" duration="11533000" />
+      <workItem from="1551071678217" duration="11636000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="968689000" />
+    <option name="totallyTimeSpent" value="968792000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -3718,9 +3718,9 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45299146" sideWeight="0.5030257" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.45299146" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45299146" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290469" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.391453" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.391453" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15506808" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -5896,8 +5896,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/database/mongo.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3">
-          <caret line="5011" column="51" selection-start-line="5011" selection-start-column="51" selection-end-line="5011" selection-end-column="51" />
+        <state relative-caret-position="-17">
+          <caret line="5010" column="32" selection-start-line="5010" selection-start-column="32" selection-end-line="5010" selection-end-column="32" />
           <folding>
             <element signature="e#250#2262#0" expanded="false" />
             <element signature="e#357#2259#0" expanded="false" />
@@ -7382,18 +7382,18 @@
             <element signature="e#146070#146278#0" expanded="false" />
             <element signature="e#146142#146163#0" expanded="false" />
             <element signature="e#146494#146560#0" expanded="false" />
-            <element signature="e#147579#147625#0" expanded="false" />
-            <element signature="e#147667#147712#0" expanded="false" />
-            <element signature="e#147806#147827#0" expanded="false" />
-            <element signature="e#148022#148951#0" expanded="false" />
-            <element signature="e#148150#148216#0" expanded="false" />
-            <element signature="e#148549#148595#0" expanded="false" />
-            <element signature="e#148641#148686#0" expanded="false" />
-            <element signature="e#148780#148801#0" expanded="false" />
-            <element signature="e#149123#149189#0" expanded="false" />
-            <element signature="e#149516#149562#0" expanded="false" />
-            <element signature="e#149604#149649#0" expanded="false" />
-            <element signature="e#149743#149764#0" expanded="false" />
+            <element signature="e#147573#147619#0" expanded="false" />
+            <element signature="e#147661#147706#0" expanded="false" />
+            <element signature="e#147800#147821#0" expanded="false" />
+            <element signature="e#148016#148945#0" expanded="false" />
+            <element signature="e#148144#148210#0" expanded="false" />
+            <element signature="e#148543#148589#0" expanded="false" />
+            <element signature="e#148635#148680#0" expanded="false" />
+            <element signature="e#148774#148795#0" expanded="false" />
+            <element signature="e#149117#149183#0" expanded="false" />
+            <element signature="e#149510#149556#0" expanded="false" />
+            <element signature="e#149598#149643#0" expanded="false" />
+            <element signature="e#149737#149758#0" expanded="false" />
           </folding>
         </state>
       </provider>

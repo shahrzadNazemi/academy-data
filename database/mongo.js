@@ -5009,7 +5009,7 @@ module.exports.getMessagOfChatroom = (chId, cb)=> {
                     }
                 },
                 {$unwind: '$user'},
-                { $project : { role : "student"} },
+                // { $project : { role : "student"} },
 
                 {
                     $lookup: {
