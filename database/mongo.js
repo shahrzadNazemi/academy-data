@@ -5005,10 +5005,21 @@ module.exports.getMessagOfChatroom = (chId, cb)=> {
                         from: "student",
                         localField: "usrId",
                         foreignField: "_id",
-                        as: "student"
+                        as: "user"
                     }
                 },
-                {$unwind: '$student'},
+                {$unwind: '$user'},
+                { $project : { role : "student"} },
+
+                {
+                    $lookup: {
+                        from: "chatAdmin",
+                        localField: "usrId",
+                        foreignField: "_id",
+                        as: "chAdmin"
+                    }
+                },
+                // {$unwind: '$chAdmin'},
             ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
