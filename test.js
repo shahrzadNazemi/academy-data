@@ -1,4 +1,5 @@
 let db = require('./database/database')
+let mongo = require('./database/mongo')
 
 // let lsnId = "5c592204502538783d9467c0"
 // let usrId = "5c4ea5eec7887440c0ff73cf"
@@ -15,3 +16,9 @@ console.log(moment(1550390396538.0).format("YYYY:MM:D HH:mm:ss"))
 console.log(moment(pass).format("YYYY:MM:D HH:mm:ss"))
 
 console.log(9<=  moment().format('HH') &&  moment().format('HH') <= 14)
+
+
+
+mongo.deleteStudentChatroom("5c7121b794b7b935e41568b3" , (del)=>{
+    console.log(del)
+})

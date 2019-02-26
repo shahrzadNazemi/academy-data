@@ -366,6 +366,34 @@ module.exports.unPinMsg = ( cb)=> {
         }
     })
 };
+module.exports.deleteStudentChatroom = ( chId , cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("student").updateMany({ }
+            // { $pull: { chatrooms: { "_id: 8 , item: "B" } } },
+            // { multi: true }
+                , (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else if (result != null) {
+                        cb(result)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+        }
+    })
+};
+
 
 
 module.exports.getTktById = (tktId, cb)=> {
@@ -2631,7 +2659,7 @@ module.exports.getChatAdmnById = (caId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -4690,7 +4718,7 @@ module.exports.getChatrmById = (chId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -4806,7 +4834,6 @@ module.exports.getChatrmByLvlId = (lvlId, cb)=> {
         }
     })
 };
-
 //no need
 module.exports.getChatRoomByChtAdmn = (caId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {

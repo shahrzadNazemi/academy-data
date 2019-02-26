@@ -4639,17 +4639,21 @@ module.exports.getAllChatrooms = (cb)=> {
     })
 };
 
-module.exports.delChatroom = (caId, cb)=> {
-    mongo.deleteChatRoom(caId, (result)=> {
-        if (result == -1) {
-            cb(-1)
-        }
-        else if (result == 0) {
-            cb(0)
-        }
-        else {
-            cb(result)
-        }
+module.exports.delChatroom = (chId, cb)=> {
+    mongo.deleteStudentChatroom(chId , (deleted)=>{
+        mongo.deleteChatAdminChatroom(chId , (deleted)=>{
+            mongo.deleteChatRoom(chId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+        })
     })
 };
 
