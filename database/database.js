@@ -4694,6 +4694,22 @@ module.exports.updateMessage = (updateInfo, msgId, cb)=> {
     })
 };
 
+module.exports.unpinMessage = (cb)=> {
+            mongo.unPinMsg( (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+};
+
+
 module.exports.delMessageOfChatRoom = (chId, cb)=> {
     mongo.deletechatRoomMessages(chId, (result)=> {
         if (result == -1) {

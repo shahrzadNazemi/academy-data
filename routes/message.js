@@ -18,19 +18,20 @@ router.post('/', (req, res)=> {
 
 router.put('/:msgId', (req, res)=> {
     if(req.body.pinned){
-        
+        database.unpinMessage((updated)=>{
+            database.updateMessage(req.body, req.params.msgId, (result)=> {
+                if (result == -1) {
+                    res.status(500).end('')
+                }
+                else if (result == 0) {
+                    res.status(404).end('')
+                }
+                else {
+                    res.json(result)
+                }
+            })
+        })
     }
-    database.updateMessage(req.body, req.params.msgId, (result)=> {
-        if (result == -1) {
-            res.status(500).end('')
-        }
-        else if (result == 0) {
-            res.status(404).end('')
-        }
-        else {
-            res.json(result)
-        }
-    })
 });
 
 router.delete('/:msgId', (req, res)=> {

@@ -335,6 +335,39 @@ module.exports.updateResultByLsnId = (lsnId, info, cb)=> {
     })
 };
 
+module.exports.unPinMsg = ( cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+                con.collection("message").updateMany({"pinned": true}, {
+                        $set: {
+                            "pinned": false
+                        },
+                    }
+                    , (err, result)=> {
+                        if (err) {
+                            console.log(err)
+                            cb(-1)
+                        }
+                        else if (result != null) {
+                            cb(result)
+
+                        }
+                        else {
+                            cb(0)
+                        }
+                    })
+
+
+        }
+    })
+};
+
+
 module.exports.getTktById = (tktId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
