@@ -4822,8 +4822,8 @@ module.exports.editMessage = (info, msgId, cb)=> {
             cb(-1)
         }
         else {
-            if (info.usrId ) {
-                info.usrId = new ObjectID(info.usrId)
+            if (info.user._id ) {
+                info.user._id = new ObjectID(info.user._id)
             }
             if (info.chId ) {
                 info.chId = new ObjectID(info.chId)
@@ -4831,7 +4831,7 @@ module.exports.editMessage = (info, msgId, cb)=> {
             var con = db.db('englishAcademy')
             let infor = {
                 "msg": info.msg,
-                "usrId": info.usrId,
+                "user": info.user,
                 "chId": info.chId,
                 "pinned": info.pinned,
                 "warned":info.warned,
@@ -4866,8 +4866,8 @@ module.exports.postMessage = (info, cb)=> {
             cb(-1)
         }
         else {
-            if (info.usrId ) {
-                info.usrId = new ObjectID(info.usrId)
+            if (info.user._id ) {
+                info.user._id = new ObjectID(info.user._id)
             }
             if (info.chId ) {
                 info.chId = new ObjectID(info.chId)
@@ -4875,7 +4875,7 @@ module.exports.postMessage = (info, cb)=> {
             var con = db.db('englishAcademy')
             con.collection("message").insertOne({
                 "msg": info.msg,
-                "usrId": info.usrId,
+                "user":info.user,
                 "chId": info.chId,
                 "pinned": false,
                 "warned":false,
@@ -4998,29 +4998,7 @@ module.exports.getMessagOfChatroom = (chId, cb)=> {
             }
             chId = new ObjectID(`${chId}`)
             var con = db.db('englishAcademy')
-            con.collection("message").aggregate([
-                {$match: {"chId": chId}},
-                {
-                    $lookup: {
-                        from: "student",
-                        localField: "usrId",
-                        foreignField: "_id",
-                        as: "user"
-                    }
-                },
-                {$unwind: '$user'},
-                // { $project : { role : "student"} },
-
-                {
-                    $lookup: {
-                        from: "chatAdmin",
-                        localField: "usrId",
-                        foreignField: "_id",
-                        as: "chAdmin"
-                    }
-                },
-                // {$unwind: '$chAdmin'},
-            ]).toArray((err, result) => {
+            con.collection("message").find({"chId":chId}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
