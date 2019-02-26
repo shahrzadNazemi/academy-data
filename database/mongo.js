@@ -373,10 +373,11 @@ module.exports.deleteStudentChatroom = ( chId , cb)=> {
             cb(-1)
         }
         else {
+
             var con = db.db('englishAcademy')
-            con.collection("student").updateMany({ }
-            // { $pull: { chatrooms: { "_id: 8 , item: "B" } } },
-            // { multi: true }
+            con.collection("student").updateMany({ },
+            { $pull: { chatrooms: {"_id": new ObjectID(`${chId}`)} } },
+            { multi: true }
                 , (err, result)=> {
                     if (err) {
                         console.log(err)
@@ -393,6 +394,36 @@ module.exports.deleteStudentChatroom = ( chId , cb)=> {
         }
     })
 };
+
+module.exports.deleteChatAdminChatroom = ( chId , cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+
+            var con = db.db('englishAcademy')
+            con.collection("chatAdmin").updateMany({ },
+                { $pull: { chatrooms: {"_id": new ObjectID(`${chId}`)} } },
+                { multi: true }
+                , (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else if (result != null) {
+                        cb(result)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+        }
+    })
+};
+
 
 
 
@@ -4856,7 +4887,7 @@ module.exports.getChatRoomByChtAdmn = (caId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
@@ -4895,7 +4926,8 @@ module.exports.editMessage = (info, msgId, cb)=> {
                 "chId": info.chId,
                 "pinned": info.pinned,
                 "warned":info.warned,
-                "marked":info.marked
+                "marked":info.marked,
+                "time":info.time
             }
             con.collection("message").findOneAndUpdate({"_id": new ObjectID(msgId)}, {
                 $set: infor
@@ -4939,7 +4971,8 @@ module.exports.postMessage = (info, cb)=> {
                 "chId": info.chId,
                 "pinned": false,
                 "warned":false,
-                "marked":false
+                "marked":false,
+                "time":info.time
             }, (err, result) => {
                 if (err) {
 
@@ -5028,7 +5061,7 @@ module.exports.getMessageById = (msgId, cb)=> {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
