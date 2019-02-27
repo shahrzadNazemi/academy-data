@@ -4069,7 +4069,9 @@ module.exports.getAllLess = (cb)=> {
         else {
             var con = db.db('englishAcademy')
 
-            con.collection("lesson").aggregate([{
+            con.collection("lesson").aggregate([
+
+                {
                 $lookup: {
                     from: "level",
                     localField: "lvlId",
