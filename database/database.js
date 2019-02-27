@@ -2877,6 +2877,8 @@ module.exports.addResult = (resultInfo, cb)=> {
                         resultInfo.exam.examCount = 0
                         resultInfo.quiz.quizScore = 0
                         resultInfo.quiz.quizCount = 0
+                        resultInfo.quiz.getScore = 0
+
                         mongo.postResult(resultInfo, (added)=> {
                             if (added == -1) {
                                 cb(-1)
@@ -4293,6 +4295,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
 
         }
         else {
+
             mongo.editResult(usrId, lsnId, updateInfo, (lastResult)=> {
                 if (lastResult == -1) {
                     cb(-1)
@@ -4663,7 +4666,7 @@ module.exports.addChatroom = (data, cb)=> {
             cb(-1)
         }
         else {
-            
+
             cb(added)
         }
     })

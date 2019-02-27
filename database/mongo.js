@@ -1071,6 +1071,7 @@ module.exports.postResult = (info, cb)=> {
             cb(-1)
         }
         else {
+            info.quiz.getScore =0
             var con = db.db('englishAcademy')
             con.collection("result").insertOne({
                 "usrId": info.usrId,
@@ -1717,9 +1718,15 @@ module.exports.getResultByLsnIdUsrId = (usrId, lsnId, cb)=> {
             cb(-1)
         }
         else {
+            if(lsnId ==0){
+                lsnId =0
+            }
+            else{
+                lsnId =new ObjectID(`${lsnId}`)
+            }
             var con = db.db('englishAcademy')
             con.collection("result").findOne({
-                "lsnId": new ObjectID(`${lsnId}`),
+                "lsnId": lsnId,
                 "usrId": new ObjectID(`${usrId}`),
                 "passedLesson": false
             }, (err, result) => {
@@ -4919,11 +4926,17 @@ module.exports.editMessage = (info, msgId, cb)=> {
             if (info.chId ) {
                 info.chId = new ObjectID(info.chId)
             }
+            info.type = "text"
+            if(info.voice != ""){
+                info.type = "voice"
+            }
             var con = db.db('englishAcademy')
             let infor = {
                 "msg": info.msg,
                 "user": info.user,
                 "chId": info.chId,
+                "voice":info.voice,
+                "type":info.type,
                 "pinned": info.pinned,
                 "warned":info.warned,
                 "marked":info.marked,
@@ -4964,15 +4977,21 @@ module.exports.postMessage = (info, cb)=> {
             if (info.chId ) {
                 info.chId = new ObjectID(info.chId)
             }
+            info.type = "text"
+            if(info.voice != ""){
+                info.type = "voice"
+            }
             var con = db.db('englishAcademy')
             con.collection("message").insertOne({
                 "msg": info.msg,
                 "user":info.user,
                 "chId": info.chId,
+                "voice":info.voice,
                 "pinned": false,
                 "warned":false,
                 "marked":false,
-                "time":info.time
+                "time":info.time,
+                "type":info.type
             }, (err, result) => {
                 if (err) {
 
