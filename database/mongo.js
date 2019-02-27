@@ -4989,7 +4989,10 @@ module.exports.postMessage = (info, cb)=> {
                     cb(0)
                 }
                 else {
-                    cb(result.insertedId)
+                   // let  data = result
+                   //  data._id = result.insertedId
+                    logger.info("result" , result.ops[0])
+                    cb(result.ops[0])
                 }
             })
 
