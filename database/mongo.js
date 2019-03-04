@@ -366,6 +366,7 @@ module.exports.unPinMsg = ( cb)=> {
         }
     })
 };
+
 module.exports.deleteStudentChatroom = ( chId , cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -394,6 +395,64 @@ module.exports.deleteStudentChatroom = ( chId , cb)=> {
         }
     })
 };
+
+module.exports.warnUser = ( updateInfo , stdId  , cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("student").findOneAndUpdate({
+                    "_id": new ObjectID(stdId),
+                    "chatrooms._id": new ObjectID(updateInfo.chId)
+                }, {$inc: {"chatrooms.$.warned": 1}},
+                {returnOriginal: false}, (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else if (result != null) {
+                        cb(result.value)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+        }
+    })
+};
+
+module.exports.blockUser = ( updateInfo , stdId  , cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("student").findOneAndUpdate({
+                    "_id": new ObjectID(stdId),
+                    "chatrooms._id": new ObjectID(updateInfo.chId)
+                }, {$set: {"chatrooms.$.blocked": updateInfo.blocked}},
+                {returnOriginal: false}, (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else if (result != null) {
+                        cb(result.value)
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+        }
+    })
+};
+
 
 module.exports.deleteChatAdminChatroom = ( chId , cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -4807,6 +4866,40 @@ module.exports.getusersOfChatroom = (chId, cb)=> {
         }
     })
 };
+
+module.exports.getBLOCKusersOfChatroom = (chId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof chId == 'number') {
+                chId = JSON.stringify(chId)
+            }
+            chId = new ObjectID(`${chId}`)
+            var con = db.db('englishAcademy')
+            con.collection("student").find({chatrooms:{$elemMatch: {"_id":chId , "blocked": {$ne: 0}}}}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 
 
 module.exports.getChatrmBylsnId = (lsnId, cb)=> {

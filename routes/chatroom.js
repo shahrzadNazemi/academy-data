@@ -59,6 +59,22 @@ router.get('/:chId/student', (req, res)=> {
 
 });
 
+router.get('/:chId/student/blocked', (req, res)=> {
+    database.getBlockUserOfChatroom(req.params.chId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+
+});
+
+
 router.get('/chatAdmin/:caId', (req, res)=> {
     database.getChatroomByChatAdmin(req.params.caId, (result)=> {
         if (result == -1) {
