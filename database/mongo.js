@@ -379,7 +379,7 @@ module.exports.editUserMsg = (updateInfo, usrId, cb)=> {
 
             con.collection("message").updateMany({"user._id": usrId}, {
                     $set: {
-                        "pinned": false
+                        "user": updateInfo
                     },
                 }
                 , (err, result)=> {

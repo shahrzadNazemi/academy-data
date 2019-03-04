@@ -1312,6 +1312,7 @@ module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
             logger.info("newChatAdmin", newChatAdmin)
             logger.info("caId", caId)
             module.exports.updateMessage(newChatAdmin , 0 , (updatedMsg)=> {
+                logger.info("updatedeMsg",updatedMsg)
                 mongo.editChatAdmin(newChatAdmin, caId, (result)=> {
                     if (result == -1) {
                         cb(-1)
@@ -2012,6 +2013,8 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
 
                 let newStu = Object.assign({}, student, updateInfo)
                 module.exports.updateMessage(newStu , 0 , (updatedMsg)=>{
+                    logger.info("updatedeMsg",updatedMsg)
+
                     mongo.editStudent(newStu, stdId, (result)=> {
                         if (result == -1) {
                             cb(-1)
