@@ -335,7 +335,7 @@ module.exports.updateResultByLsnId = (lsnId, info, cb)=> {
     })
 };
 
-module.exports.unPinMsg = ( cb)=> {
+module.exports.unPinMsg = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -343,31 +343,66 @@ module.exports.unPinMsg = ( cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-                con.collection("message").updateMany({"pinned": true}, {
-                        $set: {
-                            "pinned": false
-                        },
+            con.collection("message").updateMany({"pinned": true}, {
+                    $set: {
+                        "pinned": false
+                    },
+                }
+                , (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
                     }
-                    , (err, result)=> {
-                        if (err) {
-                            console.log(err)
-                            cb(-1)
-                        }
-                        else if (result != null) {
-                            cb(result)
+                    else if (result != null) {
+                        cb(result)
 
-                        }
-                        else {
-                            cb(0)
-                        }
-                    })
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
 
 
         }
     })
 };
 
-module.exports.deleteStudentChatroom = ( chId , cb)=> {
+module.exports.editUserMsg = (updateInfo, usrId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            usrId: new ObjectID(usrId)
+            var con = db.db('englishAcademy')
+
+            con.collection("message").updateMany({"user._id": usrId}, {
+                    $set: {
+                        "pinned": false
+                    },
+                }
+                , (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else if (result != null) {
+                        cb(result)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+
+
+        }
+    })
+};
+
+
+module.exports.deleteStudentChatroom = (chId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -376,9 +411,9 @@ module.exports.deleteStudentChatroom = ( chId , cb)=> {
         else {
 
             var con = db.db('englishAcademy')
-            con.collection("student").updateMany({ },
-            { $pull: { chatrooms: {"_id": new ObjectID(`${chId}`)} } },
-            { multi: true }
+            con.collection("student").updateMany({},
+                {$pull: {chatrooms: {"_id": new ObjectID(`${chId}`)}}},
+                {multi: true}
                 , (err, result)=> {
                     if (err) {
                         console.log(err)
@@ -396,7 +431,7 @@ module.exports.deleteStudentChatroom = ( chId , cb)=> {
     })
 };
 
-module.exports.warnUser = ( updateInfo , stdId  , cb)=> {
+module.exports.warnUser = (updateInfo, stdId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -425,7 +460,7 @@ module.exports.warnUser = ( updateInfo , stdId  , cb)=> {
     })
 };
 
-module.exports.blockUser = ( updateInfo , stdId  , cb)=> {
+module.exports.blockUser = (updateInfo, stdId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -454,7 +489,7 @@ module.exports.blockUser = ( updateInfo , stdId  , cb)=> {
 };
 
 
-module.exports.deleteChatAdminChatroom = ( chId , cb)=> {
+module.exports.deleteChatAdminChatroom = (chId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -463,9 +498,9 @@ module.exports.deleteChatAdminChatroom = ( chId , cb)=> {
         else {
 
             var con = db.db('englishAcademy')
-            con.collection("chatAdmin").updateMany({ },
-                { $pull: { chatrooms: {"_id": new ObjectID(`${chId}`)} } },
-                { multi: true }
+            con.collection("chatAdmin").updateMany({},
+                {$pull: {chatrooms: {"_id": new ObjectID(`${chId}`)}}},
+                {multi: true}
                 , (err, result)=> {
                     if (err) {
                         console.log(err)
@@ -482,8 +517,6 @@ module.exports.deleteChatAdminChatroom = ( chId , cb)=> {
         }
     })
 };
-
-
 
 
 module.exports.getTktById = (tktId, cb)=> {
@@ -1130,7 +1163,7 @@ module.exports.postResult = (info, cb)=> {
             cb(-1)
         }
         else {
-            info.quiz.getScore =0
+            info.quiz.getScore = 0
             var con = db.db('englishAcademy')
             con.collection("result").insertOne({
                 "usrId": info.usrId,
@@ -1777,11 +1810,11 @@ module.exports.getResultByLsnIdUsrId = (usrId, lsnId, cb)=> {
             cb(-1)
         }
         else {
-            if(lsnId ==0){
-                lsnId =0
+            if (lsnId == 0) {
+                lsnId = 0
             }
-            else{
-                lsnId =new ObjectID(`${lsnId}`)
+            else {
+                lsnId = new ObjectID(`${lsnId}`)
             }
             var con = db.db('englishAcademy')
             con.collection("result").findOne({
@@ -4131,13 +4164,13 @@ module.exports.getAllLess = (cb)=> {
             con.collection("lesson").aggregate([
 
                 {
-                $lookup: {
-                    from: "level",
-                    localField: "lvlId",
-                    foreignField: "_id",
-                    as: "level"
-                }
-            }]).toArray((err, result) => {
+                    $lookup: {
+                        from: "level",
+                        localField: "lvlId",
+                        foreignField: "_id",
+                        as: "level"
+                    }
+                }]).toArray((err, result) => {
                 console.log("result", result)
                 if (err) {
                     cb(-1)
@@ -4657,13 +4690,13 @@ module.exports.editChatRoom = (info, chId, cb)=> {
             else if (!Object.keys(info.level).length == 0) {
                 info.level.value = new ObjectID(info.level.value)
             }
-            if(typeof info.startTime == "string" ){
+            if (typeof info.startTime == "string") {
                 info.startTime = parseInt(info.startTime)
             }
-            if(typeof info.endTime == "string" ){
+            if (typeof info.endTime == "string") {
                 info.endTime = parseInt(info.endTime)
             }
-            if(info.avatarUrl == undefined){
+            if (info.avatarUrl == undefined) {
                 info.avatarUrl == ""
             }
             var con = db.db('englishAcademy')
@@ -4672,8 +4705,8 @@ module.exports.editChatRoom = (info, chId, cb)=> {
                 "lesson": info.lesson,
                 "avatarUrl": info.avatarUrl,
                 "level": info.level,
-                "startTime":info.startTime,
-                "endTime":info.endTime
+                "startTime": info.startTime,
+                "endTime": info.endTime
             }
             con.collection("chatRoom").findOneAndUpdate({"_id": new ObjectID(chId)}, {
                 $set: infor
@@ -4736,13 +4769,13 @@ module.exports.postChatRoom = (info, cb)=> {
             else if (!Object.keys(info.level).length == 0) {
                 info.level.value = new ObjectID(info.level.value)
             }
-            if(typeof info.startTime == "string" ){
+            if (typeof info.startTime == "string") {
                 info.startTime = parseInt(info.startTime)
             }
-            if(typeof info.endTime == "string" ){
+            if (typeof info.endTime == "string") {
                 info.endTime = parseInt(info.endTime)
             }
-            if(info.avatarUrl == undefined){
+            if (info.avatarUrl == undefined) {
                 info.avatarUrl == ""
             }
             var con = db.db('englishAcademy')
@@ -4751,8 +4784,8 @@ module.exports.postChatRoom = (info, cb)=> {
                 "lesson": info.lesson,
                 "avatarUrl": info.avatarUrl,
                 "level": info.level,
-                "startTime":info.startTime,
-                "endTime":info.endTime
+                "startTime": info.startTime,
+                "endTime": info.endTime
             }, (err, result) => {
                 if (err) {
 
@@ -4846,7 +4879,7 @@ module.exports.getusersOfChatroom = (chId, cb)=> {
             }
             chId = new ObjectID(`${chId}`)
             var con = db.db('englishAcademy')
-            con.collection("student").find({chatrooms:{$elemMatch: {"_id":chId}}}).toArray((err, result) => {
+            con.collection("student").find({chatrooms: {$elemMatch: {"_id": chId}}}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -4879,7 +4912,14 @@ module.exports.getBLOCKusersOfChatroom = (chId, cb)=> {
             }
             chId = new ObjectID(`${chId}`)
             var con = db.db('englishAcademy')
-            con.collection("student").find({chatrooms:{$elemMatch: {"_id":chId , "blocked": {$ne: 0}}}}).toArray((err, result) => {
+            con.collection("student").find({
+                chatrooms: {
+                    $elemMatch: {
+                        "_id": chId,
+                        "blocked": {$ne: 0}
+                    }
+                }
+            }).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -4900,6 +4940,38 @@ module.exports.getBLOCKusersOfChatroom = (chId, cb)=> {
     })
 };
 
+module.exports.getreportedMsgOfChatroom = (chId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof chId == 'number') {
+                chId = JSON.stringify(chId)
+            }
+            chId = new ObjectID(`${chId}`)
+            var con = db.db('englishAcademy')
+            con.collection("message").find({"chId": chId, "reportSender": {$ne: 0}}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
 
 
 module.exports.getChatrmBylsnId = (lsnId, cb)=> {
@@ -4985,7 +5057,7 @@ module.exports.getchatAdminBychatRoom = (chId, cb)=> {
                 chId = new ObjectID(`${chId}`)
             }
             var con = db.db('englishAcademy')
-            con.collection("chatAdmin").find({chatrooms:{$elemMatch: {"value":chId }}}).toArray((err, result) => {
+            con.collection("chatAdmin").find({chatrooms: {$elemMatch: {"value": chId}}}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -5013,17 +5085,17 @@ module.exports.editMessage = (info, msgId, cb)=> {
             cb(-1)
         }
         else {
-            if (info.user._id ) {
+            if (info.user._id) {
                 info.user._id = new ObjectID(info.user._id)
             }
-            if (info.chId ) {
+            if (info.chId) {
                 info.chId = new ObjectID(info.chId)
             }
-            if (info.reportSender != 0 ) {
+            if (info.reportSender != 0) {
                 info.reportSender = new ObjectID(info.reportSender)
             }
             info.type = "text"
-            if(info.voice != ""){
+            if (info.voice != "") {
                 info.type = "voice"
             }
             var con = db.db('englishAcademy')
@@ -5031,13 +5103,13 @@ module.exports.editMessage = (info, msgId, cb)=> {
                 "msg": info.msg,
                 "user": info.user,
                 "chId": info.chId,
-                "voice":info.voice,
-                "type":info.type,
+                "voice": info.voice,
+                "type": info.type,
                 "pinned": info.pinned,
-                "warned":info.warned,
-                "marked":info.marked,
-                "time":info.time,
-                "reportSender":info.reportSender
+                "warned": info.warned,
+                "marked": info.marked,
+                "time": info.time,
+                "reportSender": info.reportSender
             }
             con.collection("message").findOneAndUpdate({"_id": new ObjectID(msgId)}, {
                 $set: infor
@@ -5068,83 +5140,28 @@ module.exports.postMessage = (info, cb)=> {
             cb(-1)
         }
         else {
-            if (info.user._id ) {
+            if (info.user._id) {
                 info.user._id = new ObjectID(info.user._id)
             }
-            if (info.chId ) {
+            if (info.chId) {
                 info.chId = new ObjectID(info.chId)
             }
             info.type = "text"
-            if(info.voice != ""){
+            if (info.voice != "") {
                 info.type = "voice"
             }
             var con = db.db('englishAcademy')
             con.collection("message").insertOne({
                 "msg": info.msg,
-                "user":info.user,
+                "user": info.user,
                 "chId": info.chId,
-                "voice":info.voice,
+                "voice": info.voice,
                 "pinned": false,
-                "warned":false,
-                "marked":false,
-                "time":info.time,
-                "type":info.type,
-                "reportSender":0
-            }, (err, result) => {
-                if (err) {
-
-                    if (err.code == 11000) {
-                        console.log(err)
-                        cb(-2)
-                    }
-                    else {
-                        cb(-1)
-                    }
-
-                }
-                else if (result.length == 0) {
-                    cb(0)
-                }
-                else {
-                   // let  data = result
-                   //  data._id = result.insertedId
-                    logger.info("result" , result.ops[0])
-                    cb(result.ops[0])
-                }
-            })
-
-        }
-    })
-};
-
-module.exports.postMessageReport = (info, cb)=> {
-    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
-        if (err) {
-            console.log("Err", err)
-            cb(-1)
-        }
-        else {
-            if (info.user._id ) {
-                info.user._id = new ObjectID(info.user._id)
-            }
-            if (info.chId ) {
-                info.chId = new ObjectID(info.chId)
-            }
-            info.type = "text"
-            if(info.voice != ""){
-                info.type = "voice"
-            }
-            var con = db.db('englishAcademy')
-            con.collection("reportMsg").insertOne({
-                "msg": info.msg,
-                "user":info.user,
-                "chId": info.chId,
-                "voice":info.voice,
-                "pinned": false,
-                "warned":false,
-                "marked":false,
-                "time":info.time,
-                "type":info.type
+                "warned": false,
+                "marked": false,
+                "time": info.time,
+                "type": info.type,
+                "reportSender": 0
             }, (err, result) => {
                 if (err) {
 
@@ -5163,7 +5180,62 @@ module.exports.postMessageReport = (info, cb)=> {
                 else {
                     // let  data = result
                     //  data._id = result.insertedId
-                    logger.info("result" , result.ops[0])
+                    logger.info("result", result.ops[0])
+                    cb(result.ops[0])
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.postMessageReport = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (info.user._id) {
+                info.user._id = new ObjectID(info.user._id)
+            }
+            if (info.chId) {
+                info.chId = new ObjectID(info.chId)
+            }
+            info.type = "text"
+            if (info.voice != "") {
+                info.type = "voice"
+            }
+            var con = db.db('englishAcademy')
+            con.collection("reportMsg").insertOne({
+                "msg": info.msg,
+                "user": info.user,
+                "chId": info.chId,
+                "voice": info.voice,
+                "pinned": false,
+                "warned": false,
+                "marked": false,
+                "time": info.time,
+                "type": info.type
+            }, (err, result) => {
+                if (err) {
+
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        cb(-1)
+                    }
+
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    // let  data = result
+                    //  data._id = result.insertedId
+                    logger.info("result", result.ops[0])
                     cb(result.ops[0])
                 }
             })
@@ -5254,7 +5326,7 @@ module.exports.getMessageById = (msgId, cb)=> {
 };
 
 module.exports.getMessagOfChatroom = (chId, cb)=> {
-    logger.info("chId",chId)
+    logger.info("chId", chId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -5266,7 +5338,7 @@ module.exports.getMessagOfChatroom = (chId, cb)=> {
             }
             chId = new ObjectID(`${chId}`)
             var con = db.db('englishAcademy')
-            con.collection("message").find({"chId":chId}).toArray((err, result) => {
+            con.collection("message").find({"chId": chId}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -5288,7 +5360,7 @@ module.exports.getMessagOfChatroom = (chId, cb)=> {
 };
 
 module.exports.getMarkChat = (chId, cb)=> {
-    logger.info("chId",chId)
+    logger.info("chId", chId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -5300,7 +5372,7 @@ module.exports.getMarkChat = (chId, cb)=> {
             }
             chId = new ObjectID(`${chId}`)
             var con = db.db('englishAcademy')
-            con.collection("message").find({"chId": chId , "marked":true}).toArray((err, result) => {
+            con.collection("message").find({"chId": chId, "marked": true}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -5322,7 +5394,7 @@ module.exports.getMarkChat = (chId, cb)=> {
 };
 
 module.exports.getPinChat = (chId, cb)=> {
-    logger.info("chId",chId)
+    logger.info("chId", chId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -5334,7 +5406,7 @@ module.exports.getPinChat = (chId, cb)=> {
             }
             chId = new ObjectID(`${chId}`)
             var con = db.db('englishAcademy')
-            con.collection("message").findOne({"chId": chId , "pinned":true},(err, result) => {
+            con.collection("message").findOne({"chId": chId, "pinned": true}, (err, result) => {
                 if (err) {
                     cb(-1)
                 }

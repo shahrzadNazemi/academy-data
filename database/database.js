@@ -1311,19 +1311,19 @@ module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
 
             logger.info("newChatAdmin", newChatAdmin)
             logger.info("caId", caId)
-
-            mongo.editChatAdmin(newChatAdmin, caId, (result)=> {
-                if (result == -1) {
-                    cb(-1)
-                }
-                else if (result == 0) {
-                    cb(0)
-                }
-                else {
-                    cb(result)
-                }
+            module.exports.updateMessage(newChatAdmin , 0 , (updatedMsg)=> {
+                mongo.editChatAdmin(newChatAdmin, caId, (result)=> {
+                    if (result == -1) {
+                        cb(-1)
+                    }
+                    else if (result == 0) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result)
+                    }
+                })
             })
-
         }
     })
 
@@ -2011,19 +2011,22 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
             else {
 
                 let newStu = Object.assign({}, student, updateInfo)
-                mongo.editStudent(newStu, stdId, (result)=> {
-                    if (result == -1) {
-                        cb(-1)
-                    }
-                    else if (result == 0) {
-                        cb(0)
-                    }
-                    else if (result == -2) {
-                        cb(-2)
-                    }
-                    else {
-                        cb(result)
-                    }
+                module.exports.updateMessage(newStu , 0 , (updatedMsg)=>{
+                    mongo.editStudent(newStu, stdId, (result)=> {
+                        if (result == -1) {
+                            cb(-1)
+                        }
+                        else if (result == 0) {
+                            cb(0)
+                        }
+                        else if (result == -2) {
+                            cb(-2)
+                        }
+                        else {
+                            cb(result)
+                        }
+                    })
+
                 })
             }
         })
@@ -4653,6 +4656,21 @@ module.exports.getBlockUserOfChatroom = (chId, cb)=> {
     })
 };
 
+module.exports.getreportMsgOfChatroom = (chId, cb)=> {
+    mongo.getreportedMsgOfChatroom(chId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+
 
 
 module.exports.getChatRoomByLessonId = (lsnId, cb)=> {
@@ -4743,50 +4761,66 @@ module.exports.addChatroom = (data, cb)=> {
 
 
 module.exports.updateMessage = (updateInfo, msgId, cb)=> {
-    module.exports.getMsgById(msgId, (chatroom)=> {
-        if (chatroom == -1) {
-            cb(-1)
-        }
-        else if (chatroom == 0) {
-            cb(0)
-        }
-        else {
-            mongo.getchatAdminBychatRoom(chatroom.chId , (chatAdmins)=>{
-                if(chatAdmins ==-1){
-                    let newMessage = Object.assign({}, chatroom, updateInfo)
-                    mongo.editMessage(newMessage, msgId, (result)=> {
-                        if (result == -1) {
-                            cb(-1)
-                        }
-                        else if (result == 0) {
-                            cb(0)
-                        }
-                        else {
-                            result.chatAdmins = 0
-                            cb(result)
-                        }
-                    })
-                }
-                else{
-                    let newMessage = Object.assign({}, chatroom, updateInfo)
-                    mongo.editMessage(newMessage, msgId, (result)=> {
-                        if (result == -1) {
-                            cb(-1)
-                        }
-                        else if (result == 0) {
-                            cb(0)
-                        }
-                        else {
-                            result.chatAdmins = chatAdmins
-                            cb(result)
-                        }
-                    })
-                }
-               
-            })
-            
-        }
-    })
+    if(msgId == 0){
+        mongo.editUserMsg(updateInfo, updateInfo._id, (result)=> {
+            if (result == -1) {
+                cb(-1)
+            }
+            else if (result == 0) {
+                cb(0)
+            }
+            else {
+                cb(result)
+            }
+        })
+
+    }
+    else{
+        module.exports.getMsgById(msgId, (chatroom)=> {
+            if (chatroom == -1) {
+                cb(-1)
+            }
+            else if (chatroom == 0) {
+                cb(0)
+            }
+            else {
+                mongo.getchatAdminBychatRoom(chatroom.chId , (chatAdmins)=>{
+                    if(chatAdmins ==-1){
+                        let newMessage = Object.assign({}, chatroom, updateInfo)
+                        mongo.editMessage(newMessage, msgId, (result)=> {
+                            if (result == -1) {
+                                cb(-1)
+                            }
+                            else if (result == 0) {
+                                cb(0)
+                            }
+                            else {
+                                result.chatAdmins = 0
+                                cb(result)
+                            }
+                        })
+                    }
+                    else{
+                        let newMessage = Object.assign({}, chatroom, updateInfo)
+                        mongo.editMessage(newMessage, msgId, (result)=> {
+                            if (result == -1) {
+                                cb(-1)
+                            }
+                            else if (result == 0) {
+                                cb(0)
+                            }
+                            else {
+                                result.chatAdmins = chatAdmins
+                                cb(result)
+                            }
+                        })
+                    }
+
+                })
+
+            }
+        })
+    }
 };
 
 module.exports.unpinMessage = (cb)=> {
