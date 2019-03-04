@@ -4751,18 +4751,40 @@ module.exports.updateMessage = (updateInfo, msgId, cb)=> {
             cb(0)
         }
         else {
-            let newMessage = Object.assign({}, chatroom, updateInfo)
-            mongo.editMessage(newMessage, msgId, (result)=> {
-                if (result == -1) {
-                    cb(-1)
+            mongo.getchatAdminBychatRoom(chatroom.chId , (chatAdmins)=>{
+                if(chatAdmins ==-1){
+                    let newMessage = Object.assign({}, chatroom, updateInfo)
+                    mongo.editMessage(newMessage, msgId, (result)=> {
+                        if (result == -1) {
+                            cb(-1)
+                        }
+                        else if (result == 0) {
+                            cb(0)
+                        }
+                        else {
+                            result.chatAdmins = 0
+                            cb(result)
+                        }
+                    })
                 }
-                else if (result == 0) {
-                    cb(0)
+                else{
+                    let newMessage = Object.assign({}, chatroom, updateInfo)
+                    mongo.editMessage(newMessage, msgId, (result)=> {
+                        if (result == -1) {
+                            cb(-1)
+                        }
+                        else if (result == 0) {
+                            cb(0)
+                        }
+                        else {
+                            result.chatAdmins = chatAdmins
+                            cb(result)
+                        }
+                    })
                 }
-                else {
-                    cb(result)
-                }
+               
             })
+            
         }
     })
 };
@@ -4876,6 +4898,17 @@ module.exports.delMessage = (msgId, cb)=> {
 
 module.exports.addMessage = (data, cb)=> {
     mongo.postMessage(data, (added)=> {
+        if (added == -1) {
+            cb(-1)
+        }
+        else {
+            cb(added)
+        }
+    })
+};
+
+module.exports.addMessageReport = (data, cb)=> {
+    mongo.postMessageReport(data, (added)=> {
         if (added == -1) {
             cb(-1)
         }

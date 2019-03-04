@@ -19,6 +19,6 @@ console.log(9<=  moment().format('HH') &&  moment().format('HH') <= 14)
 
 
 
-mongo.deleteStudentChatroom("5c72364b1b309229e047a8f7" , (del)=>{
+mongo.getchatAdminBychatRoom("5c768b5e4c8a2011c7119a24" , (del)=>{
     console.log(del)
 })
