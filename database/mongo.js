@@ -374,7 +374,7 @@ module.exports.editUserMsg = (updateInfo, usrId, cb)=> {
             cb(-1)
         }
         else {
-            usrId: new ObjectID(usrId)
+            usrId = new ObjectID(usrId)
             var con = db.db('englishAcademy')
 
             con.collection("message").updateMany({"user._id": usrId}, {
@@ -382,6 +382,37 @@ module.exports.editUserMsg = (updateInfo, usrId, cb)=> {
                         "user": updateInfo
                     },
                 }
+                , (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else if (result != null) {
+                        cb(result)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+
+
+        }
+    })
+};
+
+module.exports.editStudentChatroom = (updateInfo, chId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            chId = new ObjectID(chId)
+            updateInfo._id = new ObjectID( updateInfo._id)
+            var con = db.db('englishAcademy')
+            con.collection("student").updateMany({'chatrooms._id': chId},
+                {$set: {'chatrooms.$': updateInfo}}
                 , (err, result)=> {
                     if (err) {
                         console.log(err)
@@ -471,13 +502,14 @@ module.exports.blockUser = (updateInfo, stdId, cb)=> {
             con.collection("student").findOneAndUpdate({
                     "_id": new ObjectID(stdId),
                     "chatrooms._id": new ObjectID(updateInfo.chId)
-                }, {$set: {"chatrooms.$.blocked": updateInfo.blocked}},
+                }, {$set: { "chatrooms.$.blocked": updateInfo.blocked , "chatrooms.$.blockedTime": updateInfo.blockedTime}},
                 {returnOriginal: false}, (err, result)=> {
+                    logger.info("result in blockUser" , result)
                     if (err) {
                         console.log(err)
                         cb(-1)
                     }
-                    else if (result != null) {
+                    else if (result.value != null) {
                         cb(result.value)
                     }
                     else {
@@ -5252,16 +5284,13 @@ module.exports.deletechatRoomMessages = (chId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("message").findOneAndDelete({"chId": new ObjectID(`${chId}`)}, (err, result)=> {
+            con.collection("message").deleteMany({"chId": new ObjectID(`${chId}`) , "pinned":false}, (err, result)=> {
+                logger.info("result" , result)
                 if (err) {
                     cb(-1)
                 }
-                else if (result.lastErrorObject.n != 0) {
-                    let result = "row deleted"
+               else{
                     cb(result)
-                }
-                else {
-                    cb(0)
                 }
             })
         }
