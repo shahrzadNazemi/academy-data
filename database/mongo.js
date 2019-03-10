@@ -37,7 +37,21 @@ module.exports.adminLogin = (loginInfo, cb)=> {
                                     cb(-1)
                                 }
                                 else if (result.length == 0) {
-                                    cb(0)
+                                    con.collection("tutor").find({
+                                        password: loginInfo.password,
+                                        username: loginInfo.username
+                                    }).toArray((err, result) => {
+                                        if (err) {
+                                            cb(-1)
+                                        }
+                                        else if (result.length == 0) {
+                                            cb(0)
+                                        }
+                                        else {
+                                            result[0].role = "tutor"
+                                            cb(result[0])
+                                        }
+                                    })
                                 }
                                 else {
                                     result[0].role = "chatAdmin"
@@ -3676,7 +3690,8 @@ module.exports.postStudent = (stuInfo, cb)=> {
                 "score": stuInfo.score,
                 "lastPassedLesson": stuInfo.lastPassedLesson,
                 "passedLessonScore": stuInfo.passedLessonScore,
-                "chatrooms": []
+                "chatrooms": [],
+                "vip":false
 
             }, (err, result) => {
                 if (err != null) {
@@ -3776,6 +3791,25 @@ module.exports.getStudentByLesson = (lsnId, cb)=> {
         }
     })
 };
+
+module.exports.postCurrentLessonCharoom = (students , chatroom , cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            let bulkArray = []
+            students.forEach((d, i)=>{
+                bulkArray.push({ updateOne: { filter: { _id: new ObjectID(d[i]._id) },
+                    update: { $push: { chatrooms: chatroom }}, upsert:true }})
+            })
+            con.collection("student").bulkWrite(bulkArray, {ordered:true, w:1});
+        }
+    })
+};
+
 
 module.exports.getCertById = (certId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -3954,6 +3988,12 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
             }
             else {
                 var con = db.db('englishAcademy')
+                if(stuInfo.vip == "true"){
+                    stuInfo.vip = true
+                }
+                else if(stuInfo.vip == "false"){
+                    stuInfo.vip = false
+                }
                 con.collection("student").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
                         $set: {
                             "username": stuInfo.username,
@@ -3965,7 +4005,8 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                             "score": stuInfo.score,
                             "lastPassedLesson": stuInfo.lastPassedLesson,
                             "passedLessonScore": stuInfo.passedLessonScore,
-                            "chatrooms": stuInfo.chatrooms
+                            "chatrooms": stuInfo.chatrooms,
+                            "vip":stuInfo.vip
                         }
                     },
                     {returnOriginal: false}
@@ -5436,6 +5477,189 @@ module.exports.getPinChat = (chId, cb)=> {
             chId = new ObjectID(`${chId}`)
             var con = db.db('englishAcademy')
             con.collection("message").findOne({"chId": chId, "pinned": true}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
+
+module.exports.editTutor = (info, tId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+
+            var con = db.db('englishAcademy')
+            let infor = {
+                "name": info.name,
+                "username": info.username,
+                "password": info.password,
+                "avatarUrl": info.avatarUrl,
+                "users": info.users,
+                "levels": info.levels,
+                "passed":info.passed,
+                "answered":info.answered
+
+            }
+            con.collection("tutor").findOneAndUpdate({"_id": new ObjectID(tId)}, {
+                $set: infor
+            }, {returnOriginal: false}, (err, result)=> {
+                if (err) {
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        console.log(err)
+                        cb(-1)
+                    }
+                }
+                else {
+
+                    cb(result.value)
+                }
+            })
+        }
+    })
+};
+
+module.exports.getAllTutors = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("tutor").find({}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.postTutor = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (info.chatrooms != undefined) {
+                // if(typeof info.chatrooms == "string"){
+                //     info.chatrooms == JSON.parse(info.chatRooms)
+                // }
+                for (var i = 0; i < info.chatrooms.length; i++) {
+                    info.chatrooms[i].value = new ObjectID(info.chatrooms[i].value)
+                }
+            }
+            var con = db.db('englishAcademy')
+            if(info.avatarUrl == undefined){
+                info.avatarUrl = ""
+            }
+            con.collection("tutor").insertOne({
+                "name": info.name,
+                "username": info.username,
+                "password": info.password,
+                "avatarUrl": info.avatarUrl,
+                "users": info.users,
+                "levels": info.levels,
+                "passed":info.passed,
+                "answered":info.answered
+            }, (err, result) => {
+                if (err) {
+
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        cb(-1)
+                    }
+
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.deleteTutor = (tId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("tutor").findOneAndDelete({"_id": new ObjectID(`${tId}`)}, (err, result)=> {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result = "row deleted"
+                    cb(result)
+                }
+                else {
+                    cb(0)
+                }
+            })
+        }
+    })
+};
+
+module.exports.getTtrById = (tId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof tId == 'number') {
+                tId = JSON.stringify(tId)
+            }
+            if (tId == 0) {
+                tId = 0
+            }
+            else {
+                tId = new ObjectID(`${tId}`)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("tutor").findOne({"_id": tId}, (err, result) => {
                 if (err) {
                     cb(-1)
                 }

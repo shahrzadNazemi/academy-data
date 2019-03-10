@@ -18,7 +18,8 @@ console.log(moment(pass).format("YYYY:MM:D HH:mm:ss"))
 console.log(9<=  moment().format('HH') &&  moment().format('HH') <= 14)
 
 
-
-mongo.getchatAdminBychatRoom("5c768b5e4c8a2011c7119a24" , (del)=>{
+let student = {}
+let chatroom = {}
+mongo.postCurrentLessonCharoom("5c768b5e4c8a2011c7119a24" , (del)=>{
     console.log(del)
 })

@@ -1311,8 +1311,8 @@ module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
 
             logger.info("newChatAdmin", newChatAdmin)
             logger.info("caId", caId)
-            module.exports.updateMessage(newChatAdmin , 0 , (updatedMsg)=> {
-                logger.info("updatedeMsg",updatedMsg)
+            module.exports.updateMessage(newChatAdmin, 0, (updatedMsg)=> {
+                logger.info("updatedeMsg", updatedMsg)
                 mongo.editChatAdmin(newChatAdmin, caId, (result)=> {
                     if (result == -1) {
                         cb(-1)
@@ -1957,13 +1957,13 @@ module.exports.getNotes = (lsnId, usrId, cb)=> {
     })
 };
 
-module.exports.deleteChatRoomMessage = ()=>{
-    module.exports.getAllChatrooms((chatRooms)=>{
-        logger.info("chat" , chatRooms)
-        if(chatRooms != 0 || chatRooms!= -1){
-            for(var i=0;i<chatRooms.length;i++){
-                if( moment().format('HH') >= chatRooms[i].endTime){
-                    mongo.deletechatRoomMessages(chatRooms[i]._id , ()=>{
+module.exports.deleteChatRoomMessage = ()=> {
+    module.exports.getAllChatrooms((chatRooms)=> {
+        logger.info("chat", chatRooms)
+        if (chatRooms != 0 || chatRooms != -1) {
+            for (var i = 0; i < chatRooms.length; i++) {
+                if (moment().format('HH') >= chatRooms[i].endTime) {
+                    mongo.deletechatRoomMessages(chatRooms[i]._id, ()=> {
                     })
                 }
             }
@@ -1971,20 +1971,24 @@ module.exports.deleteChatRoomMessage = ()=>{
     })
 }
 
-module.exports.unblockUsers = ()=>{
-    module.exports.getAllStudents((students)=>{
-        if(students != 0 || students!= -1){
-            for(var k=0;k<students.length;k++){
-                for(var i=0;i<students[k].chatrooms.length;i++) {
-                    if(students[k].chatrooms[i] && students[k].chatrooms[i].blocked !=0 && students[k].chatrooms[i]!= -1)
-                    if (moment(students[k].chatrooms[i].blockedTime).add(students[k].chatrooms[i].blocked , 'h') <= new Date().getTime()) {
-                        let data = {}
-                        data.blocked =0
-                        data.blockedTime = ""
-                        mongo.blockUser(data,students[k]._id , ()=> {
-                        })
+module.exports.unblockUsers = ()=> {
+    module.exports.getAllStu((students)=> {
+        if (students != 0 || students != -1) {
+            for (var k = 0; k < students.length; k++) {
+                if (students[k].chatrooms) {
+                    for (var i = 0; i < students[k].chatrooms.length; i++) {
+                        if (students[k].chatrooms[i] && students[k].chatrooms[i].blocked != 0 && students[k].chatrooms[i] != -1)
+                            if (moment(students[k].chatrooms[i].blockedTime).add(students[k].chatrooms[i].blocked, 'h') <= new Date().getTime()) {
+                                let data = {}
+                                data.blocked = 0
+                                data.blockedTime = ""
+                                data.chId = students[k].chatrooms[i]._id
+                                mongo.blockUser(data, students[k]._id, ()=> {
+                                })
+                            }
                     }
                 }
+
             }
         }
     })
@@ -1992,9 +1996,9 @@ module.exports.unblockUsers = ()=>{
 
 module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     //for editting studentChatroom
-    if(stdId ==0){
+    if (stdId == 0) {
         // mongo.getStudentChatroom(updateInfo._id ,  )
-        mongo.editStudentChatroom(updateInfo , updateInfo._id , (result)=>{
+        mongo.editStudentChatroom(updateInfo, updateInfo._id, (result)=> {
             if (result == -1) {
                 cb(-1)
             }
@@ -2009,7 +2013,7 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
             }
         })
     }
-    else{
+    else {
         if (updateInfo.warned) {
             let count = 0
             mongo.warnUser(updateInfo, stdId, (result)=> {
@@ -2020,12 +2024,12 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
                     cb(0)
                 }
                 else {
-                    for(var i=0;i<result.chatrooms.length;i++){
-                        if(result.chatrooms[i] && result.chatrooms[i]._id == updateInfo.chId){
+                    for (var i = 0; i < result.chatrooms.length; i++) {
+                        if (result.chatrooms[i] && result.chatrooms[i]._id == updateInfo.chId) {
                             count = result.chatrooms[i].warned
                         }
                     }
-                    logger.info("warnUser db" , count)
+                    logger.info("warnUser db", count)
 
                     cb(count)
                 }
@@ -2041,12 +2045,12 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
                     cb(0)
                 }
                 else {
-                    for(var i=0;i<result.chatrooms.length;i++){
-                        if(result.chatrooms[i] && result.chatrooms[i]._id == updateInfo.chId){
+                    for (var i = 0; i < result.chatrooms.length; i++) {
+                        if (result.chatrooms[i] && result.chatrooms[i]._id == updateInfo.chId) {
                             blocked = result.chatrooms[i].blocked
                         }
                     }
-                    logger.info("warnUser db" , blocked)
+                    logger.info("warnUser db", blocked)
                     cb(blocked)
                 }
             })
@@ -2064,8 +2068,8 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
                 else {
 
                     let newStu = Object.assign({}, student, updateInfo)
-                    module.exports.updateMessage(newStu , 0 , (updatedMsg)=>{
-                        logger.info("updatedeMsg",updatedMsg)
+                    module.exports.updateMessage(newStu, 0, (updatedMsg)=> {
+                        logger.info("updatedeMsg", updatedMsg)
 
                         mongo.editStudent(newStu, stdId, (result)=> {
                             if (result == -1) {
@@ -2088,7 +2092,7 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
 
         }
     }
-   
+
 };
 
 module.exports.updateCertificate = (updateInfo, certId, cb)=> {
@@ -4662,7 +4666,7 @@ module.exports.updateChatroom = (updateInfo, chId, cb)=> {
         }
         else {
             let newChatroom = Object.assign({}, chatroom, updateInfo)
-            module.exports.updateStudent(newChatroom , 0 , (updatedChatroom)=>{
+            module.exports.updateStudent(newChatroom, 0, (updatedChatroom)=> {
                 mongo.editChatRoom(newChatroom, chId, (result)=> {
                     if (result == -1) {
                         cb(-1)
@@ -4696,7 +4700,7 @@ module.exports.getChatroomById = (chId, cb)=> {
 };
 
 module.exports.getchatAdminOfChatroom = (chId, cb)=> {
-    logger.info("chIdhjhkjhkj" , chId)
+    logger.info("chIdhjhkjhkj", chId)
     mongo.getchatAdminBychatRoom(chId, (result)=> {
         if (result == -1) {
             cb(-1)
@@ -4752,8 +4756,6 @@ module.exports.getreportMsgOfChatroom = (chId, cb)=> {
         }
     })
 };
-
-
 
 
 module.exports.getChatRoomByLessonId = (lsnId, cb)=> {
@@ -4836,15 +4838,36 @@ module.exports.addChatroom = (data, cb)=> {
             cb(-1)
         }
         else {
-
+            data._id = added
+            data.warned = 0;
+            data.blocked = 0;
+            data.blockedTime = ""
             cb(added)
         }
+        // if (!Object.keys(data.lesson).length == 0) {
+// modules.exports.addCurrentLessonChatroom(data , (addedChatroom)=>{
+//     module.exports.addPastLessonChatroom(data , (add)=>{
+//         cb(added)
+//
     })
-};
+}
 
+module.exports.addCurrentLessonChatroom = (data, cb)=> {
+    data.position = "currentLesson"
+    module.exports.getStuByLessonLsnId(data.lesson.value, (student)=> {
+        mongo.postCurrentLessonCharoom(student, data, (added)=> {
+            if (added == -1) {
+                cb(-1)
+            }
+            else {
+                cb(added)
+            }
+        })
+    })
+}
 
 module.exports.updateMessage = (updateInfo, msgId, cb)=> {
-    if(msgId == 0){
+    if (msgId == 0) {
         mongo.editUserMsg(updateInfo, updateInfo._id, (result)=> {
             if (result == -1) {
                 cb(-1)
@@ -4858,7 +4881,7 @@ module.exports.updateMessage = (updateInfo, msgId, cb)=> {
         })
 
     }
-    else{
+    else {
         module.exports.getMsgById(msgId, (chatroom)=> {
             if (chatroom == -1) {
                 cb(-1)
@@ -4867,8 +4890,8 @@ module.exports.updateMessage = (updateInfo, msgId, cb)=> {
                 cb(0)
             }
             else {
-                mongo.getchatAdminBychatRoom(chatroom.chId , (chatAdmins)=>{
-                    if(chatAdmins ==-1){
+                mongo.getchatAdminBychatRoom(chatroom.chId, (chatAdmins)=> {
+                    if (chatAdmins == -1) {
                         let newMessage = Object.assign({}, chatroom, updateInfo)
                         mongo.editMessage(newMessage, msgId, (result)=> {
                             if (result == -1) {
@@ -4883,7 +4906,7 @@ module.exports.updateMessage = (updateInfo, msgId, cb)=> {
                             }
                         })
                     }
-                    else{
+                    else {
                         let newMessage = Object.assign({}, chatroom, updateInfo)
                         mongo.editMessage(newMessage, msgId, (result)=> {
                             if (result == -1) {
@@ -5026,6 +5049,106 @@ module.exports.addMessage = (data, cb)=> {
 
 module.exports.addMessageReport = (data, cb)=> {
     mongo.postMessageReport(data, (added)=> {
+        if (added == -1) {
+            cb(-1)
+        }
+        else {
+            cb(added)
+        }
+    })
+};
+
+
+module.exports.updateTutor = (updateInfo, tId, cb)=> {
+    module.exports.getTutorById(tId, (support)=> {
+        if (support == -1) {
+            cb(-1)
+        }
+        else if (support == 0) {
+            cb(0)
+        }
+        else {
+            if (typeof support.users == "string") {
+                support.users = JSON.parse(support.users)
+            }
+            if (typeof support.levels == "string") {
+                support.levels = JSON.parse(support.levels)
+            }
+            if (typeof updateInfo.users == "string") {
+                updateInfo.users = JSON.parse(updateInfo.users)
+            }
+            if (typeof updateInfo.levels == "string") {
+                updateInfo.levels = JSON.parse(updateInfo.levels)
+            }
+            logger.info("updateInfo", updateInfo)
+
+            let newUsers = Object.assign([], support.users, updateInfo.users)
+            let newLevels = Object.assign([], support.levels, updateInfo.levels)
+
+            let newTutor = Object.assign({}, support, updateInfo)
+            newTutor.users = newUsers
+            newTutor.levels = newLevels
+            logger.info("newChatAdmin", newTutor)
+                mongo.editTutor(newTutor, tId, (result)=> {
+                    if (result == -1) {
+                        cb(-1)
+                    }
+                    else if (result == 0) {
+                        cb(0)
+                    }
+                    else {
+                        cb(result)
+                    }
+                })
+        }
+    })
+
+};
+
+module.exports.getTutorById = (tId, cb)=> {
+    mongo.getTtrById(tId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getTutors = (cb)=> {
+    mongo.getAllTutors((sups)=> {
+        if (sups == -1) {
+            cb(-1)
+        }
+        else if (sups == 0) {
+            cb(0)
+        }
+        else {
+            cb(sups)
+        }
+    })
+};
+
+module.exports.delTutor = (tId, cb)=> {
+    mongo.deleteTutor(tId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.addTutor = (data, cb)=> {
+    mongo.postTutor(data, (added)=> {
         if (added == -1) {
             cb(-1)
         }

@@ -225,6 +225,74 @@ router.get('/chatAdmin/:caId', (req, res) => {
 });
 
 
+router.put('/tutor/:tId', (req, res) => {
+    database.updateTutor(req.body, req.params.tId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.get('/tutor', (req, res) => {
+    database.getTutors((result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.delete('/tutor/:tId', (req, res) => {
+    database.delTutor(req.params.tId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.post('/tutor', (req, res)=> {
+    database.addTutor(req.body, (addedSupport)=> {
+        if (addedSupport == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addedSupport)
+        }
+    })
+});
+
+router.get('/tutor/:tId', (req, res) => {
+    database.getTutorById(req.params.tId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
 
 router.post('/student', (req, res)=> {
     database.addStudent(req.body, (result)=> {
