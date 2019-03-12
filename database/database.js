@@ -518,6 +518,9 @@ module.exports.updateText = (updateInfo, txtId, cb)=> {
 };
 
 module.exports.addType = (typeInfo, cb)=> {
+    if(typeof typeInfo.category  == "string") {
+        typeInfo.category = JSON.parse(typeInfo.category)
+    }
     mongo.postType(typeInfo, (result)=> {
         if (result == -1) {
             cb(-1)
@@ -5008,6 +5011,24 @@ module.exports.getMsgOfChatroom = (chId, cb)=> {
     })
 };
 
+module.exports.getMessagesOfVipUser = (usrId, cb)=> {
+    mongo.getMsgOfVipUSR(usrId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+
+            cb(result)
+
+                       
+        }
+    })
+};
+
+
 module.exports.getMsgById = (msgId, cb)=> {
     mongo.getMessageById(msgId, (result)=> {
         if (result == -1) {
@@ -5046,6 +5067,18 @@ module.exports.addMessage = (data, cb)=> {
         }
     })
 };
+
+module.exports.addVIPMessage = (data, cb)=> {
+    mongo.postVipMessage(data, (added)=> {
+        if (added == -1) {
+            cb(-1)
+        }
+        else {
+            cb(added)
+        }
+    })
+};
+
 
 module.exports.addMessageReport = (data, cb)=> {
     mongo.postMessageReport(data, (added)=> {
@@ -5089,24 +5122,67 @@ module.exports.updateTutor = (updateInfo, tId, cb)=> {
             newTutor.users = newUsers
             newTutor.levels = newLevels
             logger.info("newChatAdmin", newTutor)
-                mongo.editTutor(newTutor, tId, (result)=> {
-                    if (result == -1) {
-                        cb(-1)
-                    }
-                    else if (result == 0) {
-                        cb(0)
-                    }
-                    else {
-                        cb(result)
-                    }
-                })
+            mongo.editTutor(newTutor, tId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
         }
     })
 
 };
 
+module.exports.addUserForTutor = (updateInfo, tId, cb)=> {
+    mongo.postUserForTutor(updateInfo, tId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.popUserFromTutors = (updateInfo, cb)=> {
+    mongo.popUsrFrmTtr(updateInfo, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+
 module.exports.getTutorById = (tId, cb)=> {
     mongo.getTtrById(tId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+module.exports.getTutorByLevel = (lvlId, cb)=> {
+    mongo.getTtrBylvl(lvlId, (result)=> {
         if (result == -1) {
             cb(-1)
         }

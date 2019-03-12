@@ -77,7 +77,6 @@ router.delete('/chatRoom/:chId', (req, res)=> {
     })
 });
 
-
 router.get('/chatRoom/:chId', (req, res)=> {
     database.getMsgOfChatroom(req.params.chId, (result)=> {
         if (result == -1) {
@@ -91,6 +90,33 @@ router.get('/chatRoom/:chId', (req, res)=> {
         }
     })
 });
+
+router.get('/user/vip/:usrId', (req, res)=> {
+    database.getMessagesOfVipUser(req.params.usrId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+router.post('/tutor', (req, res)=> {
+    database.addVIPMessage(req.body, (addResult)=> {
+        if (addResult == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addResult)
+        }
+    })
+
+});
+
+
 
 
 module.exports = router

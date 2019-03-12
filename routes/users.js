@@ -224,6 +224,19 @@ router.get('/chatAdmin/:caId', (req, res) => {
     })
 });
 
+router.put('/tutor/popStu', (req, res) => {
+    database.popUserFromTutors(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
 
 router.put('/tutor/:tId', (req, res) => {
     database.updateTutor(req.body, req.params.tId, (result)=> {
@@ -239,8 +252,37 @@ router.put('/tutor/:tId', (req, res) => {
     })
 });
 
+router.put('/tutor/:tId/student', (req, res) => {
+    database.addUserForTutor(req.body, req.params.tId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
 router.get('/tutor', (req, res) => {
     database.getTutors((result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.get('/tutor/level/:lvlId', (req, res) => {
+    database.getTutorByLevel(req.params.lvlId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -293,7 +335,6 @@ router.get('/tutor/:tId', (req, res) => {
 });
 
 
-
 router.post('/student', (req, res)=> {
     database.addStudent(req.body, (result)=> {
         if (result == -1) {
@@ -304,7 +345,7 @@ router.post('/student', (req, res)=> {
         }
         else {
             let resultInfo = {}
-            resultInfo.exam ={}
+            resultInfo.exam = {}
             resultInfo.quiz = {}
             resultInfo.exam.examScore = 0
             resultInfo.exam.permission = false
@@ -423,9 +464,8 @@ router.put('/student/:stuId', (req, res) => {
 });
 
 
-
 router.get('/student/prCrNxt/lesson/:lsnId', (req, res) => {
-    database.getPrCrNxtLesson(req.params.lsnId ,(result)=> {
+    database.getPrCrNxtLesson(req.params.lsnId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
         }
@@ -523,7 +563,6 @@ router.get('/student/:stdId', (req, res) => {
         }
     })
 });
-
 
 
 router.delete('/student/:stuId', (req, res) => {
