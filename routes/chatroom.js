@@ -43,6 +43,7 @@ router.delete('/:chId', (req, res)=> {
         }
     })
 });
+
 router.get('/:chId/chatAdmin', (req, res)=> {
     database.getchatAdminOfChatroom(req.params.chId, (result)=> {
         if (result == -1) {
@@ -57,7 +58,6 @@ router.get('/:chId/chatAdmin', (req, res)=> {
     })
 
 });
-
 
 router.get('/:chId/reported', (req, res)=> {
     database.getreportMsgOfChatroom(req.params.chId, (result)=> {
@@ -103,9 +103,6 @@ router.get('/:chId/student/blocked', (req, res)=> {
     })
 
 });
-
-
-
 
 router.get('/chatAdmin/:caId', (req, res)=> {
     database.getChatroomByChatAdmin(req.params.caId, (result)=> {

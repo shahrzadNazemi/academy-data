@@ -12,14 +12,14 @@ var moment = require('moment-jalaali')
 // moment().subtract(3, 'days'
 let pass = moment(1548757139576.0).subtract(3, 'days')
 let now = new Date().getTime()
-console.log(moment(1550390396538.0).format("YYYY:MM:D HH:mm:ss"))
+console.log(moment(1554026236509.0).format("YYYY:MM:D HH:mm:ss"))
 console.log(moment(pass).format("YYYY:MM:D HH:mm:ss"))
 
 console.log(9<=  moment().format('HH') &&  moment().format('HH') <= 14)
 
 
-let student = {}
-let chatroom = {}
-mongo.postCurrentLessonCharoom("5c768b5e4c8a2011c7119a24" , (del)=>{
-    console.log(del)
-})
+// let student = {}
+// let chatroom = {}
+// mongo.postCurrentLessonCharoom("5c768b5e4c8a2011c7119a24" , (del)=>{
+//     console.log(del)
+// })

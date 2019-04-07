@@ -43,7 +43,6 @@ router.get('/:usrId/:lsnId', (req, res)=> {
 });
 
 
-
 router.post('/answerQuestion', (req, res)=> {
     database.answerQuestion(req.body, (result)=> {
         if (result == -1) {

@@ -5,7 +5,6 @@ let assert = require('assert')
 let logger = require('../util/logger')
 
 module.exports.adminLogin = (loginInfo, cb)=> {
-    console.log(loginInfo)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -1223,13 +1222,15 @@ module.exports.postResult = (info, cb)=> {
             info.quiz.getScore = 0
             var con = db.db('englishAcademy')
             con.collection("result").insertOne({
-                "usrId": info.usrId,
-                "lsnId": info.lsnId,
+                "usrId": new ObjectID(info.usrId),
+                "lsnId": new ObjectID(info.lsnId),
                 "passedLesson": info.passedLesson,
                 "timePassed": "",
                 "quiz": info.quiz,
                 "exam": info.exam,
-                "round": false
+                "round": false,
+                "examRound":info.examRound,
+                "examTimePassed":info.examTimePassed
 
             }, (err, result) => {
 
@@ -2942,6 +2943,89 @@ module.exports.editNote = (info, ntId, cb)=> {
     })
 };
 
+module.exports.editResultForAnswerQuestion = (usrId, lsnId, info, cb)=> {
+    logger.info("info getting in editRessultForAnswerQ" , info )
+
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (lsnId != 0) {
+                lsnId = new ObjectID(lsnId)
+            }
+            if (usrId) {
+                usrId = new ObjectID(usrId)
+            }
+
+            con.collection("result").findOneAndUpdate({"usrId": usrId , "lsnId":lsnId}, {
+                    $set: {
+                        "exam": info.exam,
+                        "quiz": info.quiz,
+                        "lsnId": info.lsnId,
+                        "usrId": info.usrId,
+                        "timePassed":info.timePassed,
+                        "round":info.round,
+                        "examTimePassed":info.examTimePassed,
+                        "examRound":info.examRound,
+                        "passedLesson": info.passedLesson,
+                    }
+                },
+                {returnOriginal: false}, (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else {
+                        cb(result.value)
+                    }
+                })
+        }
+    })
+};
+
+module.exports.editResultForNewLesson = (usrId, info, cb)=> {
+    logger.info("info getting in editResultForNewLesson" , info )
+
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (usrId) {
+                usrId = new ObjectID(usrId)
+            }
+            con.collection("result").findOneAndUpdate({"usrId": usrId}, {
+                    $set: {
+                        "exam": info.exam,
+                        "quiz": info.quiz,
+                        "lsnId": info.lsnId,
+                        "usrId": info.usrId,
+                        "timePassed":info.timePassed,
+                        "round":info.round,
+                        "examTimePassed":info.examTimePassed,
+                        "examRound":info.examRound,
+                        "passedLesson": info.passedLesson,
+                    }
+                },
+                {returnOriginal: false}, (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else {
+                        cb(result.value)
+                    }
+                })
+        }
+    })
+};
+
+
 module.exports.editResult = (usrId, lsnId, info, cb)=> {
     logger.info("editResultInfo in mongo file", info)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -3027,7 +3111,9 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             "timePassed": info.timePassed,
                             "quiz": info.quiz,
                             "exam": info.exam,
-                            "round": info.round
+                            "round": info.round,
+                            "examRound":info.examRound,
+                            "examTimePassed":info.examTimePassed
                         }
                     },
                     {returnOriginal: false}, (err, result)=> {
@@ -3047,7 +3133,9 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                                         "timePassed": info.timePassed,
                                         "quiz": info.quiz,
                                         "exam": info.exam,
-                                        "round": info.round
+                                        "round": info.round,
+                                        "examRound":info.examRound,
+                                        "examTimePassed":info.examTimePassed
                                     }
                                 },
                                 {returnOriginal: false}, (err, result)=> {
@@ -3062,7 +3150,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                                 })
                         }
                         else {
-                            logger.info("jere", result)
+                            logger.info("jere", result.value)
                             cb(result)
                         }
                     })
@@ -3080,7 +3168,9 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             "timePassed": info.timePassed,
                             "quiz": info.quiz,
                             "exam": info.exam,
-                            "round": info.round
+                            "round": info.round,
+                            "examRound":info.examRound,
+                            "examTimePassed":info.examTimePassed
                         }
                     },
                     {returnOriginal: false}, (err, result)=> {
@@ -3702,7 +3792,7 @@ module.exports.postStudent = (stuInfo, cb)=> {
                 "lastPassedLesson": stuInfo.lastPassedLesson,
                 "passedLessonScore": stuInfo.passedLessonScore,
                 "chatrooms": [],
-                "vip": false
+                "purchaseStatus": "free"
 
             }, (err, result) => {
                 if (err != null) {
