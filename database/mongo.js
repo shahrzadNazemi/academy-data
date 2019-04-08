@@ -4111,7 +4111,7 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                             "lastPassedLesson": stuInfo.lastPassedLesson,
                             "passedLessonScore": stuInfo.passedLessonScore,
                             "chatrooms": stuInfo.chatrooms,
-                            "vip": stuInfo.vip
+                            "purchaseStatus": stuInfo.purchaseStatus
                         }
                     },
                     {returnOriginal: false}
