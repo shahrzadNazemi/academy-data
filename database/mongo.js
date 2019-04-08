@@ -3792,7 +3792,11 @@ module.exports.postStudent = (stuInfo, cb)=> {
                 "lastPassedLesson": stuInfo.lastPassedLesson,
                 "passedLessonScore": stuInfo.passedLessonScore,
                 "chatrooms": [],
-                "purchaseStatus": "free"
+                "purchaseStatus": {
+                    "value":"free",
+                    "date":"",
+                    "refId":""
+                }
 
             }, (err, result) => {
                 if (err != null) {
@@ -4093,12 +4097,7 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
             }
             else {
                 var con = db.db('englishAcademy')
-                if (stuInfo.vip == "true") {
-                    stuInfo.vip = true
-                }
-                else if (stuInfo.vip == "false") {
-                    stuInfo.vip = false
-                }
+                
                 con.collection("student").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
                         $set: {
                             "username": stuInfo.username,
