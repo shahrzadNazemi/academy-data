@@ -16,8 +16,10 @@ console.log(moment(1554026236509.0).format("YYYY:MM:D HH:mm:ss"))
 console.log(moment(pass).format("YYYY:MM:D HH:mm:ss"))
 
 console.log(9<=  moment().format('HH') &&  moment().format('HH') <= 14)
-
-
+let usrId ="5caf02f564be0b6805018ee3"
+db.getLevelOfStu(usrId , (level)=>{
+    console.log(level)
+})
 // let student = {}
 // let chatroom = {}
 // mongo.postCurrentLessonCharoom("5c768b5e4c8a2011c7119a24" , (del)=>{

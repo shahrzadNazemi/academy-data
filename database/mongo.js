@@ -4855,6 +4855,7 @@ module.exports.getVDByType = (typeId, cb)=> {
 }
 
 module.exports.getViewByUsrId = (usrId, cb)=> {
+    console.log("usrId" , usrId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)

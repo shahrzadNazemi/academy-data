@@ -989,6 +989,30 @@ module.exports.getLevelById = (lvlId, cb)=> {
 
 };
 
+module.exports.getLevelOfStu = (usrId, cb)=> {
+    console.log("usrId" , usrId)
+    module.exports.getViewOfUsr(usrId, (view)=> {
+    if(view == 0 || view == -1){
+        cb(-1)
+    }
+        else{
+            module.exports.getLessonById(view[0].lsnId , (lesson)=>{
+                if(lesson == 0 || lesson == -1){
+                    cb(-1)
+                }
+                else{
+                   
+                      
+                            cb(lesson[0].level)
+
+                    
+                }
+            })
+        }
+    })
+};
+
+
 module.exports.getLessonById = (lsnId, cb)=> {
     if (lsnId == 0) {
         module.exports.getFirstLesson((firstLesson)=> {
@@ -1810,7 +1834,7 @@ module.exports.addStudent = (stuData, cb)=> {
             data.mobile = stuData.mobile
             data.verifyCode = Math.floor(1000 + Math.random() * 9000)
             module.exports.addVerifyStu(data, (verified)=> {
-                smsPanel.sendVerificationSMS(data , (sent)=>{
+                smsPanel.sendVerificationSMS(data, (sent)=> {
                     cb(addedAdmin)
                 })
             })
@@ -1818,12 +1842,12 @@ module.exports.addStudent = (stuData, cb)=> {
     })
 };
 
-module.exports.addVerifyStu = (data , cb)=>{
-    mongo.postVerifyStu(data , (addedVerify)=>{
-        if(addedVerify == -1){
+module.exports.addVerifyStu = (data, cb)=> {
+    mongo.postVerifyStu(data, (addedVerify)=> {
+        if (addedVerify == -1) {
             cb(-1)
         }
-        else{
+        else {
             cb(addedVerify)
         }
     })
@@ -5287,14 +5311,14 @@ module.exports.addTutor = (data, cb)=> {
 };
 
 module.exports.verifyStu = (data, cb)=> {
-    mongo.getVerifyStu(data , (verified)=>{
-        if(verified == 0){
+    mongo.getVerifyStu(data, (verified)=> {
+        if (verified == 0) {
             cb(0)
         }
-        else if(verified == -1){
+        else if (verified == -1) {
             cb(-1)
         }
-        else{
+        else {
             cb(verified)
         }
     })
