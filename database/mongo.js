@@ -84,7 +84,8 @@ module.exports.studentLogin = (loginInfo, cb)=> {
             var con = db.db('englishAcademy')
             con.collection("student").find({
                 password: loginInfo.password,
-                username: loginInfo.username
+                username: loginInfo.username,
+                verify:true
             }).toArray((err, result) => {
                 console.log(result)
                 if (err) {
@@ -3796,7 +3797,46 @@ module.exports.postStudent = (stuInfo, cb)=> {
                     "value":"free",
                     "date":"",
                     "refId":""
+                },
+                "verify":false
+
+            }, (err, result) => {
+                if (err != null) {
+                    if (err.code == 11000) {
+                        cb(-2)
+                    }
                 }
+
+                else if (err) {
+                    console.log(err)
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.postVerifyStu = (data, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+           
+            con.collection("verifyStudent").insertOne({
+                "usrId":data.usrId ,
+                "mobile":data.mobile,
+                "verifyCode":data.verifyCode,
+                "createdTime":data.createdTime
 
             }, (err, result) => {
                 if (err != null) {
@@ -3847,6 +3887,39 @@ module.exports.getStudentById = (stdId, cb)=> {
         }
     })
 };
+
+module.exports.getVerifyStu = (data, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+
+        else {
+            if(typeof data.verifyCode == "string"){
+                data.verifyCode = parseInt(data.verifyCode)
+            }
+                logger.info("data in verification in mongo" , data)
+
+                var con = db.db('englishAcademy')
+            con.collection("verifyStudent").findOne({"usrId": new ObjectID(`${data._id}`) , "verifyCode":data.verifyCode , "mobile":data.mobile }, (err, result) => {
+                console.log("here")
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    logger.info("in verification in mongo",result)
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 
 module.exports.getStudentByLesson = (lsnId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -4110,7 +4183,8 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                             "lastPassedLesson": stuInfo.lastPassedLesson,
                             "passedLessonScore": stuInfo.passedLessonScore,
                             "chatrooms": stuInfo.chatrooms,
-                            "purchaseStatus": stuInfo.purchaseStatus
+                            "purchaseStatus": stuInfo.purchaseStatus,
+                            "verify":stuInfo.verify
                         }
                     },
                     {returnOriginal: false}
@@ -4126,7 +4200,7 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                             cb(-1)
                         }
                         else {
-                            console.log(result)
+                            console.log(result.value)
                             cb(result.value)
                         }
                     })

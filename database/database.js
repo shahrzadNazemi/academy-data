@@ -3,6 +3,7 @@ let mongoose = require('./mongoose')
 let logger = require('../util/logger')
 let moment = require('moment')
 let ObjectID = require('mongodb').ObjectID;
+let smsPanel = require('../util/smsPanel')
 
 
 module.exports.loginForAdmin = (loginInfo, cb)=> {
@@ -1803,10 +1804,30 @@ module.exports.addStudent = (stuData, cb)=> {
             cb(-1)
         }
         else {
-            cb(addedAdmin)
+            let data = {}
+            data.usrId = addedAdmin
+            data.createdTime = new Date().getTime()
+            data.mobile = stuData.mobile
+            data.verifyCode = Math.floor(1000 + Math.random() * 9000)
+            module.exports.addVerifyStu(data, (verified)=> {
+                smsPanel.sendVerificationSMS(data , (sent)=>{
+                    cb(addedAdmin)
+                })
+            })
         }
     })
 };
+
+module.exports.addVerifyStu = (data , cb)=>{
+    mongo.postVerifyStu(data , (addedVerify)=>{
+        if(addedVerify == -1){
+            cb(-1)
+        }
+        else{
+            cb(addedVerify)
+        }
+    })
+}
 
 module.exports.addView = (viewInfo, cb)=> {
     mongo.postView(viewInfo, (addedView)=> {
@@ -2072,8 +2093,6 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
 
                     let newStu = Object.assign({}, student, updateInfo)
                     module.exports.updateMessage(newStu, 0, (updatedMsg)=> {
-                        logger.info("updatedeMsg", updatedMsg)
-
                         mongo.editStudent(newStu, stdId, (result)=> {
                             if (result == -1) {
                                 cb(-1)
@@ -3903,11 +3922,11 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                     newResult.exam = {}
                                                                     newResult.timePassed = ""
                                                                     newResult.passedLesson = false
-                                                                    module.exports.getResultByLsnUsr(info.usrId , newLesson._id , (existingResult)=>{
-                                                                        if(existingResult == -1 || existingResult != 0){
+                                                                    module.exports.getResultByLsnUsr(info.usrId, newLesson._id, (existingResult)=> {
+                                                                        if (existingResult == -1 || existingResult != 0) {
                                                                             cb(newLesson)
                                                                         }
-                                                                        else{
+                                                                        else {
                                                                             module.exports.addResult(newResult, (addedResult)=> {
                                                                                 cb(newLesson)
                                                                             })
@@ -4074,11 +4093,11 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                                             resultInfo.passedLesson = false
                                                                                             resultInfo.examRound = false
                                                                                             resultInfo.examTimePassed = ""
-                                                                                            module.exports.getResultByLsnUsr(info.usrId , lesson._id , (existingResult)=>{
-                                                                                                if(existingResult == -1 || existingResult != 0){
+                                                                                            module.exports.getResultByLsnUsr(info.usrId, lesson._id, (existingResult)=> {
+                                                                                                if (existingResult == -1 || existingResult != 0) {
                                                                                                     cb(lesson)
                                                                                                 }
-                                                                                                else{
+                                                                                                else {
                                                                                                     module.exports.addResult(resultInfo, (addedResult)=> {
                                                                                                         cb(lesson)
                                                                                                     })
@@ -5266,3 +5285,17 @@ module.exports.addTutor = (data, cb)=> {
         }
     })
 };
+
+module.exports.verifyStu = (data, cb)=> {
+    mongo.getVerifyStu(data , (verified)=>{
+        if(verified == 0){
+            cb(0)
+        }
+        else if(verified == -1){
+            cb(-1)
+        }
+        else{
+            cb(verified)
+        }
+    })
+}

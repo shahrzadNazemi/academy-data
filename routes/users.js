@@ -371,6 +371,20 @@ router.post('/student', (req, res)=> {
     })
 });
 
+router.post('/student/verification', (req, res)=> {
+    database.verifyStu(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == -2) {
+            res.status(403).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
 router.post('/student/login', (req, res) => {
     database.loginForStudent(req.body, (result)=> {
         if (result == -1) {
