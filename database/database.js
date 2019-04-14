@@ -1827,6 +1827,9 @@ module.exports.addStudent = (stuData, cb)=> {
         if (addedAdmin == -1) {
             cb(-1)
         }
+            else if(addedAdmin == -2){
+            cb(-2)
+        }
         else {
             let data = {}
             data.usrId = addedAdmin
