@@ -654,6 +654,59 @@ module.exports.getTktBySupId = (supId, cb)=> {
     })
 };
 
+module.exports.getClosedChatsOfTtr = (trId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (trId != 0) {
+                trId = new ObjectID(`${trId}`)
+            }
+            con.collection("tutor").aggregate([
+                {$match: {"_id": trId}},
+                {
+                    $unwind: "$endChatUsers",
+                    $unwind: {
+                        path: "$profile.universities",
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "universities",
+                        localField: "profile.universities._id",
+                        foreignField: "_id",
+                        as: "profile.universities"
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$_id",
+                        emails: { "$first": "$emails" },
+                        profile: { "$first": "$profile" },
+                        universities: { "$push": "$profile.universities" }
+                    }
+                }
+            ]).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.getTktByStuId = (stuId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {

@@ -5283,7 +5283,7 @@ module.exports.getTutorById = (tId, cb)=> {
 };
 
 module.exports.getClosedChatsOfTutor = (tId, cb)=> {
-    module.exports.getTutorById(tId, (result)=> {
+    mongo.getClosedChatsOfTtr(tId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -5291,7 +5291,7 @@ module.exports.getClosedChatsOfTutor = (tId, cb)=> {
             cb(0)
         }
         else {
-
+cb(result)
         }
     })
 };

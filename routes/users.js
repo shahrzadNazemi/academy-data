@@ -417,6 +417,7 @@ router.post('/student/verification', (req, res)=> {
 });
 
 router.post('/student/resendVerification', (req, res)=> {
+    console.log("body in resend" , req.body)
     database.resendVerifyStu(req.body, (result)=> {
         if (result == -1) {
             res.status(500).end('')
