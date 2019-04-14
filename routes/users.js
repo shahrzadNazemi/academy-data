@@ -253,6 +253,7 @@ router.put('/tutor/:tId', (req, res) => {
 });
 
 router.put('/tutor/:tId/student', (req, res) => {
+   
     database.addUserForTutor(req.body, req.params.tId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
@@ -294,6 +295,36 @@ router.get('/tutor/level/:lvlId', (req, res) => {
         }
     })
 });
+
+router.get('/tutor/:trId/closedChat', (req, res) => {
+    database.getClosedChatsOfTutor(req.params.trId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.get('/tutor/:trId/openChat', (req, res) => {
+    database.getOpenChatsOfTutor(req.params.trId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
 
 router.delete('/tutor/:tId', (req, res) => {
     database.delTutor(req.params.tId, (result)=> {
@@ -384,6 +415,21 @@ router.post('/student/verification', (req, res)=> {
         }
     })
 });
+
+router.post('/student/resendVerification', (req, res)=> {
+    database.resendVerifyStu(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == -2) {
+            res.status(403).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
 
 router.post('/student/login', (req, res) => {
     database.loginForStudent(req.body, (result)=> {

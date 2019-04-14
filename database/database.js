@@ -1853,6 +1853,31 @@ module.exports.addVerifyStu = (data, cb)=> {
     })
 }
 
+module.exports.updateVerifyStu = (data, cb)=> {
+    data._id = data.usrId
+    module.exports.verifyStu(data , (verify)=>{
+        if(verify == -1){
+            cb(-1)
+        }
+        else if(verify ==0){
+            cb(0)
+        }
+        else{
+            let newVerify = Object.assign({} , verify , data)
+            mongo.editVerifyStu(newVerify,data._id , (addedVerify)=> {
+                if (addedVerify == -1) {
+                    cb(-1)
+                }
+                else {
+                    cb(addedVerify)
+                }
+            })
+
+        }
+    })
+}
+
+
 module.exports.addView = (viewInfo, cb)=> {
     mongo.postView(viewInfo, (addedView)=> {
         if (addedView == -1) {
@@ -5257,6 +5282,35 @@ module.exports.getTutorById = (tId, cb)=> {
     })
 };
 
+module.exports.getClosedChatsOfTutor = (tId, cb)=> {
+    module.exports.getTutorById(tId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+
+        }
+    })
+};
+
+module.exports.getOpenChatsOfTutor = (tId, cb)=> {
+    mongo.getTtrById(tId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+
 module.exports.getTutorByLevel = (lvlId, cb)=> {
     mongo.getTtrBylvl(lvlId, (result)=> {
         if (result == -1) {
@@ -5323,3 +5377,28 @@ module.exports.verifyStu = (data, cb)=> {
         }
     })
 }
+
+module.exports.resendVerifyStu = (info, cb)=> {
+
+    module.exports.getStuById(info._id , (student)=>{
+        if(student == 0){
+            cb(0)
+        }
+        else if(student == -1){
+            cb(-1)
+        }
+        else{
+            let data = {}
+            data.usrId = info._id
+            data.createdTime = new Date().getTime()
+            data.mobile = student.mobile
+            data.verifyCode = Math.floor(1000 + Math.random() * 9000)
+            module.exports.updateVerifyStu(data, (verified)=> {
+                smsPanel.sendVerificationSMS(data, (sent)=> {
+                    cb(student)
+                })
+            })
+        }
+    })
+}
+

@@ -4982,6 +4982,42 @@ module.exports.editChatRoom = (info, chId, cb)=> {
     })
 };
 
+module.exports.editVerifyStu = (info, stdId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            let infor = {
+                "usrId":info.usrId ,
+                "mobile":info.mobile,
+                "verifyCode":info.verifyCode,
+                "createdTime":info.createdTime
+            }
+            con.collection("verifyStudent").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
+                $set: infor
+            }, {returnOriginal: false}, (err, result)=> {
+                if (err) {
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        console.log(err)
+                        cb(-1)
+                    }
+                }
+                else {
+
+                    cb(result.value)
+                }
+            })
+        }
+    })
+};
+
 module.exports.getAllChatrooms = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -5809,8 +5845,8 @@ module.exports.editTutor = (info, tId, cb)=> {
                 "users": info.users,
                 "levels": info.levels,
                 "passed": info.passed,
-                "answered": info.answered
-
+                "answered": info.answered,
+                "endChatUsers": info.endChatUsers,
             }
             con.collection("tutor").findOneAndUpdate({"_id": new ObjectID(tId)}, {
                 $set: infor
@@ -5836,39 +5872,78 @@ module.exports.editTutor = (info, tId, cb)=> {
 
 module.exports.postUserForTutor = (info, tId, cb)=> {
     logger.info("info in add user for titor mongo" , info)
-    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
-        if (err) {
-            console.log("Err", err)
-            cb(-1)
-        }
-        else {
-            if (info._id) {
-                info._id = new ObjectID(`${info._id}`)
+    if(info.endChat == true){
+        MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+            if (err) {
+                console.log("Err", err)
+                cb(-1)
             }
-            var con = db.db('englishAcademy')
-            con.collection("tutor").findOneAndUpdate({"_id": new ObjectID(tId)}, {
-                    $addToSet: {
-                        "users": {"_id":info._id}
-                    }
-                }, {returnOriginal: false},
-                (err, result)=> {
-                    if (err) {
-                        if (err.code == 11000) {
-                            console.log(err)
-                            cb(-2)
+            else {
+                if (info._id) {
+                    info._id = new ObjectID(`${info._id}`)
+                }
+                var con = db.db('englishAcademy')
+                con.collection("tutor").findOneAndUpdate({"_id": new ObjectID(tId)}, {
+                        $addToSet: {
+                            "endChatUsers": {"_id":info._id}
+                        }
+                    }, {returnOriginal: false},
+                    (err, result)=> {
+                        if (err) {
+                            if (err.code == 11000) {
+                                console.log(err)
+                                cb(-2)
+                            }
+                            else {
+                                console.log(err)
+                                cb(-1)
+                            }
                         }
                         else {
-                            console.log(err)
-                            cb(-1)
-                        }
-                    }
-                    else {
 
-                        cb(result.value)
-                    }
-                })
-        }
-    })
+                            cb(result.value)
+                        }
+                    })
+            }
+        })
+
+    }
+    else{
+        MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+            if (err) {
+                console.log("Err", err)
+                cb(-1)
+            }
+            else {
+                if (info._id) {
+                    info._id = new ObjectID(`${info._id}`)
+                }
+                var con = db.db('englishAcademy')
+                con.collection("tutor").findOneAndUpdate({"_id": new ObjectID(tId)}, {
+                        $addToSet: {
+                            "users": {"_id":info._id}
+                        }
+                    }, {returnOriginal: false},
+                    (err, result)=> {
+                        if (err) {
+                            if (err.code == 11000) {
+                                console.log(err)
+                                cb(-2)
+                            }
+                            else {
+                                console.log(err)
+                                cb(-1)
+                            }
+                        }
+                        else {
+
+                            cb(result.value)
+                        }
+                    })
+            }
+        })
+
+    }
 };
 
 module.exports.popUsrFrmTtr = (info, cb)=> {
@@ -5950,7 +6025,8 @@ module.exports.postTutor = (info, cb)=> {
                 "users": info.users,
                 "levels": info.levels,
                 "passed": info.passed,
-                "answered": info.answered
+                "answered": info.answered,
+                "endChatUsers":[]
             }, (err, result) => {
                 if (err) {
 
