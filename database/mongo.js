@@ -1273,10 +1273,15 @@ module.exports.postResult = (info, cb)=> {
         }
         else {
             info.quiz.getScore = 0
+            
+            if(info.lsnId !=0){
+                info.lsnId = new ObjectID(info.lsnId)
+            }
+           
             var con = db.db('englishAcademy')
             con.collection("result").insertOne({
                 "usrId": new ObjectID(info.usrId),
-                "lsnId": new ObjectID(info.lsnId),
+                "lsnId": info.lsnId,
                 "passedLesson": info.passedLesson,
                 "timePassed": "",
                 "quiz": info.quiz,
