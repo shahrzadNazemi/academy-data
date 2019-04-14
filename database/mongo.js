@@ -85,7 +85,6 @@ module.exports.studentLogin = (loginInfo, cb)=> {
             con.collection("student").find({
                 password: loginInfo.password,
                 username: loginInfo.username,
-                verify:true
             }).toArray((err, result) => {
                 console.log(result)
                 if (err) {
