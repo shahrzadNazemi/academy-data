@@ -4469,9 +4469,16 @@ module.exports.getSupById = (supId, cb)=> {
             con.collection("supporter").aggregate([
                 {$match: {"_id": supId}},
                 {
+                    $unwind: "$department",
+                    $unwind: {
+                        path: "$department.value",
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                {
                     $lookup: {
                         from: "ticketType",
-                        localField: "department",
+                        localField: "department.value",
                         foreignField: "_id",
                         as: "department"
                     }
