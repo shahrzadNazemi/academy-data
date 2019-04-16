@@ -2612,8 +2612,15 @@ module.exports.postSupporter = (info, cb)=> {
             cb(-1)
         }
         else {
-            if (info.department != undefined && info.department != "") {
+            if (info.department[0] != undefined) {
                 info.department = new ObjectID(info.department)
+            }
+            else {
+                for(var i=0;i<info.department.length;i++){
+                    if (info.department[i].value) {
+                        info.department[i].value = new ObjectID(info.department[i].value)
+                    }
+                }
             }
             var con = db.db('englishAcademy')
             con.collection("supporter").insertOne({
