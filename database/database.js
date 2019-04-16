@@ -990,22 +990,22 @@ module.exports.getLevelById = (lvlId, cb)=> {
 };
 
 module.exports.getLevelOfStu = (usrId, cb)=> {
-    console.log("usrId" , usrId)
+    console.log("usrId", usrId)
     module.exports.getViewOfUsr(usrId, (view)=> {
-    if(view == 0 || view == -1){
-        cb(-1)
-    }
-        else{
-            module.exports.getLessonById(view[0].lsnId , (lesson)=>{
-                if(lesson == 0 || lesson == -1){
+        if (view == 0 || view == -1) {
+            cb(-1)
+        }
+        else {
+            module.exports.getLessonById(view[0].lsnId, (lesson)=> {
+                if (lesson == 0 || lesson == -1) {
                     cb(-1)
                 }
-                else{
-                   
-                      
-                            cb(lesson[0].level)
+                else {
 
-                    
+
+                    cb(lesson[0].level)
+
+
                 }
             })
         }
@@ -1827,7 +1827,7 @@ module.exports.addStudent = (stuData, cb)=> {
         if (addedAdmin == -1) {
             cb(-1)
         }
-            else if(addedAdmin == -2){
+        else if (addedAdmin == -2) {
             cb(-2)
         }
         else {
@@ -1858,16 +1858,16 @@ module.exports.addVerifyStu = (data, cb)=> {
 
 module.exports.updateVerifyStu = (data, cb)=> {
     data._id = data.usrId
-    module.exports.verifyStu(data , (verify)=>{
-        if(verify == -1){
+    module.exports.verifyStu(data, (verify)=> {
+        if (verify == -1) {
             cb(-1)
         }
-        else if(verify ==0){
+        else if (verify == 0) {
             cb(0)
         }
-        else{
-            let newVerify = Object.assign({} , verify , data)
-            mongo.editVerifyStu(newVerify,data._id , (addedVerify)=> {
+        else {
+            let newVerify = Object.assign({}, verify, data)
+            mongo.editVerifyStu(newVerify, data._id, (addedVerify)=> {
                 if (addedVerify == -1) {
                     cb(-1)
                 }
@@ -5294,13 +5294,27 @@ module.exports.getClosedChatsOfTutor = (tId, cb)=> {
             cb(0)
         }
         else {
-cb(result)
+            cb(result)
+        }
+    })
+};
+
+module.exports.getMsgByTutorStudent = (tId,usrId , cb)=> {
+    mongo.getMsgByTtrStu(tId,usrId , (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
         }
     })
 };
 
 module.exports.getOpenChatsOfTutor = (tId, cb)=> {
-    mongo.getTtrById(tId, (result)=> {
+    mongo.getOpenChatsOfTtr(tId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -5383,14 +5397,14 @@ module.exports.verifyStu = (data, cb)=> {
 
 module.exports.resendVerifyStu = (info, cb)=> {
 
-    module.exports.getStuById(info._id , (student)=>{
-        if(student == 0){
+    module.exports.getStuById(info._id, (student)=> {
+        if (student == 0) {
             cb(0)
         }
-        else if(student == -1){
+        else if (student == -1) {
             cb(-1)
         }
-        else{
+        else {
             let data = {}
             data.usrId = info._id
             data.createdTime = new Date().getTime()

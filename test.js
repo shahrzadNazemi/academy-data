@@ -6,18 +6,18 @@ let mongo = require('./database/mongo')
 // db.getPreviousLesson(lsnId , (lesson)=>{
 //     console.log("lesson",lesson)
 // })
-var moment = require('moment-jalaali')
+// var moment = require('moment-jalaali')
 1548760739576
 1548829586210
 // moment().subtract(3, 'days'
-let pass = moment(1548757139576.0).subtract(3, 'days')
-let now = new Date().getTime()
-console.log(moment(1554026236509.0).format("YYYY:MM:D HH:mm:ss"))
-console.log(moment(pass).format("YYYY:MM:D HH:mm:ss"))
-
-console.log(9<=  moment().format('HH') &&  moment().format('HH') <= 14)
-let usrId ="5caf02f564be0b6805018ee3"
-db.getLevelOfStu(usrId , (level)=>{
+// let pass = moment(1548757139576.0).subtract(3, 'days')
+// let now = new Date().getTime()
+// console.log(moment(1554026236509.0).format("YYYY:MM:D HH:mm:ss"))
+// console.log(moment(pass).format("YYYY:MM:D HH:mm:ss"))
+//
+// console.log(9<=  moment().format('HH') &&  moment().format('HH') <= 14)
+let usrId ="5cb1b247c4622d75995f53e4"
+mongo.getClosedChatsOfTtr(usrId , (level)=>{
     console.log(level)
 })
 // let student = {}

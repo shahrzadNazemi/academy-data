@@ -612,6 +612,30 @@ module.exports.getTktBydepId = (depId, cb)=> {
     })
 };
 
+module.exports.getMsgByTtrStu = (trId , usrId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("vipMessage").find({"user": new ObjectID(`${usrId}`) , "tutorId": new ObjectID(`${trId}`)}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 
 module.exports.getTktBySupId = (supId, cb)=> {
     logger.info("supId", supId)
@@ -670,26 +694,94 @@ module.exports.getClosedChatsOfTtr = (trId, cb)=> {
                 {
                     $unwind: "$endChatUsers",
                     $unwind: {
-                        path: "$profile.universities",
+                        path: "$endChatUsers._id",
                         preserveNullAndEmptyArrays: true
                     }
                 },
                 {
                     $lookup: {
-                        from: "universities",
-                        localField: "profile.universities._id",
+                        from: "student",
+                        localField: "endChatUsers._id",
                         foreignField: "_id",
-                        as: "profile.universities"
+                        as: "closedStudents"
+                    }
+                },
+                // {
+                //     $lookup: {
+                //         from: "vipMessage",
+                //         localField: "endChatUsers._id",
+                //         foreignField: "usrId",
+                //         as: "messages"
+                //     }
+                // },
+                // {
+                //     $group: {
+                //         _id: "$_id",
+                //         emails: { "$first": "$emails" },
+                //         profile: { "$first": "$profile" },
+                //         universities: { "$push": "$profile.universities" }
+                //     }
+                // }
+            ]).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getOpenChatsOfTtr = (trId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            if (trId != 0) {
+                trId = new ObjectID(`${trId}`)
+            }
+            con.collection("tutor").aggregate([
+                {$match: {"_id": trId}},
+                {
+                    $unwind: "$users",
+                    $unwind: {
+                        path: "$users._id",
+                        preserveNullAndEmptyArrays: true
                     }
                 },
                 {
-                    $group: {
-                        _id: "$_id",
-                        emails: { "$first": "$emails" },
-                        profile: { "$first": "$profile" },
-                        universities: { "$push": "$profile.universities" }
+                    $lookup: {
+                        from: "student",
+                        localField: "users._id",
+                        foreignField: "_id",
+                        as: "openStudents"
                     }
-                }
+                },
+                // {
+                //     $lookup: {
+                //         from: "vipMessage",
+                //         localField: "endChatUsers._id",
+                //         foreignField: "usrId",
+                //         as: "messages"
+                //     }
+                // },
+                // {
+                //     $group: {
+                //         _id: "$_id",
+                //         emails: { "$first": "$emails" },
+                //         profile: { "$first": "$profile" },
+                //         universities: { "$push": "$profile.universities" }
+                //     }
+                // }
             ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
@@ -1964,7 +2056,7 @@ module.exports.getResultByUsrId = (usrId, cb)=> {
             var con = db.db('englishAcademy')
             con.collection("result").find({
                 "usrId": new ObjectID(`${usrId}`),
-                "examTimePassed": {$ne: null}
+                "examTimePassed": {$ne: ""}
             }).toArray((err, result) => {
                 if (err) {
                     cb(-1)

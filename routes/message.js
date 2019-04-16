@@ -104,6 +104,8 @@ router.get('/user/vip/:usrId', (req, res)=> {
         }
     })
 });
+
+
 router.post('/tutor', (req, res)=> {
     database.addVIPMessage(req.body, (addResult)=> {
         if (addResult == -1) {
@@ -115,6 +117,19 @@ router.post('/tutor', (req, res)=> {
     })
 
 });
+
+router.get('/tutor/:trId/student/:usrId', (req, res)=> {
+    database.getMsgByTutorStudent(req.params.trId,req.params.usrId , (addResult)=> {
+        if (addResult == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addResult)
+        }
+    })
+
+});
+
 
 
 
