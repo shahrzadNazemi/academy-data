@@ -1340,9 +1340,9 @@ module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
             }
             logger.info("updateInfo", updateInfo)
 
-            let newChatrooms = Object.assign([], support.chatrooms, updateInfo.chatrooms)
+            // let newChatrooms = Object.assign([], support.chatrooms, updateInfo.chatrooms)
             let newChatAdmin = Object.assign({}, support, updateInfo)
-            newChatAdmin.chatrooms = newChatrooms
+            newChatAdmin.chatrooms = updateInfo.chatrooms
 
             logger.info("newChatAdmin", newChatAdmin)
             logger.info("caId", caId)
