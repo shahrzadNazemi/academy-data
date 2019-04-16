@@ -4466,24 +4466,8 @@ module.exports.getSupById = (supId, cb)=> {
                 supId = new ObjectID(`${supId}`)
             }
             var con = db.db('englishAcademy')
-            con.collection("supporter").aggregate([
-                {$match: {"_id": supId}},
-                {
-                    $unwind: "$department",
-                    $unwind: {
-                        path: "$department.value",
-                        preserveNullAndEmptyArrays: true
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "ticketType",
-                        localField: "department.value",
-                        foreignField: "_id",
-                        as: "department"
-                    }
-                },
-            ]).toArray((err, result) => {
+            con.collection("supporter").find(
+                {"_id": supId}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -4493,7 +4477,7 @@ module.exports.getSupById = (supId, cb)=> {
                 else {
                     logger.info("result", result)
                     result = result[0]
-                    result.department = result.department[0]
+                    // result.department = result.department[0]
 
 
                     cb(result)
