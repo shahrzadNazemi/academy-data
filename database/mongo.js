@@ -2815,8 +2815,15 @@ module.exports.editSupporter = (info, supId, cb)=> {
             cb(-1)
         }
         else {
-            if (info.department != undefined && info.department != "") {
-                info.department = new ObjectID(info.department._id)
+            if (info.department[0] == undefined) {
+                info.department = new ObjectID(info.department)
+            }
+            else {
+                for(var i=0;i<info.department.length;i++){
+                    if (info.department[i].value) {
+                        info.department[i].value = new ObjectID(info.department[i].value)
+                    }
+                }
             }
             var con = db.db('englishAcademy')
             let infor = {
@@ -2857,7 +2864,16 @@ module.exports.editChatAdmin = (info, caId, cb)=> {
             cb(-1)
         }
         else {
-
+            if (info.chatrooms[0] == chatrooms) {
+                info.department = new ObjectID(info.department)
+            }
+            else {
+                for(var i=0;i<info.chatrooms.length;i++){
+                    if (info.chatrooms[i].value) {
+                        info.chatrooms[i].value = new ObjectID(info.chatrooms[i].value)
+                    }
+                }
+            }
             var con = db.db('englishAcademy')
             let infor = {
                 "name": info.name,
