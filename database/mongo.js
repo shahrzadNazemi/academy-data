@@ -2864,7 +2864,7 @@ module.exports.editChatAdmin = (info, caId, cb)=> {
             cb(-1)
         }
         else {
-            if (info.chatrooms[0] == chatrooms) {
+            if (info.chatrooms[0] == undefined) {
                 info.department = new ObjectID(info.department)
             }
             else {
