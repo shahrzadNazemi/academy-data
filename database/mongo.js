@@ -2823,6 +2823,8 @@ module.exports.editSupporter = (info, supId, cb)=> {
                     if (info.department[i].value) {
                         info.department[i].value = new ObjectID(info.department[i].value)
                     }
+
+
                 }
             }
             var con = db.db('englishAcademy')
@@ -2859,20 +2861,32 @@ module.exports.editSupporter = (info, supId, cb)=> {
 
 module.exports.editChatAdmin = (info, caId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+
         if (err) {
             console.log("Err", err)
             cb(-1)
         }
         else {
             if (info.chatrooms[0] == undefined) {
-                info.department = new ObjectID(info.department)
+                info.chatrooms = new ObjectID(info.chatrooms)
             }
             else {
+                // if (info.levels) {
+                //         for (var i = 0; i <= info.levels.length; i++) {
+                //             if (info.levels[i])
+                //                 info.levels[i].value = new ObjectID(`${info.levels[i].value}`)
+                //         }
+                // }
                 for(var i=0;i<info.chatrooms.length;i++){
                     if (info.chatrooms[i].value) {
+                        logger.info("chatrooms in mongo edit chatadmin" ,  new ObjectID(info.chatrooms[i].value))
+
                         info.chatrooms[i].value = new ObjectID(info.chatrooms[i].value)
                     }
+
+
                 }
+
             }
             var con = db.db('englishAcademy')
             let infor = {
@@ -2936,7 +2950,7 @@ module.exports.postChatAdmin = (info, cb)=> {
             cb(-1)
         }
         else {
-            if (info.chatrooms != undefined) {
+            if (info.chatrooms[0] != undefined) {
                 // if(typeof info.chatrooms == "string"){
                 //     info.chatrooms == JSON.parse(info.chatRooms)
                 // }
