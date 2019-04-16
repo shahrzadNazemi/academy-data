@@ -1182,6 +1182,10 @@ module.exports.addAdmin = (adminData, cb)=> {
 };
 
 module.exports.addSupporter = (data, cb)=> {
+    if (typeof data.department == "string") {
+        data.department = JSON.parse(data.department)
+    }
+
     mongo.postSupporter(data, (added)=> {
         if (added == -1) {
             cb(-1)
@@ -1291,6 +1295,9 @@ module.exports.updateAdmin = (updateInfo, admId, cb)=> {
 };
 
 module.exports.updateSupporter = (updateInfo, supId, cb)=> {
+    if (typeof updateInfo.department == "string") {
+        updateInfo.department = JSON.parse(updateInfo.department)
+    }
     module.exports.getSupportById(supId, (support)=> {
         if (support == -1) {
             cb(-1)
