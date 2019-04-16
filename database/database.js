@@ -2330,6 +2330,7 @@ module.exports.getStuByLessonLsnId = (lsnId, cb)=> {
             cb(0)
         }
         else {
+            
             cb(result)
         }
     })
@@ -4949,17 +4950,23 @@ module.exports.addChatroom = (data, cb)=> {
             data.warned = 0;
             data.blocked = 0;
             data.blockedTime = ""
-            cb(added)
+            if (!Object.keys(data.lesson).length == 0) {
+                modules.exports.addCurrentLessonChatRoom(data, (addedChatroom)=> {
+                    module.exports.addPastLessonChatRoom(data, (add)=> {
+                        cb(added)
+                    })
+                })
+            }
+            else{
+                module.exports.addCurrentLevelChatRoom(data , (addedChatLevel)=>{
+                    cb(added)
+                })
+            }
         }
-        // if (!Object.keys(data.lesson).length == 0) {
-// modules.exports.addCurrentLessonChatroom(data , (addedChatroom)=>{
-//     module.exports.addPastLessonChatroom(data , (add)=>{
-//         cb(added)
-//
     })
 }
 
-module.exports.addCurrentLessonChatroom = (data, cb)=> {
+module.exports.addCurrentLessonChatRoom = (data, cb)=> {
     data.position = "currentLesson"
     module.exports.getStuByLessonLsnId(data.lesson.value, (student)=> {
         mongo.postCurrentLessonCharoom(student, data, (added)=> {
@@ -4972,6 +4979,35 @@ module.exports.addCurrentLessonChatroom = (data, cb)=> {
         })
     })
 }
+
+module.exports.addPastLessonChatRoom = (data, cb)=> {
+    data.position = "passedLesson"
+    module.exports.getStuByLessonLsnId(data.lesson.value, (student)=> {
+        mongo.postCurrentLessonCharoom(student, data, (added)=> {
+            if (added == -1) {
+                cb(-1)
+            }
+            else {
+                cb(added)
+            }
+        })
+    })
+}
+
+module.exports.addCurrentLevelChatRoom = (data, cb)=> {
+    data.position = "currentLevel"
+    module.exports.getStuByLevel(data.level.value, (student)=> {
+        mongo.postCurrentLessonCharoom(student, data, (added)=> {
+            if (added == -1) {
+                cb(-1)
+            }
+            else {
+                cb(added)
+            }
+        })
+    })
+}
+
 
 module.exports.updateMessage = (updateInfo, msgId, cb)=> {
     if (msgId == 0) {
@@ -5299,8 +5335,8 @@ module.exports.getClosedChatsOfTutor = (tId, cb)=> {
     })
 };
 
-module.exports.getMsgByTutorStudent = (tId,usrId , cb)=> {
-    mongo.getMsgByTtrStu(tId,usrId , (result)=> {
+module.exports.getMsgByTutorStudent = (tId, usrId, cb)=> {
+    mongo.getMsgByTtrStu(tId, usrId, (result)=> {
         if (result == -1) {
             cb(-1)
         }

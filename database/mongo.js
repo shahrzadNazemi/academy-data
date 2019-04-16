@@ -2612,7 +2612,7 @@ module.exports.postSupporter = (info, cb)=> {
             cb(-1)
         }
         else {
-            if (info.department[0] != undefined) {
+            if (info.department[0] == undefined) {
                 info.department = new ObjectID(info.department)
             }
             else {
@@ -4928,20 +4928,33 @@ module.exports.getStudentByLevel = (lvlId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-
-            con.collection("student").aggregate([
+            if (lvlId == 0) {
+                lvlId = 0
+            }
+            else {
+                lvlId = new ObjectID(`${lvlId}`)
+            }
+            con.collection("view").aggregate([
+                {$match: {"lvlId": lvlId}},
                 {
-                    $group: {
-                        _id: {$_id: "$lvlId"},
-
+                    $lookup: {
+                        from: "student",
+                        localField: "usrId",
+                        foreignField: "_id",
+                        as: "student"
                     }
+
                 },
                 {
-                    $sort: {score: 1}
-                },
-            ]).toArray((err, result) => {
+                    $lookup: {
+                        from: "level",
+                        localField: "lvlId",
+                        foreignField: "_id",
+                        as: "level"
+                    }
+
+                }]).toArray((err, result) => {
                 if (err) {
-                    console.log(err)
                     cb(-1)
                 }
                 else if (result == null) {
