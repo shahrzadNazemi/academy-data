@@ -5385,6 +5385,21 @@ module.exports.getTutorByLevel = (lvlId, cb)=> {
     })
 };
 
+module.exports.getTutorByUser = (usrId, cb)=> {
+    mongo.getTtrByUsr(usrId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+
 module.exports.getTutors = (cb)=> {
     mongo.getAllTutors((sups)=> {
         if (sups == -1) {

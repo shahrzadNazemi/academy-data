@@ -16,8 +16,8 @@ let mongo = require('./database/mongo')
 // console.log(moment(pass).format("YYYY:MM:D HH:mm:ss"))
 //
 // console.log(9<=  moment().format('HH') &&  moment().format('HH') <= 14)
-let usrId ="5ca048f8d4f46f731bfa2b7a"
-db.getStuByLessonLsnId(usrId , (level)=>{
+let usrId ="5ca81385d4f46f731bfa2b97"
+mongo.getTtrByUsr(usrId , (level)=>{
     console.log(level)
 })
 // let student = {}
