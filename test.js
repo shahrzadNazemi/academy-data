@@ -17,7 +17,7 @@ let mongo = require('./database/mongo')
 //
 // console.log(9<=  moment().format('HH') &&  moment().format('HH') <= 14)
 let usrId ="5ca81385d4f46f731bfa2b97"
-mongo.getTtrByUsr(usrId , (level)=>{
+mongo.getMsgOfVipUSR(usrId , (level)=>{
     console.log(level)
 })
 // let student = {}

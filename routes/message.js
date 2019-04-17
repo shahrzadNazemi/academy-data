@@ -118,6 +118,17 @@ router.post('/tutor', (req, res)=> {
 
 });
 
+router.post('/tutor/conversation', (req, res)=> {
+    database.addConversation(req.body, (addResult)=> {
+        if (addResult == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addResult)
+        }
+    })
+});
+
 router.get('/tutor/:trId/student/:usrId', (req, res)=> {
     database.getMsgByTutorStudent(req.params.trId,req.params.usrId , (addResult)=> {
         if (addResult == -1) {

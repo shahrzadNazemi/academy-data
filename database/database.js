@@ -5248,6 +5248,18 @@ module.exports.addMessageReport = (data, cb)=> {
     })
 };
 
+module.exports.addConversation = (data, cb)=> {
+    mongo.postConversation(data, (added)=> {
+        if (added == -1) {
+            cb(-1)
+        }
+        else {
+            cb(added)
+        }
+    })
+};
+
+
 
 module.exports.updateTutor = (updateInfo, tId, cb)=> {
     module.exports.getTutorById(tId, (support)=> {

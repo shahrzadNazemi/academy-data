@@ -5718,6 +5718,45 @@ module.exports.postVipMessage = (info, cb)=> {
     })
 };
 
+module.exports.postConversation = (info, cb)=> {
+    logger.info("info postVipMessage" , info)
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (info.usrId) {
+                info.usrId = new ObjectID(info.usrId)
+            }
+            if (info.tutorId) {
+                info.tutorId = new ObjectID(info.tutorId)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("vipConversation").insertOne({
+                "user": info.usrId,
+                "tutorId": info.tutorId,
+                "startTime": info.startTime,
+                "endTime": info.endTime,
+            }, (err, result) => {
+                if (err) {
+                    console.log("err" , err)
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    // let  data = result
+                    //  data._id = result.insertedId
+                    logger.info("result", result.ops[0])
+                    cb(result.ops[0])
+                }
+            })
+
+        }
+    })
+};
 
 module.exports.postMessageReport = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -5899,7 +5938,7 @@ module.exports.getMsgOfVipUSR = (usrId, cb)=> {
             usrId = new ObjectID(`${usrId}`)
             var con = db.db('englishAcademy')
             con.collection("vipMessage").aggregate([
-                {$match: {"usrId": usrId}},
+                {$match: {"user": usrId}},
                 {
                     $lookup: {
                         from: "student",
