@@ -5697,7 +5697,7 @@ module.exports.postVipMessage = (info, cb)=> {
                 "img": info.img,
                 "time": info.time,
                 "type": info.type,
-                "info.sender":info.sender
+                "sender":info.sender
             }, (err, result) => {
                 if (err) {
                     console.log("err" , err)
