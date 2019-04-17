@@ -5942,11 +5942,12 @@ module.exports.getMsgOfVipUSR = (usrId, cb)=> {
                 {
                     $lookup: {
                         from: "student",
-                        localField: "usrId",
+                        localField: "user",
                         foreignField: "_id",
                         as: "student"
                     }
                 },
+                {$unwind: "$student"},
                 {
                     $lookup: {
                         from: "tutor",
@@ -5955,6 +5956,8 @@ module.exports.getMsgOfVipUSR = (usrId, cb)=> {
                         as: "tutor"
                     }
                 },
+                {$unwind: "$tutor"},
+
             ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
