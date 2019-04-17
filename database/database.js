@@ -5224,7 +5224,7 @@ module.exports.addVIPMessage = (data, cb)=> {
             module.exports.getTutorById(data.tutorId, (tutor)=> {
                 if (tutor != 0 || tutor != -1) {
                     added.tutor = tutor
-                    module.exports.getStuById(data.user, (student)=> {
+                    module.exports.getStuById(data.usrId, (student)=> {
                         if (student != 0 || student != -1) {
                             added.student = student
                             cb(added)
