@@ -5700,15 +5700,8 @@ module.exports.postVipMessage = (info, cb)=> {
                 "info.sender":info.sender
             }, (err, result) => {
                 if (err) {
-
-                    if (err.code == 11000) {
-                        console.log(err)
-                        cb(-2)
-                    }
-                    else {
+                    console.log("err" , err)
                         cb(-1)
-                    }
-
                 }
                 else if (result.length == 0) {
                     cb(0)
