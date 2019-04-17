@@ -2337,7 +2337,7 @@ module.exports.getStuByLessonLsnId = (lsnId, cb)=> {
             cb(0)
         }
         else {
-            
+
             cb(result)
         }
     })
@@ -4964,8 +4964,8 @@ module.exports.addChatroom = (data, cb)=> {
                     })
                 })
             }
-            else{
-                module.exports.addCurrentLevelChatRoom(data , (addedChatLevel)=>{
+            else {
+                module.exports.addCurrentLevelChatRoom(data, (addedChatLevel)=> {
                     cb(added)
                 })
             }
@@ -5221,7 +5221,17 @@ module.exports.addVIPMessage = (data, cb)=> {
             cb(-1)
         }
         else {
-            cb(added)
+            module.exports.getTutorById(data.tutorId, (tutor)=> {
+                if (tutor != 0 || tutor != -1) {
+                    added.tutor = tutor
+                    module.exports.getStuById(data.user, (student)=> {
+                        if (student != 0 || student != -1) {
+                            added.student = student
+                            cb(added)
+                        }
+                    })
+                }
+            })
         }
     })
 };
