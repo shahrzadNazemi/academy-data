@@ -5668,6 +5668,7 @@ module.exports.postMessage = (info, cb)=> {
 };
 
 module.exports.postVipMessage = (info, cb)=> {
+    logger.info("info postVipMessage" , info)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
