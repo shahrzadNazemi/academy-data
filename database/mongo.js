@@ -5719,25 +5719,26 @@ module.exports.postVipMessage = (info, cb)=> {
 };
 
 module.exports.postConversation = (info, cb)=> {
-    logger.info("info postVipMessage" , info)
+    logger.info("info postConversation" , info)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
             cb(-1)
         }
         else {
-            if (info.usrId) {
+            if (info.userId) {
                 info.usrId = new ObjectID(info.usrId)
             }
-            if (info.tutorId) {
+            if (info.tutorId != 0) {
                 info.tutorId = new ObjectID(info.tutorId)
             }
             var con = db.db('englishAcademy')
             con.collection("vipConversation").insertOne({
-                "user": info.usrId,
+                "userId": info.userId,
                 "tutorId": info.tutorId,
                 "startTime": info.startTime,
                 "endTime": info.endTime,
+                "status":"open"
             }, (err, result) => {
                 if (err) {
                     console.log("err" , err)
@@ -5890,6 +5891,37 @@ module.exports.getMessageById = (msgId, cb)=> {
         }
     })
 };
+
+module.exports.getOpenConv = ( cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+
+            var con = db.db('englishAcademy')
+            con.collection("vipConversation").find({"status": "open"}).toArray((err, result )=> {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 
 module.exports.getMessagOfChatroom = (chId, cb)=> {
     logger.info("chId", chId)
@@ -6093,6 +6125,50 @@ module.exports.editTutor = (info, tId, cb)=> {
         }
     })
 };
+
+module.exports.editConversation = (info, convId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (info.usrId) {
+                info.usrId = new ObjectID(info.usrId)
+            }
+            if (info.tutorId != 0) {
+                info.tutorId = new ObjectID(info.tutorId)
+            }
+            var con = db.db('englishAcademy')
+            let infor = {
+                "userId": info.userId,
+                "tutorId": info.tutorId,
+                "startTime": info.startTime,
+                "endTime": info.endTime,
+                "status":info.status
+            }
+            con.collection("vipConversation").findOneAndUpdate({"_id": new ObjectID(convId)}, {
+                $set: infor
+            }, {returnOriginal: false}, (err, result)=> {
+                if (err) {
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        console.log(err)
+                        cb(-1)
+                    }
+                }
+                else {
+
+                    cb(result.value)
+                }
+            })
+        }
+    })
+};
+
 
 module.exports.postUserForTutor = (info, tId, cb)=> {
     logger.info("info in add user for titor mongo" , info)
@@ -6412,6 +6488,46 @@ module.exports.getTtrByUsr = (usrId, cb)=> {
         }
     })
 };
+
+module.exports.getConvById = (convId, cb)=> {
+    logger.info("convInfo" , convId)
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof convId == 'number') {
+                convId = JSON.stringify(convId)
+            }
+            if (convId == 0) {
+                convId = 0
+            }
+            else {
+                convId = new ObjectID(`${convId}`)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("vipConversation").findOne({"_id": convId},(err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 
 
 

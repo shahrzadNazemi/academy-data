@@ -129,6 +129,30 @@ router.post('/tutor/conversation', (req, res)=> {
     })
 });
 
+router.put('/tutor/conversation/:convId', (req, res)=> {
+    database.updateConversation(req.params.convId ,req.body, (addResult)=> {
+        if (addResult == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addResult)
+        }
+    })
+});
+
+router.get('/tutor/conversation/open', (req, res)=> {
+    database.getOpenConversation((addResult)=> {
+        if (addResult == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addResult)
+        }
+    })
+});
+
+
+
 router.get('/tutor/:trId/student/:usrId', (req, res)=> {
     database.getMsgByTutorStudent(req.params.trId,req.params.usrId , (addResult)=> {
         if (addResult == -1) {

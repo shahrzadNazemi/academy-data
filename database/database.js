@@ -453,6 +453,34 @@ module.exports.updateTicketView = (tktId, cb)=> {
     })
 };
 
+module.exports.updateConversation = (convId,updateInfo , cb)=> {
+    module.exports.getConversationById(convId, (conversation)=> {
+        if (conversation == -1) {
+            cb(-1)
+        }
+        else if (conversation == 0) {
+            cb(0)
+        }
+        else {
+            let newConversation = Object.assign({}, conversation, updateInfo)
+
+            mongo.editConversation(newConversation, convId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.updateTypeOfTicket = (depInfo, tktId, cb)=> {
     mongo.editTypeOfTicket(depInfo, tktId, (result)=> {
         if (result == -1) {
@@ -666,6 +694,35 @@ module.exports.getExamById = (exId, cb)=> {
         }
     })
 }
+
+module.exports.getConversationById = (convId, cb)=> {
+    mongo.getConvById(convId, (exam)=> {
+        if (exam == -1) {
+            cb(-1)
+        }
+        else if (exam == 0) {
+            cb(0)
+        }
+        else {
+            cb(exam)
+        }
+    })
+}
+
+module.exports.getOpenConversation = ( cb)=> {
+    mongo.getOpenConv((exam)=> {
+        if (exam == -1) {
+            cb(-1)
+        }
+        else if (exam == 0) {
+            cb(0)
+        }
+        else {
+            cb(exam)
+        }
+    })
+}
+
 
 module.exports.getTextById = (txtId, cb)=> {
     mongo.getTxtById(txtId, (exam)=> {
