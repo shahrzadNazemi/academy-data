@@ -718,7 +718,20 @@ module.exports.getOpenConversation = (cb)=> {
             cb(0)
         }
         else {
-            cb(exam)
+            let data = {}
+            for(var i=0;i<exam.length;i++){
+                data.fname = exam[i].user.fname
+                data.lname = exam[i].user.lname
+                data.score = exam[i].user.score
+                data._id = exam[i].user._id
+                data.convId = exam[i]._id
+                data.time = exam[i].startTime
+
+
+
+
+            }
+            cb(data)
         }
     })
 }

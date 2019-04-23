@@ -5727,7 +5727,7 @@ module.exports.postConversation = (info, cb)=> {
         }
         else {
             if (info.userId) {
-                info.usrId = new ObjectID(info.usrId)
+                info.userId = new ObjectID(info.userId)
             }
             if (info.tutorId != 0) {
                 info.tutorId = new ObjectID(info.tutorId)
@@ -5910,7 +5910,7 @@ module.exports.getOpenConv = ( cb)=> {
                         as: "user"
                     }
                 },
-                {$unwind: "$user"},
+                {$unwind:"$user"}
             ]).toArray((err, result )=> {
                 if (err) {
                     cb(-1)
