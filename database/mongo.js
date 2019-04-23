@@ -6755,7 +6755,9 @@ module.exports.postFile = (info, cb)=> {
                 "typeId": info.typeId,
                 "url": info.url,
                 "lsnId": info.lsnId,
-                "lvlId": info.lvlId
+                "lvlId": info.lvlId,
+                "order": info.order
+
             }, (err, result) => {
                 if (err) {
 
@@ -6886,7 +6888,9 @@ module.exports.editFile = (info, flId, cb)=> {
                 "typeId": info.typeId,
                 "url": info.url,
                 "lsnId": info.lsnId,
-                "lvlId": info.lvlId
+                "lvlId": info.lvlId,
+                "order": info.order
+
             }
             con.collection("file").findOneAndUpdate({"_id": new ObjectID(flId)}, {
                 $set: infor
