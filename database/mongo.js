@@ -6532,4 +6532,302 @@ module.exports.getConvById = (convId, cb)=> {
 
 
 
+module.exports.postPackage = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+           
+            var con = db.db('englishAcademy')
+            con.collection("package").insertOne({
+                "name": info.name,
+                "price":info.price
+            }, (err, result) => {
+                if (err) {
+
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        cb(-1)
+                    }
+
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.deletePackage = (pgId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("package").findOneAndDelete({"_id": new ObjectID(`${pgId}`)}, (err, result)=> {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result = "row deleted"
+                    cb(result)
+                }
+                else {
+                    cb(0)
+                }
+            })
+        }
+    })
+};
+
+module.exports.gtPackageById = (pgId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            
+                pgId = new ObjectID(`${pgId}`)
+            
+            var con = db.db('englishAcademy')
+            con.collection("package").findOne({"_id": pgId}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.editPackage = (info, pgId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+
+          
+            var con = db.db('englishAcademy')
+            let infor = {
+                "name": info.name,
+               "price":info.price
+            }
+            con.collection("package").findOneAndUpdate({"_id": new ObjectID(pgId)}, {
+                $set: infor
+            }, {returnOriginal: false}, (err, result)=> {
+                if (err) {
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        console.log(err)
+                        cb(-1)
+                    }
+                }
+                else {
+
+                    cb(result.value)
+                }
+            })
+        }
+    })
+};
+
+module.exports.getAllPackges = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            
+            con.collection("package").find({}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
+module.exports.postFile = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            info.lvlId = new ObjectID(`${info.lvlId}`)
+            info.lsnId = new ObjectID(`${info.lsnId}`)
+            info.typeId = new ObjectID(`${info.typeId}`)
+            var con = db.db('englishAcademy')
+            con.collection("file").insertOne({
+                "title": info.title,
+                "description": info.description,
+                "typeId": info.typeId,
+                "url": info.url,
+                "lsnId": info.lsnId,
+                "lvlId": info.lvlId
+            }, (err, result) => {
+                if (err) {
+
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        cb(-1)
+                    }
+
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.deleteFile = (flId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("file").findOneAndDelete({"_id": new ObjectID(`${flId}`)}, (err, result)=> {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result = "row deleted"
+                    cb(result)
+                }
+                else {
+                    cb(0)
+                }
+            })
+        }
+    })
+};
+
+module.exports.getFlById = (flId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+
+            flId = new ObjectID(`${flId}`)
+
+            var con = db.db('englishAcademy')
+            con.collection("file").findOne({"_id": flId}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.editFile = (info, flId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            info.lvlId = new ObjectID(`${info.lvlId}`)
+            info.lsnId = new ObjectID(`${info.lsnId}`)
+            info.typeId = new ObjectID(`${info.typeId}`)
+            var con = db.db('englishAcademy')
+            let infor = {
+                "title": info.title,
+                "description": info.description,
+                "typeId": info.typeId,
+                "url": info.url,
+                "lsnId": info.lsnId,
+                "lvlId": info.lvlId
+            }
+            con.collection("file").findOneAndUpdate({"_id": new ObjectID(flId)}, {
+                $set: infor
+            }, {returnOriginal: false}, (err, result)=> {
+                if (err) {
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        console.log(err)
+                        cb(-1)
+                    }
+                }
+                else {
+
+                    cb(result.value)
+                }
+            })
+        }
+    })
+};
+
+
+
+
+
+
 

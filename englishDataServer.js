@@ -23,6 +23,8 @@ let ticket = require('./routes/ticket')
 var cron = require('./util/cronJobHelper')
 let chatroom = require('./routes/chatroom')
 let message = require('./routes/message')
+let package = require('./routes/package')
+
 
 
 
@@ -41,6 +43,7 @@ app.use('/api/certificate', certificate);
 app.use('/api/ticket', ticket);
 app.use('/api/chatroom', chatroom);
 app.use('/api/message', message);
+app.use('/api/package', package);
 
 
 

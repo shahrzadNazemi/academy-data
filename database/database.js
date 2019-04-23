@@ -453,7 +453,7 @@ module.exports.updateTicketView = (tktId, cb)=> {
     })
 };
 
-module.exports.updateConversation = (convId,updateInfo , cb)=> {
+module.exports.updateConversation = (convId, updateInfo, cb)=> {
     module.exports.getConversationById(convId, (conversation)=> {
         if (conversation == -1) {
             cb(-1)
@@ -709,7 +709,7 @@ module.exports.getConversationById = (convId, cb)=> {
     })
 }
 
-module.exports.getOpenConversation = ( cb)=> {
+module.exports.getOpenConversation = (cb)=> {
     mongo.getOpenConv((exam)=> {
         if (exam == -1) {
             cb(-1)
@@ -5317,7 +5317,6 @@ module.exports.addConversation = (data, cb)=> {
 };
 
 
-
 module.exports.updateTutor = (updateInfo, tId, cb)=> {
     module.exports.getTutorById(tId, (support)=> {
         if (support == -1) {
@@ -5555,4 +5554,147 @@ module.exports.resendVerifyStu = (info, cb)=> {
         }
     })
 }
+
+module.exports.addPackage = (data, cb)=> {
+    mongo.postPackage(data, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            cb(-1)
+        }
+        else {
+            cb(addedAdmin)
+        }
+    })
+};
+
+module.exports.getPackageById = (pgId, cb)=> {
+    mongo.gtPackageById(pgId, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            cb(-1)
+        }
+        else {
+            cb(addedAdmin)
+        }
+    })
+};
+
+module.exports.delPackage = (pgId, cb)=> {
+    mongo.deletePackage(pgId, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            cb(-1)
+        }
+        else {
+            cb(addedAdmin)
+        }
+    })
+};
+
+
+module.exports.getAllPackages = (cb)=> {
+    mongo.getAllPackges((addedAdmin)=> {
+        if (addedAdmin == -1) {
+            cb(-1)
+        }
+        else {
+            cb(addedAdmin)
+        }
+    })
+};
+
+
+module.exports.updatePackage = (updateInfo, pgId, cb)=> {
+    module.exports.getPackageById(pgId, (support)=> {
+        if (support == -1) {
+            cb(-1)
+        }
+        else if (support == 0) {
+            cb(0)
+        }
+        else {
+
+
+            let newTutor = Object.assign({}, support, updateInfo)
+            logger.info("newChatAdmin", newTutor)
+            mongo.editPackage(newTutor, pgId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+        }
+    })
+
+};
+
+
+
+
+module.exports.addFile = (data, cb)=> {
+    mongo.postFile(data, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            cb(-1)
+        }
+        else {
+            cb(addedAdmin)
+        }
+    })
+};
+
+module.exports.getFileById = (flId, cb)=> {
+    mongo.getFlById(flId, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            cb(-1)
+        }
+        else {
+            cb(addedAdmin)
+        }
+    })
+};
+
+module.exports.delFile = (flId, cb)=> {
+    mongo.deleteFile(flId, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            cb(-1)
+        }
+        else {
+            cb(addedAdmin)
+        }
+    })
+};
+
+
+module.exports.updateFile = (updateInfo, flId, cb)=> {
+    module.exports.getFileById(flId, (support)=> {
+        if (support == -1) {
+            cb(-1)
+        }
+        else if (support == 0) {
+            cb(0)
+        }
+        else {
+
+
+            let newTutor = Object.assign({}, support, updateInfo)
+            logger.info("newChatAdmin", newTutor)
+            mongo.editFile(newTutor, flId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+        }
+    })
+
+};
+
+
 
