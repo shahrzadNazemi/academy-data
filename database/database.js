@@ -723,6 +723,8 @@ module.exports.getOpenConversation = (cb)=> {
                 data.fname = exam[i].user.fname
                 data.lname = exam[i].user.lname
                 data.score = exam[i].user.score
+                data.avatarUrl = exam[i].user.avatarUrl
+
                 data._id = exam[i].user._id
                 data.convId = exam[i]._id
                 data.time = exam[i].startTime
