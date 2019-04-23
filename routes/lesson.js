@@ -424,6 +424,25 @@ router.get('/first', (req, res)=> {
     })
 });
 
+router.get('/file', (req, res)=> {
+    database.getAllFiles((sounds)=> {
+        if (sounds == -1) {
+            res.status(500).end()
+        }
+        else if (sounds == 0) {
+            res.status(404).end()
+        }
+        else {
+            // for (var i = 0; i < sounds.length; i++) {
+            //     sounds[i].lesson = sounds[i].lesson[0]
+            //     sounds[i].type = sounds[i].type[0]
+            // }
+            res.json(sounds)
+        }
+    })
+})
+
+
 router.get('/:lsnId', (req, res) => {
     database.getLessonById(req.params.lsnId, (result)=> {
         if (result == -1) {
@@ -512,23 +531,21 @@ router.get('/file/:flId', (req, res) => {
     })
 });
 
-router.get('/file', (req, res)=> {
-    database.getAllFiles((sounds)=> {
-        if (sounds == -1) {
-            res.status(500).end()
+
+router.get('/:lsnId/file', (req, res) => {
+    database.getFileByLessonId(req.params.lsnId ,(result)=> {
+        if (result == -1) {
+            res.status(500).end('')
         }
-        else if (sounds == 0) {
-            res.status(404).end()
+        else if (result == 0) {
+            res.status(404).end('')
         }
         else {
-            // for (var i = 0; i < sounds.length; i++) {
-            //     sounds[i].lesson = sounds[i].lesson[0]
-            //     sounds[i].type = sounds[i].type[0]
-            // }
-            res.json(sounds)
+            res.json(result)
         }
     })
-})
+});
+
 
 
 

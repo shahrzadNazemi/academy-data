@@ -4885,7 +4885,6 @@ module.exports.getAllfls = (cb)=> {
     })
 };
 
-
 module.exports.getAllQuestions = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -6836,6 +6835,39 @@ module.exports.getFlById = (flId, cb)=> {
         }
     })
 };
+
+module.exports.getFileByLsnId = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+
+            lsnId = new ObjectID(`${lsnId}`)
+
+            var con = db.db('englishAcademy')
+            con.collection("file").find({"lsnId": lsnId}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    logger.info("result", result)
+                    // result = result[0]
+                    // result.department = result.department[0]
+
+
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
 
 module.exports.editFile = (info, flId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {

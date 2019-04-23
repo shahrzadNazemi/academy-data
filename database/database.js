@@ -5757,6 +5757,18 @@ module.exports.getFileById = (flId, cb)=> {
     })
 };
 
+module.exports.getFileByLessonId = (lsnId, cb)=> {
+    mongo.getFileByLsnId(lsnId, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            cb(-1)
+        }
+        else {
+            cb(addedAdmin)
+        }
+    })
+};
+
+
 module.exports.delFile = (flId, cb)=> {
     mongo.deleteFile(flId, (addedAdmin)=> {
         if (addedAdmin == -1) {
