@@ -1253,6 +1253,75 @@ module.exports.addAdmin = (adminData, cb)=> {
     })
 };
 
+module.exports.addCp = (cpData, cb)=> {
+    mongo.postAdmin(adminData, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            cb(-1)
+        }
+        else {
+            cb(addedAdmin)
+        }
+    })
+};
+module.exports.getCps = (cb)=> {
+    mongo.getAllAdmins((admins)=> {
+        if (admins == -1) {
+            cb(-1)
+        }
+        else if (admins == 0) {
+            cb(0)
+        }
+        else {
+            cb(admins)
+        }
+    })
+};
+module.exports.updateCp = (updateInfo, cpId, cb)=> {
+    mongo.editAdmin(updateInfo, admId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+module.exports.getCpById = (cpId, cb)=> {
+    mongo.getAdmById(admId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+module.exports.delCp = (cpId, cb)=> {
+    mongo.deleteAdmin(admId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else if (result == -4) {
+            cb(-4)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+
+
+
 module.exports.addSupporter = (data, cb)=> {
     if (typeof data.department == "string") {
         data.department = JSON.parse(data.department)
@@ -2480,6 +2549,24 @@ module.exports.getAllSounds = (cb)=> {
         }
     })
 };
+
+module.exports.getAllFiles = (cb)=> {
+    mongo.getAllfls((result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else if (result == -2) {
+            cb(-2)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
 
 module.exports.getAllTpe = (cb)=> {
     mongo.getAllTypes((result)=> {

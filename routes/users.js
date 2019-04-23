@@ -656,4 +656,75 @@ router.delete('/student/:stuId', (req, res) => {
 });
 
 
+router.put('/cp/:cpId', (req, res) => {
+    database.updateCp(req.body, req.params.cpId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.get('/cp', (req, res) => {
+    database.getCps((result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.delete('/cp/:cpId', (req, res) => {
+    database.delCp(req.params.cpId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else if (result == -4) {
+            res.status(403).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.post('/cp', (req, res)=> {
+    database.addCp(req.body, (addedAdmin)=> {
+        if (addedAdmin == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(addedAdmin)
+        }
+    })
+});
+
+router.get('/cp/:cpId', (req, res) => {
+    database.getCpById(req.params.cpId, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+
 module.exports = router

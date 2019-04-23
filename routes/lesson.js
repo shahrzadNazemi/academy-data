@@ -512,6 +512,25 @@ router.get('/file/:flId', (req, res) => {
     })
 });
 
+router.get('/file', (req, res)=> {
+    database.getAllFiles((sounds)=> {
+        if (sounds == -1) {
+            res.status(500).end()
+        }
+        else if (sounds == 0) {
+            res.status(404).end()
+        }
+        else {
+            // for (var i = 0; i < sounds.length; i++) {
+            //     sounds[i].lesson = sounds[i].lesson[0]
+            //     sounds[i].type = sounds[i].type[0]
+            // }
+            res.json(sounds)
+        }
+    })
+})
+
+
 
 router.get('/sound/:sndId', (req, res) => {
     database.getSndById(req.params.sndId, (result)=> {

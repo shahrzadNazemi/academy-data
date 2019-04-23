@@ -4841,6 +4841,51 @@ module.exports.getAllSnds = (cb)=> {
     })
 };
 
+module.exports.getAllfls = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("file").aggregate([{
+                $lookup: {
+                    from: "lesson",
+                    localField: "lsnId",
+                    foreignField: "_id",
+                    as: "lesson"
+                }
+            },
+                {$unwind:"$lesson"},
+
+                {
+                    $lookup: {
+                        from: "type",
+                        localField: "typeId",
+                        foreignField: "_id",
+                        as: "type"
+                    }
+
+                }
+                ,{$unwind:"$type"},]).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.getAllQuestions = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
