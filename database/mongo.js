@@ -5899,9 +5899,19 @@ module.exports.getOpenConv = ( cb)=> {
             cb(-1)
         }
         else {
-
             var con = db.db('englishAcademy')
-            con.collection("vipConversation").find({"status": "open"}).toArray((err, result )=> {
+            con.collection("vipConversation").aggregate([
+                {$match: {"status": "open"}},
+                {
+                    $lookup: {
+                        from: "student",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                {$unwind: "$user"},
+            ]).toArray((err, result )=> {
                 if (err) {
                     cb(-1)
                 }
@@ -5912,8 +5922,6 @@ module.exports.getOpenConv = ( cb)=> {
                     logger.info("result", result)
                     // result = result[0]
                     // result.department = result.department[0]
-
-
                     cb(result)
                 }
             })
