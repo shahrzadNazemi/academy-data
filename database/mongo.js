@@ -1993,6 +1993,14 @@ module.exports.getLsnById = (lsnId, cb)=> {
 
                     }
                 },
+                {
+                    $lookup: {
+                        from: "file",
+                        localField: "_id",
+                        foreignField: "lsnId",
+                        as: "downloadFile"
+                    }
+                },
             ]).toArray((err, result) => {
                 if (err) {
                     console.log(err)
@@ -2002,6 +2010,7 @@ module.exports.getLsnById = (lsnId, cb)=> {
                     cb(0)
                 }
                 else {
+                    logger.info("result",result)
                     cb(result)
                 }
             })
@@ -6913,6 +6922,158 @@ module.exports.editFile = (info, flId, cb)=> {
         }
     })
 };
+
+
+
+
+module.exports.postCp = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("cp").insertOne({
+                "name": info.name,
+                "username": info.username,
+                "password": info.password
+            }, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.editCp = (info, cpId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            let infor = {
+                "name": info.name,
+                "username": info.username,
+                "password": info.password
+            }
+            con.collection("admins").updateOne({"_id": new ObjectID(admId)}, {
+                $set: infor
+            }, (err, result)=> {
+                if (err) {
+                    console.log(err)
+                    cb(-1)
+                }
+                else {
+
+                    cb(result)
+                }
+            })
+        }
+    })
+};
+
+module.exports.deleteCp = (cpId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            module.exports.getAllAdmins((admins)=> {
+                if (admins == -1) {
+                    cb(-1)
+                }
+                else {
+                    let count = admins.length
+                    if (count <= 1) {
+                        cb(-4)
+                    }
+                    else {
+                        con.collection("admins").findOneAndDelete({"_id": new ObjectID(`${admId}`)}, (err, result)=> {
+                            if (err) {
+                                cb(-1)
+                            }
+                            else if (result.lastErrorObject.n != 0) {
+                                let result = "row deleted"
+                                cb(result)
+                            }
+                            else {
+                                cb(0)
+                            }
+                        })
+                    }
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getCpId = (cpId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (typeof admId == 'number') {
+                admId = JSON.stringify(admId)
+            }
+            var con = db.db('englishAcademy')
+            con.collection("admins").findOne({"_id": new ObjectID(`${admId}`)}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.getAllCps = (cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+
+            con.collection("admins").find().toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 
 
 

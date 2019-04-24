@@ -1190,6 +1190,16 @@ module.exports.getLessonById = (lsnId, cb)=> {
                             }
 
                         }
+                        var k = 0
+                        for (var i = 0; i < result[0].downloadFile.length; i++) {
+                            for (k = 0; k < type.length; k++) {
+                                if (result[0].downloadFile[i].typeId.equals(type[k]._id)) {
+                                    result[0].downloadFile[i].type = type[k]
+                                }
+                            }
+
+                        }
+                       
                         cb(result)
 
                     }
@@ -1254,7 +1264,7 @@ module.exports.addAdmin = (adminData, cb)=> {
 };
 
 module.exports.addCp = (cpData, cb)=> {
-    mongo.postAdmin(adminData, (addedAdmin)=> {
+    mongo.postCp(cpData, (addedAdmin)=> {
         if (addedAdmin == -1) {
             cb(-1)
         }
@@ -1263,8 +1273,9 @@ module.exports.addCp = (cpData, cb)=> {
         }
     })
 };
+
 module.exports.getCps = (cb)=> {
-    mongo.getAllAdmins((admins)=> {
+    mongo.getAllCps((admins)=> {
         if (admins == -1) {
             cb(-1)
         }
@@ -1276,8 +1287,9 @@ module.exports.getCps = (cb)=> {
         }
     })
 };
+
 module.exports.updateCp = (updateInfo, cpId, cb)=> {
-    mongo.editAdmin(updateInfo, admId, (result)=> {
+    mongo.editCp(updateInfo, cpId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -1289,8 +1301,9 @@ module.exports.updateCp = (updateInfo, cpId, cb)=> {
         }
     })
 };
+
 module.exports.getCpById = (cpId, cb)=> {
-    mongo.getAdmById(admId, (result)=> {
+    mongo.getCpId(cpId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -1302,8 +1315,9 @@ module.exports.getCpById = (cpId, cb)=> {
         }
     })
 };
+
 module.exports.delCp = (cpId, cb)=> {
-    mongo.deleteAdmin(admId, (result)=> {
+    mongo.deleteCp(cpId, (result)=> {
         if (result == -1) {
             cb(-1)
         }
@@ -4703,7 +4717,6 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                 else {
                     console.log("herein=0", lastResult)
                     module.exports.getExamByLessonId(updateInfo.lsnId, (exam)=> {
-                        console.log("exam", exam)
                         if (exam == -1) {
                             cb(-1)
                         }
