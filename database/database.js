@@ -1299,7 +1299,7 @@ module.exports.updateCp = (updateInfo, cpId, cb)=> {
         else {
             let newCp = Object.assign({}, lastCp, updateInfo)
 
-            mongo.editCp(updateInfo, cpId, (result)=> {
+            mongo.editCp(newCp, cpId, (result)=> {
                 if (result == -1) {
                     cb(-1)
                 }

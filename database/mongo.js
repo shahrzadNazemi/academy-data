@@ -6962,9 +6962,9 @@ module.exports.editCp = (info, cpId, cb)=> {
                 "username": info.username,
                 "password": info.password
             }
-            con.collection("cp").updateOne({"_id": new ObjectID(cpId)}, {
+            con.collection("cp").findOneAndUpdate({"_id": new ObjectID(cpId)}, {
                 $set: infor
-            }, (err, result)=> {
+            }, {returnOriginal: false},(err, result)=> {
                 if (err != null) {
                     if (err.code == 11000) {
                         cb(-2)
@@ -6977,9 +6977,10 @@ module.exports.editCp = (info, cpId, cb)=> {
                 }
                 else {
 
-                    cb(result)
+                    cb(result.value)
                 }
             })
+
         }
     })
 };
