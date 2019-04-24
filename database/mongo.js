@@ -6965,7 +6965,13 @@ module.exports.editCp = (info, cpId, cb)=> {
             con.collection("cp").updateOne({"_id": new ObjectID(cpId)}, {
                 $set: infor
             }, (err, result)=> {
-                if (err) {
+                if (err != null) {
+                    if (err.code == 11000) {
+                        cb(-2)
+                    }
+                }
+
+                else if (err) {
                     console.log(err)
                     cb(-1)
                 }
