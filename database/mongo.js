@@ -6072,7 +6072,6 @@ module.exports.getMsgOfVipUSR = (usrId, cb)=> {
     })
 };
 
-
 module.exports.getMarkChat = (chId, cb)=> {
     logger.info("chId", chId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -6140,7 +6139,6 @@ module.exports.getPinChat = (chId, cb)=> {
         }
     })
 };
-
 
 module.exports.editTutor = (info, tId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -6229,7 +6227,6 @@ module.exports.editConversation = (info, convId, cb)=> {
         }
     })
 };
-
 
 module.exports.postUserForTutor = (info, tId, cb)=> {
     logger.info("info in add user for titor mongo" , info)
@@ -6589,10 +6586,6 @@ module.exports.getConvById = (convId, cb)=> {
     })
 };
 
-
-
-
-
 module.exports.postPackage = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -6746,7 +6739,6 @@ module.exports.getAllPackges = (cb)=> {
     })
 };
 
-
 module.exports.postFile = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -6879,7 +6871,6 @@ module.exports.getFileByLsnId = (lsnId, cb)=> {
     })
 };
 
-
 module.exports.editFile = (info, flId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -6923,9 +6914,6 @@ module.exports.editFile = (info, flId, cb)=> {
     })
 };
 
-
-
-
 module.exports.postCp = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -6939,7 +6927,14 @@ module.exports.postCp = (info, cb)=> {
                 "username": info.username,
                 "password": info.password
             }, (err, result) => {
-                if (err) {
+                if (err != null) {
+                    if (err.code == 11000) {
+                        cb(-2)
+                    }
+                }
+
+                else if (err) {
+                    console.log(err)
                     cb(-1)
                 }
                 else if (result.length == 0) {
@@ -6967,7 +6962,7 @@ module.exports.editCp = (info, cpId, cb)=> {
                 "username": info.username,
                 "password": info.password
             }
-            con.collection("admins").updateOne({"_id": new ObjectID(admId)}, {
+            con.collection("cp").updateOne({"_id": new ObjectID(cpId)}, {
                 $set: infor
             }, (err, result)=> {
                 if (err) {
@@ -6991,17 +6986,9 @@ module.exports.deleteCp = (cpId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            module.exports.getAllAdmins((admins)=> {
-                if (admins == -1) {
-                    cb(-1)
-                }
-                else {
-                    let count = admins.length
-                    if (count <= 1) {
-                        cb(-4)
-                    }
-                    else {
-                        con.collection("admins").findOneAndDelete({"_id": new ObjectID(`${admId}`)}, (err, result)=> {
+
+
+                        con.collection("cp").findOneAndDelete({"_id": new ObjectID(`${cpId}`)}, (err, result)=> {
                             if (err) {
                                 cb(-1)
                             }
@@ -7013,12 +7000,10 @@ module.exports.deleteCp = (cpId, cb)=> {
                                 cb(0)
                             }
                         })
-                    }
+
                 }
             })
 
-        }
-    })
 };
 
 module.exports.getCpId = (cpId, cb)=> {
@@ -7028,11 +7013,11 @@ module.exports.getCpId = (cpId, cb)=> {
             cb(-1)
         }
         else {
-            if (typeof admId == 'number') {
-                admId = JSON.stringify(admId)
+            if (typeof cpId == 'number') {
+                cpId = JSON.stringify(cpId)
             }
             var con = db.db('englishAcademy')
-            con.collection("admins").findOne({"_id": new ObjectID(`${admId}`)}, (err, result) => {
+            con.collection("cp").findOne({"_id": new ObjectID(`${cpId}`)}, (err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -7057,7 +7042,7 @@ module.exports.getAllCps = (cb)=> {
         else {
             var con = db.db('englishAcademy')
 
-            con.collection("admins").find().toArray((err, result) => {
+            con.collection("cp").find().toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
