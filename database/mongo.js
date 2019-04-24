@@ -44,7 +44,21 @@ module.exports.adminLogin = (loginInfo, cb)=> {
                                             cb(-1)
                                         }
                                         else if (result.length == 0) {
-                                            cb(0)
+                                            con.collection("cp").find({
+                                                password: loginInfo.password,
+                                                username: loginInfo.username
+                                            }).toArray((err, result) => {
+                                                if (err) {
+                                                    cb(-1)
+                                                }
+                                                else if (result.length == 0) {
+                                                    cb(0)
+                                                }
+                                                else {
+                                                    result[0].role = "cp"
+                                                    cb(result[0])
+                                                }
+                                            })
                                         }
                                         else {
                                             result[0].role = "tutor"
