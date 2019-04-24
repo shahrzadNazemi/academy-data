@@ -1289,15 +1289,28 @@ module.exports.getCps = (cb)=> {
 };
 
 module.exports.updateCp = (updateInfo, cpId, cb)=> {
-    mongo.editCp(updateInfo, cpId, (result)=> {
-        if (result == -1) {
+    module.exports.getCpById(cpId , (lastCp)=>{
+        if(lastCp == -1){
             cb(-1)
         }
-        else if (result == 0) {
+            else if(lastCp == 0){
             cb(0)
         }
         else {
-            cb(result)
+            let newCp = Object.assign({}, lastCp, updateInfo)
+
+            mongo.editCp(updateInfo, cpId, (result)=> {
+                if (result == -1) {
+                    cb(-1)
+                }
+                else if (result == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
         }
     })
 };
