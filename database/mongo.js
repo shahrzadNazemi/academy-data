@@ -6607,11 +6607,19 @@ module.exports.postPackage = (info, cb)=> {
             cb(-1)
         }
         else {
-           
+           if(info.off == undefined){
+               info.off = null
+           }
+            if(info.description == undefined){
+                info.description =""
+            }
             var con = db.db('englishAcademy')
             con.collection("package").insertOne({
                 "name": info.name,
-                "price":info.price
+                "type": info.type,
+                "price":info.price,
+                "off":info.off,
+                "description":info.description
             }, (err, result) => {
                 if (err) {
 
@@ -6699,12 +6707,13 @@ module.exports.editPackage = (info, pgId, cb)=> {
             cb(-1)
         }
         else {
-
-          
             var con = db.db('englishAcademy')
             let infor = {
                 "name": info.name,
-               "price":info.price
+                "type": info.type,
+                "price":info.price ,
+                "off":info.off,
+                "description":info.description
             }
             con.collection("package").findOneAndUpdate({"_id": new ObjectID(pgId)}, {
                 $set: infor
