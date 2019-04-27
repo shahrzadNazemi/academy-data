@@ -626,7 +626,7 @@ module.exports.getTktBydepId = (depId, cb)=> {
     })
 };
 
-module.exports.getMsgByTtrStu = (trId , usrId, cb)=> {
+module.exports.getMsgByTtrStu = (trId, usrId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -634,7 +634,10 @@ module.exports.getMsgByTtrStu = (trId , usrId, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("vipMessage").find({"user": new ObjectID(`${usrId}`) , "tutorId": new ObjectID(`${trId}`)}).toArray((err, result) => {
+            con.collection("vipMessage").find({
+                "user": new ObjectID(`${usrId}`),
+                "tutorId": new ObjectID(`${trId}`)
+            }).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -1262,13 +1265,13 @@ module.exports.postType = (info, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            if(info.category[0] == undefined){
+            if (info.category[0] == undefined) {
                 if (info.category.value) {
                     info.category.value = new ObjectID(info.category.value)
                 }
             }
             else {
-                for(var i=0;i<info.category.length;i++){
+                for (var i = 0; i < info.category.length; i++) {
                     if (info.category[i].value) {
                         info.category[i].value = new ObjectID(info.category[i].value)
                     }
@@ -1379,11 +1382,11 @@ module.exports.postResult = (info, cb)=> {
         }
         else {
             info.quiz.getScore = 0
-            
-            if(info.lsnId !=0){
+
+            if (info.lsnId != 0) {
                 info.lsnId = new ObjectID(info.lsnId)
             }
-           
+
             var con = db.db('englishAcademy')
             con.collection("result").insertOne({
                 "usrId": new ObjectID(info.usrId),
@@ -1393,8 +1396,8 @@ module.exports.postResult = (info, cb)=> {
                 "quiz": info.quiz,
                 "exam": info.exam,
                 "round": false,
-                "examRound":info.examRound,
-                "examTimePassed":info.examTimePassed
+                "examRound": info.examRound,
+                "examTimePassed": info.examTimePassed
 
             }, (err, result) => {
 
@@ -2024,7 +2027,7 @@ module.exports.getLsnById = (lsnId, cb)=> {
                     cb(0)
                 }
                 else {
-                    logger.info("result",result)
+                    logger.info("result", result)
                     cb(result)
                 }
             })
@@ -2639,7 +2642,7 @@ module.exports.postSupporter = (info, cb)=> {
                 info.department = new ObjectID(info.department)
             }
             else {
-                for(var i=0;i<info.department.length;i++){
+                for (var i = 0; i < info.department.length; i++) {
                     if (info.department[i].value) {
                         info.department[i].value = new ObjectID(info.department[i].value)
                     }
@@ -2842,7 +2845,7 @@ module.exports.editSupporter = (info, supId, cb)=> {
                 info.department = new ObjectID(info.department)
             }
             else {
-                for(var i=0;i<info.department.length;i++){
+                for (var i = 0; i < info.department.length; i++) {
                     if (info.department[i].value) {
                         info.department[i].value = new ObjectID(info.department[i].value)
                     }
@@ -2900,9 +2903,9 @@ module.exports.editChatAdmin = (info, caId, cb)=> {
                 //                 info.levels[i].value = new ObjectID(`${info.levels[i].value}`)
                 //         }
                 // }
-                for(var i=0;i<info.chatrooms.length;i++){
+                for (var i = 0; i < info.chatrooms.length; i++) {
                     if (info.chatrooms[i].value) {
-                        logger.info("chatrooms in mongo edit chatadmin" ,  new ObjectID(info.chatrooms[i].value))
+                        logger.info("chatrooms in mongo edit chatadmin", new ObjectID(info.chatrooms[i].value))
 
                         info.chatrooms[i].value = new ObjectID(info.chatrooms[i].value)
                     }
@@ -3154,7 +3157,7 @@ module.exports.editNote = (info, ntId, cb)=> {
 };
 
 module.exports.editResultForAnswerQuestion = (usrId, lsnId, info, cb)=> {
-    logger.info("info getting in editRessultForAnswerQ" , info )
+    logger.info("info getting in editRessultForAnswerQ", info)
 
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -3170,16 +3173,16 @@ module.exports.editResultForAnswerQuestion = (usrId, lsnId, info, cb)=> {
                 usrId = new ObjectID(usrId)
             }
 
-            con.collection("result").findOneAndUpdate({"usrId": usrId , "lsnId":lsnId}, {
+            con.collection("result").findOneAndUpdate({"usrId": usrId, "lsnId": lsnId}, {
                     $set: {
                         "exam": info.exam,
                         "quiz": info.quiz,
                         "lsnId": info.lsnId,
                         "usrId": info.usrId,
-                        "timePassed":info.timePassed,
-                        "round":info.round,
-                        "examTimePassed":info.examTimePassed,
-                        "examRound":info.examRound,
+                        "timePassed": info.timePassed,
+                        "round": info.round,
+                        "examTimePassed": info.examTimePassed,
+                        "examRound": info.examRound,
                         "passedLesson": info.passedLesson,
                     }
                 },
@@ -3197,7 +3200,7 @@ module.exports.editResultForAnswerQuestion = (usrId, lsnId, info, cb)=> {
 };
 
 module.exports.editResultForNewLesson = (usrId, info, cb)=> {
-    logger.info("info getting in editResultForNewLesson" , info )
+    logger.info("info getting in editResultForNewLesson", info)
 
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -3215,10 +3218,10 @@ module.exports.editResultForNewLesson = (usrId, info, cb)=> {
                         "quiz": info.quiz,
                         "lsnId": info.lsnId,
                         "usrId": info.usrId,
-                        "timePassed":info.timePassed,
-                        "round":info.round,
-                        "examTimePassed":info.examTimePassed,
-                        "examRound":info.examRound,
+                        "timePassed": info.timePassed,
+                        "round": info.round,
+                        "examTimePassed": info.examTimePassed,
+                        "examRound": info.examRound,
                         "passedLesson": info.passedLesson,
                     }
                 },
@@ -3322,8 +3325,8 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             "quiz": info.quiz,
                             "exam": info.exam,
                             "round": info.round,
-                            "examRound":info.examRound,
-                            "examTimePassed":info.examTimePassed
+                            "examRound": info.examRound,
+                            "examTimePassed": info.examTimePassed
                         }
                     },
                     {returnOriginal: false}, (err, result)=> {
@@ -3344,8 +3347,8 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                                         "quiz": info.quiz,
                                         "exam": info.exam,
                                         "round": info.round,
-                                        "examRound":info.examRound,
-                                        "examTimePassed":info.examTimePassed
+                                        "examRound": info.examRound,
+                                        "examTimePassed": info.examTimePassed
                                     }
                                 },
                                 {returnOriginal: false}, (err, result)=> {
@@ -3379,8 +3382,8 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             "quiz": info.quiz,
                             "exam": info.exam,
                             "round": info.round,
-                            "examRound":info.examRound,
-                            "examTimePassed":info.examTimePassed
+                            "examRound": info.examRound,
+                            "examTimePassed": info.examTimePassed
                         }
                     },
                     {returnOriginal: false}, (err, result)=> {
@@ -4003,11 +4006,11 @@ module.exports.postStudent = (stuInfo, cb)=> {
                 "passedLessonScore": stuInfo.passedLessonScore,
                 "chatrooms": [],
                 "purchaseStatus": {
-                    "value":"free",
-                    "date":"",
-                    "refId":""
+                    "value": "free",
+                    "date": "",
+                    "refId": ""
                 },
-                "verify":false
+                "verify": false
 
             }, (err, result) => {
                 if (err != null) {
@@ -4040,12 +4043,12 @@ module.exports.postVerifyStu = (data, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-           
+
             con.collection("verifyStudent").insertOne({
-                "usrId":data.usrId ,
-                "mobile":data.mobile,
-                "verifyCode":data.verifyCode,
-                "createdTime":data.createdTime
+                "usrId": data.usrId,
+                "mobile": data.mobile,
+                "verifyCode": data.verifyCode,
+                "createdTime": data.createdTime
 
             }, (err, result) => {
                 if (err != null) {
@@ -4105,13 +4108,17 @@ module.exports.getVerifyStu = (data, cb)=> {
         }
 
         else {
-            if(typeof data.verifyCode == "string"){
+            if (typeof data.verifyCode == "string") {
                 data.verifyCode = parseInt(data.verifyCode)
             }
-                logger.info("data in verification in mongo" , data)
+            logger.info("data in verification in mongo", data)
 
-                var con = db.db('englishAcademy')
-            con.collection("verifyStudent").findOne({"usrId": new ObjectID(`${data._id}`) , "verifyCode":data.verifyCode , "mobile":data.mobile }, (err, result) => {
+            var con = db.db('englishAcademy')
+            con.collection("verifyStudent").findOne({
+                "usrId": new ObjectID(`${data._id}`),
+                "verifyCode": data.verifyCode,
+                "mobile": data.mobile
+            }, (err, result) => {
                 console.log("here")
                 if (err) {
                     cb(-1)
@@ -4120,7 +4127,7 @@ module.exports.getVerifyStu = (data, cb)=> {
                     cb(0)
                 }
                 else {
-                    logger.info("in verification in mongo",result)
+                    logger.info("in verification in mongo", result)
                     cb(result)
                 }
             })
@@ -4379,7 +4386,7 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
             }
             else {
                 var con = db.db('englishAcademy')
-                
+
                 con.collection("student").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
                         $set: {
                             "username": stuInfo.username,
@@ -4393,7 +4400,7 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                             "passedLessonScore": stuInfo.passedLessonScore,
                             "chatrooms": stuInfo.chatrooms,
                             "purchaseStatus": stuInfo.purchaseStatus,
-                            "verify":stuInfo.verify
+                            "verify": stuInfo.verify
                         }
                     },
                     {returnOriginal: false}
@@ -4881,7 +4888,7 @@ module.exports.getAllfls = (cb)=> {
                     as: "lesson"
                 }
             },
-                {$unwind:"$lesson"},
+                {$unwind: "$lesson"},
 
                 {
                     $lookup: {
@@ -4892,7 +4899,7 @@ module.exports.getAllfls = (cb)=> {
                     }
 
                 }
-                ,{$unwind:"$type"},]).toArray((err, result) => {
+                , {$unwind: "$type"},]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -5112,7 +5119,7 @@ module.exports.getVDByType = (typeId, cb)=> {
 }
 
 module.exports.getViewByUsrId = (usrId, cb)=> {
-    console.log("usrId" , usrId)
+    console.log("usrId", usrId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -5248,10 +5255,10 @@ module.exports.editVerifyStu = (info, stdId, cb)=> {
         else {
             var con = db.db('englishAcademy')
             let infor = {
-                "usrId":info.usrId ,
-                "mobile":info.mobile,
-                "verifyCode":info.verifyCode,
-                "createdTime":info.createdTime
+                "usrId": info.usrId,
+                "mobile": info.mobile,
+                "verifyCode": info.verifyCode,
+                "createdTime": info.createdTime
             }
             con.collection("verifyStudent").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
                 $set: infor
@@ -5735,7 +5742,7 @@ module.exports.postMessage = (info, cb)=> {
 };
 
 module.exports.postVipMessage = (info, cb)=> {
-    logger.info("info postVipMessage" , info)
+    logger.info("info postVipMessage", info)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -5764,11 +5771,11 @@ module.exports.postVipMessage = (info, cb)=> {
                 "img": info.img,
                 "time": info.time,
                 "type": info.type,
-                "sender":info.sender
+                "sender": info.sender
             }, (err, result) => {
                 if (err) {
-                    console.log("err" , err)
-                        cb(-1)
+                    console.log("err", err)
+                    cb(-1)
                 }
                 else if (result.length == 0) {
                     cb(0)
@@ -5786,7 +5793,7 @@ module.exports.postVipMessage = (info, cb)=> {
 };
 
 module.exports.postConversation = (info, cb)=> {
-    logger.info("info postConversation" , info)
+    logger.info("info postConversation", info)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -5805,10 +5812,10 @@ module.exports.postConversation = (info, cb)=> {
                 "tutorId": info.tutorId,
                 "startTime": info.startTime,
                 "endTime": info.endTime,
-                "status":"open"
+                "status": "open"
             }, (err, result) => {
                 if (err) {
-                    console.log("err" , err)
+                    console.log("err", err)
                     cb(-1)
                 }
                 else if (result.length == 0) {
@@ -5959,7 +5966,7 @@ module.exports.getMessageById = (msgId, cb)=> {
     })
 };
 
-module.exports.getOpenConv = ( cb)=> {
+module.exports.getOpenConv = (cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -5977,8 +5984,8 @@ module.exports.getOpenConv = ( cb)=> {
                         as: "user"
                     }
                 },
-                {$unwind:"$user"}
-            ]).toArray((err, result )=> {
+                {$unwind: "$user"}
+            ]).toArray((err, result)=> {
                 if (err) {
                     cb(-1)
                 }
@@ -6218,7 +6225,7 @@ module.exports.editConversation = (info, convId, cb)=> {
                 "tutorId": info.tutorId,
                 "startTime": info.startTime,
                 "endTime": info.endTime,
-                "status":info.status
+                "status": info.status
             }
             con.collection("vipConversation").findOneAndUpdate({"_id": new ObjectID(convId)}, {
                 $set: infor
@@ -6243,7 +6250,7 @@ module.exports.editConversation = (info, convId, cb)=> {
 };
 
 module.exports.postUserForTutor = (info, tId, cb)=> {
-    logger.info("info in add user for titor mongo" , info)
+    logger.info("info in add user for titor mongo", info)
     // if(info.endChat == true){
     //     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
     //         if (err) {
@@ -6281,39 +6288,39 @@ module.exports.postUserForTutor = (info, tId, cb)=> {
     //
     // }
     // else{
-        MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
-            if (err) {
-                console.log("Err", err)
-                cb(-1)
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            if (info._id) {
+                info._id = new ObjectID(`${info._id}`)
             }
-            else {
-                if (info._id) {
-                    info._id = new ObjectID(`${info._id}`)
-                }
-                var con = db.db('englishAcademy')
-                con.collection("tutor").findOneAndUpdate({"_id": new ObjectID(tId)}, {
-                        $addToSet: {
-                            "users": {"_id":info._id}
-                        }
-                    }, {returnOriginal: false},
-                    (err, result)=> {
-                        if (err) {
-                            if (err.code == 11000) {
-                                console.log(err)
-                                cb(-2)
-                            }
-                            else {
-                                console.log(err)
-                                cb(-1)
-                            }
+            var con = db.db('englishAcademy')
+            con.collection("tutor").findOneAndUpdate({"_id": new ObjectID(tId)}, {
+                    $addToSet: {
+                        "users": {"_id": info._id}
+                    }
+                }, {returnOriginal: false},
+                (err, result)=> {
+                    if (err) {
+                        if (err.code == 11000) {
+                            console.log(err)
+                            cb(-2)
                         }
                         else {
-
-                            cb(result.value)
+                            console.log(err)
+                            cb(-1)
                         }
-                    })
-            }
-        })
+                    }
+                    else {
+
+                        cb(result.value)
+                    }
+                })
+        }
+    })
 
     // }
 };
@@ -6398,7 +6405,7 @@ module.exports.postTutor = (info, cb)=> {
                 "levels": info.levels,
                 "passed": info.passed,
                 "answered": info.answered,
-                "endChatUsers":[]
+                "endChatUsers": []
             }, (err, result) => {
                 if (err) {
 
@@ -6562,7 +6569,7 @@ module.exports.getTtrByUsr = (usrId, cb)=> {
 };
 
 module.exports.getConvById = (convId, cb)=> {
-    logger.info("convInfo" , convId)
+    logger.info("convInfo", convId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -6579,7 +6586,7 @@ module.exports.getConvById = (convId, cb)=> {
                 convId = new ObjectID(`${convId}`)
             }
             var con = db.db('englishAcademy')
-            con.collection("vipConversation").findOne({"_id": convId},(err, result) => {
+            con.collection("vipConversation").findOne({"_id": convId}, (err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -6607,19 +6614,19 @@ module.exports.postPackage = (info, cb)=> {
             cb(-1)
         }
         else {
-           if(info.off == undefined){
-               info.off = null
-           }
-            if(info.description == undefined){
-                info.description =""
+            if (info.off == undefined) {
+                info.off = null
+            }
+            if (info.description == undefined) {
+                info.description = ""
             }
             var con = db.db('englishAcademy')
             con.collection("package").insertOne({
                 "name": info.name,
                 "type": info.type,
-                "price":info.price,
-                "off":info.off,
-                "description":info.description
+                "price": info.price,
+                "off": info.off,
+                "description": info.description
             }, (err, result) => {
                 if (err) {
 
@@ -6675,9 +6682,9 @@ module.exports.gtPackageById = (pgId, cb)=> {
             cb(-1)
         }
         else {
-            
-                pgId = new ObjectID(`${pgId}`)
-            
+
+            pgId = new ObjectID(`${pgId}`)
+
             var con = db.db('englishAcademy')
             con.collection("package").findOne({"_id": pgId}, (err, result) => {
                 if (err) {
@@ -6711,9 +6718,9 @@ module.exports.editPackage = (info, pgId, cb)=> {
             let infor = {
                 "name": info.name,
                 "type": info.type,
-                "price":info.price ,
-                "off":info.off,
-                "description":info.description
+                "price": info.price,
+                "off": info.off,
+                "description": info.description
             }
             con.collection("package").findOneAndUpdate({"_id": new ObjectID(pgId)}, {
                 $set: infor
@@ -6745,7 +6752,7 @@ module.exports.getAllPackges = (cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            
+
             con.collection("package").find({}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
@@ -6841,7 +6848,29 @@ module.exports.getFlById = (flId, cb)=> {
             flId = new ObjectID(`${flId}`)
 
             var con = db.db('englishAcademy')
-            con.collection("file").findOne({"_id": flId}, (err, result) => {
+            con.collection("file").aggregate([
+                {$match: {"_id": new ObjectID(`${flId}`)}},
+                {
+                    $lookup: {
+                        from: "lesson",
+                        localField: "lsnId",
+                        foreignField: "_id",
+                        as: "lesson"
+                    }
+
+                },
+                {$unwind: "$lesson"},
+
+                {
+                    $lookup: {
+                        from: "type",
+                        localField: "typeId",
+                        foreignField: "_id",
+                        as: "type"
+                    }
+
+                }, {$unwind: "$type"},
+            ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -6849,14 +6878,10 @@ module.exports.getFlById = (flId, cb)=> {
                     cb(0)
                 }
                 else {
-                    logger.info("result", result)
-                    // result = result[0]
-                    // result.department = result.department[0]
-
-
-                    cb(result)
+                    cb(result[0])
                 }
             })
+
 
         }
     })
@@ -6987,7 +7012,7 @@ module.exports.editCp = (info, cpId, cb)=> {
             }
             con.collection("cp").findOneAndUpdate({"_id": new ObjectID(cpId)}, {
                 $set: infor
-            }, {returnOriginal: false},(err, result)=> {
+            }, {returnOriginal: false}, (err, result)=> {
                 if (err != null) {
                     if (err.code == 11000) {
                         cb(-2)
@@ -7018,21 +7043,21 @@ module.exports.deleteCp = (cpId, cb)=> {
             var con = db.db('englishAcademy')
 
 
-                        con.collection("cp").findOneAndDelete({"_id": new ObjectID(`${cpId}`)}, (err, result)=> {
-                            if (err) {
-                                cb(-1)
-                            }
-                            else if (result.lastErrorObject.n != 0) {
-                                let result = "row deleted"
-                                cb(result)
-                            }
-                            else {
-                                cb(0)
-                            }
-                        })
-
+            con.collection("cp").findOneAndDelete({"_id": new ObjectID(`${cpId}`)}, (err, result)=> {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.lastErrorObject.n != 0) {
+                    let result = "row deleted"
+                    cb(result)
+                }
+                else {
+                    cb(0)
                 }
             })
+
+        }
+    })
 
 };
 
