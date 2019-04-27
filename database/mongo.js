@@ -4009,7 +4009,7 @@ module.exports.postStudent = (stuInfo, cb)=> {
                     "value": "free",
                     "date": "",
                     "refId": "",
-                    "pgId":""
+                    "pgId": ""
                 },
                 "verify": false
 
@@ -4387,7 +4387,9 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
             }
             else {
                 var con = db.db('englishAcademy')
-
+                if (stuInfo.purchaseStatus.pgId != "") {
+                    stuInfo.purchaseStatus.pgId = new ObjectID(stuInfo.purchaseStatus.pgId)
+                }
                 con.collection("student").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
                         $set: {
                             "username": stuInfo.username,
