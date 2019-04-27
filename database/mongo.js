@@ -4008,7 +4008,8 @@ module.exports.postStudent = (stuInfo, cb)=> {
                 "purchaseStatus": {
                     "value": "free",
                     "date": "",
-                    "refId": ""
+                    "refId": "",
+                    "pgId":""
                 },
                 "verify": false
 
@@ -6626,6 +6627,7 @@ module.exports.postPackage = (info, cb)=> {
                 "type": info.type,
                 "price": info.price,
                 "off": info.off,
+                "days": info.days,
                 "description": info.description
             }, (err, result) => {
                 if (err) {
@@ -6719,6 +6721,7 @@ module.exports.editPackage = (info, pgId, cb)=> {
                 "name": info.name,
                 "type": info.type,
                 "price": info.price,
+                "days": info.days,
                 "off": info.off,
                 "description": info.description
             }

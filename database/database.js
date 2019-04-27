@@ -29,7 +29,23 @@ module.exports.loginForStudent = (loginInfo, cb)=> {
             cb(0)
         }
         else {
-            cb(result)
+            if(result.purchaseStatus.pgId != ""){
+                module.exports.getPackageById(result.purchaseStatus.pgId  , (packag)=>{
+                    if(packag == -1 || packag ==0){
+                        result.purchaseStatus.package = {}
+                    }
+                    else{
+                        result.purchaseStatus.package = packag
+                        cb(result)
+                    }
+                })
+            }
+            else{
+                result.purchaseStatus.package = {}
+                cb(result)
+
+            }
+          
         }
     })
 };
@@ -2076,7 +2092,23 @@ module.exports.getStuById = (stdId, cb)=> {
             cb(0)
         }
         else {
-            cb(result)
+            if(result.purchaseStatus.pgId != ""){
+                module.exports.getPackageById(result.purchaseStatus.pgId  , (packag)=>{
+                    if(packag == -1 || packag ==0){
+                        result.purchaseStatus.package = {}
+                    }
+                    else{
+                        result.purchaseStatus.package = packag
+                        cb(result)
+                    }
+                })
+            }
+            else{
+                result.purchaseStatus.package = {}
+                cb(result)
+
+            }
+
         }
     })
 };
