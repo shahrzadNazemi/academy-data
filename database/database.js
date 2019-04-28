@@ -2465,11 +2465,22 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
                                             refId: updateInfo.refId,
                                             date: updateInfo.date
                                         }]
+                                        cb(newresult.purchaseStatus)
+
                                     })
 
                                 }
                                 else {
-                                    cb(newresult.purchaseStatus)
+                                    module.exports.getPackageById(updateInfo.pgId, (packag)=> {
+                                        info = {
+                                            package: packag,
+                                            refId: updateInfo.refId,
+                                            date: updateInfo.date
+                                        }
+                                        newresult.purchaseStatus.push(info)
+                                        cb(newresult.purchaseStatus)
+                                    })
+
 
                                 }
 
