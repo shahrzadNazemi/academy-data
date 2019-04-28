@@ -2443,7 +2443,6 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
                     // }
 
                     let newStu = Object.assign({}, student, updateInfo)
-                    logger.info("studen" , newStu)
 
                     module.exports.updateMessage(newStu, 0, (updatedMsg)=> {
                         mongo.editStudent(newStu, stdId, (result)=> {
@@ -2458,7 +2457,22 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
                             }
                             else {
                                 let newresult = Object.assign({}, student, updateInfo)
-                                cb(newresult.purchaseStatus)
+                                logger.info("studen", newresult)
+                                if (newresult.purchaseStatus[0] == undefined) {
+                                    module.exports.getPackageById(updateInfo.pgId, (packag)=> {
+                                        newresult.purchaseStatus = [{
+                                            package: packag,
+                                            refId: updateInfo.refId,
+                                            date: updateInfo.date
+                                        }]
+                                    })
+
+                                }
+                                else {
+                                    cb(newresult.purchaseStatus)
+
+                                }
+
                             }
                         })
 
