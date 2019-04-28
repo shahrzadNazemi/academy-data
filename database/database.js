@@ -4,7 +4,6 @@ let logger = require('../util/logger')
 let moment = require('moment')
 let ObjectID = require('mongodb').ObjectID;
 let smsPanel = require('../util/smsPanel')
-let funcHelper = require('../util/funcHelper')
 
 
 module.exports.getSomePackagesByTheirIds = (pgIds, cb)=> {
