@@ -3983,6 +3983,33 @@ module.exports.getSNDByLVLLSN = (lvlID, lsnId, cb)=> {
     })
 };
 
+module.exports.getPackagesByTheirIds = (pgIds, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            for(var i=0;i<pgIds.length;i++){
+                pgIds[i]= new ObjectID(`${pgIds[i]}`)
+
+            }
+            var con = db.db('englishAcademy')
+            con.collection("package").find({"_id" : {"$in" : pgIds}}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+        }
+    })
+};
+
 module.exports.postStudent = (stuInfo, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -4005,12 +4032,7 @@ module.exports.postStudent = (stuInfo, cb)=> {
                 "lastPassedLesson": stuInfo.lastPassedLesson,
                 "passedLessonScore": stuInfo.passedLessonScore,
                 "chatrooms": [],
-                "purchaseStatus": {
-                    "value": "free",
-                    "date": "",
-                    "refId": "",
-                    "pgId": ""
-                },
+                "purchaseStatus": [],
                 "verify": false
 
             }, (err, result) => {
@@ -4355,6 +4377,7 @@ module.exports.getAllStudents = (cb)=> {
 };
 
 module.exports.editStudent = (stuInfo, stdId, cb)=> {
+    logger.info("studInfo" , stuInfo)
     if (stuInfo.setAvatar == true) {
         MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
             if (err) {
@@ -4387,42 +4410,70 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
             }
             else {
                 var con = db.db('englishAcademy')
-                if (stuInfo.purchaseStatus.pgId != "") {
-                    stuInfo.purchaseStatus.pgId = new ObjectID(stuInfo.purchaseStatus.pgId)
+                if (stuInfo.purchaseStatus[0] != undefined) {
+                    for(var i=0;i<stuInfo.purchaseStatus.length;i++){
+                        stuInfo.purchaseStatus[i].pgId= new ObjectID(stuInfo.purchaseStatus[i].pgId)
+                    }
                 }
-                con.collection("student").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
-                        $set: {
-                            "username": stuInfo.username,
-                            "password": stuInfo.password,
-                            "fname": stuInfo.fname,
-                            "lname": stuInfo.lname,
-                            "mobile": stuInfo.mobile,
-                            "avatarUrl": stuInfo.avatarUrl,
-                            "score": stuInfo.score,
-                            "lastPassedLesson": stuInfo.lastPassedLesson,
-                            "passedLessonScore": stuInfo.passedLessonScore,
-                            "chatrooms": stuInfo.chatrooms,
-                            "purchaseStatus": stuInfo.purchaseStatus,
-                            "verify": stuInfo.verify
-                        }
-                    },
-                    {returnOriginal: false}
-                    , (err, result)=> {
-                        if (err != null) {
-                            if (err.code == 11000) {
-                                cb(-2)
-                            }
-                        }
+                if (stuInfo.pgId != undefined) {
+                        stuInfo.pgId= new ObjectID(stuInfo.pgId)
+                    con.collection("student").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
 
-                        else if (err) {
-                            console.log(err)
-                            cb(-1)
-                        }
-                        else {
-                            console.log(result.value)
-                            cb(result.value)
-                        }
-                    })
+                            $addToSet:{ "purchaseStatus": {"pgId":stuInfo.pgId, "date":stuInfo.date , "refId":stuInfo.refId}}
+                        },
+                        {returnOriginal: false}
+                        , (err, result)=> {
+                            if (err != null) {
+                                if (err.code == 11000) {
+                                    cb(-2)
+                                }
+                            }
+
+                            else if (err) {
+                                console.log(err)
+                                cb(-1)
+                            }
+                            else {
+                                console.log(result.value)
+                                cb(result.value)
+                            }
+                        })
+                }
+                else{
+                    con.collection("student").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
+                            $set: {
+                                "username": stuInfo.username,
+                                "password": stuInfo.password,
+                                "fname": stuInfo.fname,
+                                "lname": stuInfo.lname,
+                                "mobile": stuInfo.mobile,
+                                "avatarUrl": stuInfo.avatarUrl,
+                                "score": stuInfo.score,
+                                "lastPassedLesson": stuInfo.lastPassedLesson,
+                                "passedLessonScore": stuInfo.passedLessonScore,
+                                "chatrooms": stuInfo.chatrooms,
+                                "verify": stuInfo.verify
+                            },
+                        },
+                        {returnOriginal: false}
+                        , (err, result)=> {
+                            if (err != null) {
+                                if (err.code == 11000) {
+                                    cb(-2)
+                                }
+                            }
+
+                            else if (err) {
+                                console.log(err)
+                                cb(-1)
+                            }
+                            else {
+                                console.log(result.value)
+                                cb(result.value)
+                            }
+                        })
+                }
+
             }
         })
 
@@ -4998,7 +5049,19 @@ module.exports.getAllExams = (usrId, cb)=> {
                 })
             }
             else {
-                con.collection("exam").find({}).toArray((err, result) => {
+                con.collection("exam").aggregate([
+                    {
+                        $lookup: {
+                            from: "lesson",
+                            localField: "preLesson.value",
+                            foreignField: "_id",
+                            as: "lesson"
+                        }
+                        ,
+
+                    },
+                    {$unwind:"$lesson"}
+                ]).toArray((err, result) => {
                     if (err) {
                         console.log(err)
                         cb(-1)

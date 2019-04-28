@@ -5,7 +5,19 @@ let moment = require('moment')
 let ObjectID = require('mongodb').ObjectID;
 let smsPanel = require('../util/smsPanel')
 
-
+module.exports.getSomePackagesByTheirIds = (pgIds, cb)=> {
+    mongo.getPackagesByTheirIds(pgIds, (packages)=> {
+        if (packages == -1) {
+            cb(-1)
+        }
+        else if (packages == 0) {
+            cb(0)
+        }
+        else {
+            cb(packages)
+        }
+    })
+}
 module.exports.loginForAdmin = (loginInfo, cb)=> {
     mongo.adminLogin(loginInfo, (result)=> {
         if (result == -1) {
@@ -29,23 +41,37 @@ module.exports.loginForStudent = (loginInfo, cb)=> {
             cb(0)
         }
         else {
-            if(result.purchaseStatus.pgId != ""){
-                module.exports.getPackageById(result.purchaseStatus.pgId  , (packag)=>{
-                    if(packag == -1 || packag ==0){
-                        result.purchaseStatus.package = {}
+            if (result.purchaseStatus[0] != undefined) {
+
+                let pgIds = []
+                for (var i = 0; i < result.purchaseStatus.length; i++) {
+                    pgIds.push(result.purchaseStatus[i].pgId)
+                }
+
+                module.exports.getSomePackagesByTheirIds(pgIds, (packag)=> {
+                    if (packag == -1 || packag == 0) {
+                        result.purchaseStatus = []
                     }
-                    else{
-                        result.purchaseStatus.package = packag
+                    else {
+                        for (var i = 0; i < result.purchaseStatus.length; i++) {
+                            for (var k = 0; k < packag.length; k++) {
+                                if (result.purchaseStatus[i].pgId.equals(packag[k]._id)) {
+                                    logger.info("pacj", packag)
+
+                                    result.purchaseStatus[i].package = packag[k]
+                                    // delete result.purchaseStatus[i].pgId
+                                }
+                            }
+                        }
                         cb(result)
                     }
                 })
             }
-            else{
-                result.purchaseStatus.package = {}
+            else {
                 cb(result)
 
             }
-          
+
         }
     })
 };
@@ -735,7 +761,7 @@ module.exports.getOpenConversation = (cb)=> {
         }
         else {
             let data = {}
-            for(var i=0;i<exam.length;i++){
+            for (var i = 0; i < exam.length; i++) {
                 data.fname = exam[i].user.fname
                 data.lname = exam[i].user.lname
                 data.score = exam[i].user.score
@@ -744,8 +770,6 @@ module.exports.getOpenConversation = (cb)=> {
                 data._id = exam[i].user._id
                 data.convId = exam[i]._id
                 data.time = exam[i].startTime
-
-
 
 
             }
@@ -1215,7 +1239,7 @@ module.exports.getLessonById = (lsnId, cb)=> {
                             }
 
                         }
-                       
+
                         cb(result)
 
                     }
@@ -1305,11 +1329,11 @@ module.exports.getCps = (cb)=> {
 };
 
 module.exports.updateCp = (updateInfo, cpId, cb)=> {
-    module.exports.getCpById(cpId , (lastCp)=>{
-        if(lastCp == -1){
+    module.exports.getCpById(cpId, (lastCp)=> {
+        if (lastCp == -1) {
             cb(-1)
         }
-            else if(lastCp == 0){
+        else if (lastCp == 0) {
             cb(0)
         }
         else {
@@ -1361,8 +1385,6 @@ module.exports.delCp = (cpId, cb)=> {
         }
     })
 };
-
-
 
 
 module.exports.addSupporter = (data, cb)=> {
@@ -2083,6 +2105,49 @@ module.exports.addView = (viewInfo, cb)=> {
     })
 };
 
+module.exports.getCertificatePermission = (usrId, cb)=> {
+    module.exports.getResultByUsr(usrId, (resultOfUser)=> {
+        if (resultOfUser == -1 || resultOfUser == 0) {
+            cb(false)
+        }
+        else {
+            module.exports.getLastExam((lastExam)=> {
+                if (lastExam == -1 || lastExam == 0) {
+                    cb(false)
+                }
+                else {
+                    if (resultOfUser.exam.exId == lastExam._id) {
+                        cb(true)
+                    }
+                    else {
+                        cb(false)
+                    }
+                }
+            })
+        }
+    })
+}
+
+module.exports.getLastExam = (cb)=> {
+    module.exports.getExams(0, (exams)=> {
+        if (exams == -1) {
+            cb(-1)
+        }
+        else if (exams == 0) {
+            cb(0)
+        }
+        else {
+            let max = exams[0]
+            for (var i = 0; i < exams.length; i++) {
+                if (exams[i].lesson.order[i] < exams[i].lesson.order[i + 1]) {
+                    max = exams[i].lesson.order[i + 1]
+                }
+            }
+            cb(max)
+        }
+    })
+}
+
 module.exports.getStuById = (stdId, cb)=> {
     mongo.getStudentById(stdId, (result)=> {
         if (result == -1) {
@@ -2092,22 +2157,40 @@ module.exports.getStuById = (stdId, cb)=> {
             cb(0)
         }
         else {
-            if(result.purchaseStatus.pgId != ""){
-                module.exports.getPackageById(result.purchaseStatus.pgId  , (packag)=>{
-                    if(packag == -1 || packag ==0){
-                        result.purchaseStatus.package = {}
-                    }
-                    else{
-                        result.purchaseStatus.package = packag
-                        cb(result)
-                    }
-                })
-            }
-            else{
-                result.purchaseStatus.package = {}
-                cb(result)
+            module.exports.getCertificatePermission(stdId, (permission)=> {
+                result.certificatePermission = permission
+                if (result.purchaseStatus[0] != undefined) {
 
-            }
+                    let pgIds = []
+                    for (var i = 0; i < result.purchaseStatus.length; i++) {
+                        pgIds.push(result.purchaseStatus[i].pgId)
+                    }
+
+                    module.exports.getSomePackagesByTheirIds(pgIds, (packag)=> {
+                        if (packag == -1 || packag == 0) {
+                            result.purchaseStatus = []
+                        }
+                        else {
+                            for (var i = 0; i < result.purchaseStatus.length; i++) {
+                                for (var k = 0; k < packag.length; k++) {
+                                    if (result.purchaseStatus[i].pgId.equals(packag[k]._id)) {
+                                        logger.info("pacj", packag)
+
+                                        result.purchaseStatus[i].package = packag[k]
+                                        // delete result.purchaseStatus[i].pgId
+                                    }
+                                }
+                            }
+                            cb(result)
+                        }
+                    })
+                }
+                else {
+                    cb(result)
+
+                }
+            })
+
 
         }
     })
@@ -2341,16 +2424,27 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
         }
         else {
             module.exports.getStuById(stdId, (student)=> {
-                if (student == -1
-                ) {
+                if (student == -1) {
                     cb(-1)
                 }
                 else if (student == 0) {
                     cb(0)
                 }
                 else {
+                    // if (student.purchaseStatus[0] != undefined) {
+                    //     for (var i = 0; i < student.purchaseStatus.length; i++) {
+                    //         delete student.purchaseStatus[i].package
+                    //     }
+                    // }
+                    // if (updateInfo.purchaseStatus[0] != undefined) {
+                    //     for (var i = 0; i < updateInfo.purchaseStatus.length; i++) {
+                    //         delete updateInfo.purchaseStatus[i].package
+                    //     }
+                    // }
 
                     let newStu = Object.assign({}, student, updateInfo)
+                    logger.info("studen" , newStu)
+
                     module.exports.updateMessage(newStu, 0, (updatedMsg)=> {
                         mongo.editStudent(newStu, stdId, (result)=> {
                             if (result == -1) {
@@ -2363,7 +2457,8 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
                                 cb(-2)
                             }
                             else {
-                                cb(result)
+                                let newresult = Object.assign({}, student, updateInfo)
+                                cb(newresult.purchaseStatus)
                             }
                         })
 
@@ -5789,8 +5884,6 @@ module.exports.updatePackage = (updateInfo, pgId, cb)=> {
     })
 
 };
-
-
 
 
 module.exports.addFile = (data, cb)=> {

@@ -15,9 +15,10 @@ let mongo = require('./database/mongo')
 // console.log(moment(1554026236509.0).format("YYYY:MM:D HH:mm:ss"))
 // console.log(moment(pass).format("YYYY:MM:D HH:mm:ss"))
 //
-// console.log(9<=  moment().format('HH') &&  moment().format('HH') <= 14)
-let usrId ="5cc4329cc5371a1d58fee619"
-db.getStuById(usrId ,(level)=>{
+// console.log(9<=  moment().format(
+// 'HH') &&  moment().format('HH') <= 14)
+let usrId ="5cbee9c99fa3ae6faf0085cd"
+db.getStuById( usrId ,(level)=>{
     console.log(level)
 })
 // let student = {}
