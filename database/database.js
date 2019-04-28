@@ -4,6 +4,8 @@ let logger = require('../util/logger')
 let moment = require('moment')
 let ObjectID = require('mongodb').ObjectID;
 let smsPanel = require('../util/smsPanel')
+let funcHelper = require('../util/funcHelper')
+
 
 module.exports.getSomePackagesByTheirIds = (pgIds, cb)=> {
     mongo.getPackagesByTheirIds(pgIds, (packages)=> {
@@ -2456,33 +2458,21 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
                                 cb(-2)
                             }
                             else {
-                                let newresult = Object.assign({}, student, updateInfo)
-                                logger.info("studen", newresult)
-                                if (newresult.purchaseStatus[0] == undefined) {
-                                    module.exports.getPackageById(updateInfo.pgId, (packag)=> {
-                                        newresult.purchaseStatus = [{
-                                            package: packag,
-                                            refId: updateInfo.refId,
-                                            date: updateInfo.date
-                                        }]
-                                        cb(newresult.purchaseStatus)
-
-                                    })
-
-                                }
-                                else {
-                                    module.exports.getPackageById(updateInfo.pgId, (packag)=> {
-                                        info = {
-                                            package: packag,
-                                            refId: updateInfo.refId,
-                                            date: updateInfo.date
-                                        }
-                                        newresult.purchaseStatus.push(info)
-                                        cb(newresult.purchaseStatus)
-                                    })
-
-
-                                }
+                               if(updateInfo.pgId){
+                                   module.exports.getStuById(stdId, (student)=> {
+                                       if (student == -1) {
+                                           cb(-1)
+                                       }
+                                       else if (student == 0) {
+                                           cb(0)
+                                       }
+                                       else {
+                                           cb(student.purchaseStatus)
+                                       }})
+                               }
+                                else{
+                                   cb(result)
+                               }
 
                             }
                         })
