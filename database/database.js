@@ -5285,9 +5285,22 @@ module.exports.addChatroom = (data, cb)=> {
             data.blocked = 0;
             data.blockedTime = ""
             if (!Object.keys(data.lesson).length == 0) {
-                modules.exports.addCurrentLessonChatRoom(data, (addedChatroom)=> {
-                    module.exports.addPastLessonChatRoom(data, (add)=> {
-                        cb(added)
+
+                module.exports.addCurrentLessonChatRoom(data, (addedChatroom)=> {
+                    module.exports.getFirstLesson((firstLesson)=>{
+logger.info("firstLesson" , firstLesson)
+                        logger.info("firstLesson" , data.lesson.value)
+
+                        if(firstLesson._id.equals(data.lesson.value)){
+                            cb(added)
+                        }
+                        else{
+                            module.exports.addPastLessonChatRoom(data, (add)=> {
+                                cb(added)
+                            })
+
+                        }
+
                     })
                 })
             }
@@ -5316,8 +5329,21 @@ module.exports.addCurrentLessonChatRoom = (data, cb)=> {
 
 module.exports.addPastLessonChatRoom = (data, cb)=> {
     data.position = "passedLesson"
-    module.exports.getStuByLessonLsnId(data.lesson.value, (student)=> {
+    module.exports.getStudentByPassedLesson(data.lesson.value, (student)=> {
         mongo.postCurrentLessonCharoom(student, data, (added)=> {
+            if (added == -1) {
+                cb(-1)
+            }
+            else {
+                logger.info("added passed" , added)
+                cb(added)
+            }
+        })
+    })
+}
+
+module.exports.getStudentByPassedLesson = (lsnId, cb)=> {
+        mongo.getStuByPassedLesson(lsnId, (added)=> {
             if (added == -1) {
                 cb(-1)
             }
@@ -5325,13 +5351,23 @@ module.exports.addPastLessonChatRoom = (data, cb)=> {
                 cb(added)
             }
         })
-    })
 }
+
 
 module.exports.addCurrentLevelChatRoom = (data, cb)=> {
     data.position = "currentLevel"
+    // module.exports.getLessonByLvlId(data.level.value  , (lessons)=>{
+    //     if(lessons != 0 || lessons != -1){
+    //         for(var i=0;i<lessons.length;i++){
+    //            
+    //         }
+    //     }
+    //     module.exports.getStuByLevel(data.level.value, (student)=> {
+    //
+    //     })
+    //     })
     module.exports.getStuByLevel(data.level.value, (student)=> {
-        mongo.postCurrentLessonCharoom(student, data, (added)=> {
+        mongo.postCurrentLevelCharoom(student, data, (added)=> {
             if (added == -1) {
                 cb(-1)
             }

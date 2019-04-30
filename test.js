@@ -17,9 +17,12 @@ let mongo = require('./database/mongo')
 //
 // console.log(9<=  moment().format(
 // 'HH') &&  moment().format('HH') <= 14)
-let usrId ="5cbee9c99fa3ae6faf0085cd"
-db.getStuById( usrId ,(level)=>{
-    console.log(level)
+let usrId ={level:{value:"5ca048d7d4f46f731bfa2b79"}}
+let lvlId = "5ca048f8d4f46f731bfa2b7a"
+// db.addCurrentLevelChatRoom( usrId ,(level)=>{
+// })
+mongo.getStuByPassedLesson(lvlId , (stus) =>{
+    console.log(stus)
 })
 // let student = {}
 // let chatroom = {}

@@ -4180,16 +4180,21 @@ module.exports.getStudentByLesson = (lsnId, cb)=> {
                         as: "student"
                     }
 
+                },{
+                    $unwind: "$student"
                 },
+                
                 {
                     $lookup: {
                         from: "lesson",
                         localField: "lsnId",
                         foreignField: "_id",
                         as: "lesson"
-                    }
+                    }},{
+                    $replaceRoot: {newRoot: "$student"}
+                }
 
-                }]).toArray((err, result) => {
+                ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -4205,7 +4210,34 @@ module.exports.getStudentByLesson = (lsnId, cb)=> {
     })
 };
 
-module.exports.postCurrentLessonCharoom = (students, chatroom, cb)=> {
+module.exports.getStuByPassedLesson = (lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            // if (typeof lsnId == 'number') {
+            //     lsnId = parseInt(lsnId)
+            // }
+            var con = db.db('englishAcademy')
+            con.collection("student").find({"lastPassedLesson": new ObjectID(`${lsnId}`)}).toArray((err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+module.exports.postCurrentLevelCharoom = (students, chatroom, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -4214,18 +4246,60 @@ module.exports.postCurrentLessonCharoom = (students, chatroom, cb)=> {
         else {
             var con = db.db('englishAcademy')
             let bulkArray = []
-            students.forEach((d, i)=> {
-                bulkArray.push({
-                    updateOne: {
-                        filter: {_id: new ObjectID(d[i]._id)},
-                        update: {$push: {chatrooms: chatroom}}, upsert: true
-                    }
+            if(students != 0){
+                students.forEach((d, i , students)=> {
+                    logger.info("student.length" , d)
+                    bulkArray.push({
+                        updateOne: {
+                            filter: {_id: new ObjectID(d._id)},
+                            update: {$push: {chatrooms: chatroom}},upsert:true
+                        }
+                    })
                 })
-            })
-            con.collection("student").bulkWrite(bulkArray, {ordered: true, w: 1});
+                con.collection("student").bulkWrite(bulkArray, {ordered: true, w: 1});
+                cb(chatroom)
+
+            }
+            else{
+                cb(chatroom)
+            }
+
         }
     })
 };
+
+module.exports.postCurrentLessonCharoom = (students, chatroom, cb)=> {
+    logger.info("student.length" , students)
+
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            let bulkArray = []
+            if(students != 0){
+                students.forEach((d, i , students)=> {
+                    bulkArray.push({
+                        updateOne: {
+                            filter: {_id: new ObjectID(d._id)},
+                            update: {$push: {chatrooms: chatroom}},upsert:true
+                        }
+                    })
+                })
+                con.collection("student").bulkWrite(bulkArray, {ordered: true, w: 1});
+                cb(chatroom)
+            }
+            else{
+                cb(chatroom)
+            }
+
+        }
+    })
+};
+
+
 
 
 module.exports.getCertById = (certId, cb)=> {
@@ -5078,40 +5152,47 @@ module.exports.getAllExams = (usrId, cb)=> {
 };
 
 module.exports.getStudentByLevel = (lvlId, cb)=> {
+    logger.info("levelId" , lvlId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
             cb(-1)
         }
         else {
-            var con = db.db('englishAcademy')
+            var con = db.db('englishAcademy')  
             if (lvlId == 0) {
                 lvlId = 0
             }
             else {
                 lvlId = new ObjectID(`${lvlId}`)
             }
-            con.collection("view").aggregate([
+            con.collection("lesson").aggregate([
                 {$match: {"lvlId": lvlId}},
                 {
                     $lookup: {
+                        from: "view",
+                        localField: "_id",
+                        foreignField: "lsnId",
+                        as: "view"
+                    }
+                }, {
+                    $lookup: {
                         from: "student",
-                        localField: "usrId",
+                        localField: "view.usrId",
                         foreignField: "_id",
                         as: "student"
                     }
 
+                },{
+                    $unwind: "$student"
                 },
                 {
-                    $lookup: {
-                        from: "level",
-                        localField: "lvlId",
-                        foreignField: "_id",
-                        as: "level"
-                    }
+                    $replaceRoot: { newRoot: "$student" }
+                }
 
-                }]).toArray((err, result) => {
+            ]).toArray((err, result) => {
                 if (err) {
+                    logger.error("err" , err)
                     cb(-1)
                 }
                 else if (result == null) {
