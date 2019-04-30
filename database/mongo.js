@@ -1980,7 +1980,6 @@ module.exports.getLsnById = (lsnId, cb)=> {
 
                     }
                 },
-
                 {
                     $lookup: {
                         from: "level",
@@ -1988,9 +1987,7 @@ module.exports.getLsnById = (lsnId, cb)=> {
                         foreignField: "_id",
                         as: "level"
                     }
-                }
-                ,
-
+                },
                 {
                     $lookup: {
                         from: "sound",
@@ -2031,7 +2028,6 @@ module.exports.getLsnById = (lsnId, cb)=> {
                     cb(result)
                 }
             })
-
         }
     })
 };

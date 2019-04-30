@@ -2117,7 +2117,8 @@ module.exports.getCertificatePermission = (usrId, cb)=> {
                     cb(false)
                 }
                 else {
-                    if (resultOfUser.exam.exId == lastExam._id) {
+                    logger.info("resultOfUser" , resultOfUser)
+                    if (resultOfUser[0].exam.exId == lastExam._id) {
                         cb(true)
                     }
                     else {
