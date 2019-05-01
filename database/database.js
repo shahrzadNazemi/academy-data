@@ -42,36 +42,40 @@ module.exports.loginForStudent = (loginInfo, cb)=> {
             cb(0)
         }
         else {
-            if (result.purchaseStatus[0] != undefined) {
+            module.exports.getCertificatePermission(result._id , (certificatePermission)=>{
+                result.certificatePermission = certificatePermission
+                if (result.purchaseStatus[0] != undefined) {
 
-                let pgIds = []
-                for (var i = 0; i < result.purchaseStatus.length; i++) {
-                    pgIds.push(result.purchaseStatus[i].pgId)
-                }
-
-                module.exports.getSomePackagesByTheirIds(pgIds, (packag)=> {
-                    if (packag == -1 || packag == 0) {
-                        result.purchaseStatus = []
+                    let pgIds = []
+                    for (var i = 0; i < result.purchaseStatus.length; i++) {
+                        pgIds.push(result.purchaseStatus[i].pgId)
                     }
-                    else {
-                        for (var i = 0; i < result.purchaseStatus.length; i++) {
-                            for (var k = 0; k < packag.length; k++) {
-                                if (result.purchaseStatus[i].pgId.equals(packag[k]._id)) {
-                                    logger.info("pacj", packag)
 
-                                    result.purchaseStatus[i].package = packag[k]
-                                    // delete result.purchaseStatus[i].pgId
+                    module.exports.getSomePackagesByTheirIds(pgIds, (packag)=> {
+                        if (packag == -1 || packag == 0) {
+                            result.purchaseStatus = []
+                        }
+                        else {
+                            for (var i = 0; i < result.purchaseStatus.length; i++) {
+                                for (var k = 0; k < packag.length; k++) {
+                                    if (result.purchaseStatus[i].pgId.equals(packag[k]._id)) {
+                                        logger.info("pacj", packag)
+
+                                        result.purchaseStatus[i].package = packag[k]
+                                        // delete result.purchaseStatus[i].pgId
+                                    }
                                 }
                             }
+                            cb(result)
                         }
-                        cb(result)
-                    }
-                })
-            }
-            else {
-                cb(result)
+                    })
+                }
+                else {
+                    cb(result)
 
-            }
+                }
+            })
+
 
         }
     })
@@ -1531,44 +1535,65 @@ module.exports.updateSupporter = (updateInfo, supId, cb)=> {
 };
 
 module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
-    module.exports.getChatAdminById(caId, (support)=> {
-        if (support == -1) {
-            cb(-1)
-        }
-        else if (support == 0) {
-            cb(0)
-        }
-        else {
-            if (typeof support.chatrooms == "string") {
-                support.chatrooms = JSON.parse(support.chatrooms)
-            }
-            if (typeof updateInfo.chatrooms == "string") {
-                updateInfo.chatrooms = JSON.parse(updateInfo.chatrooms)
-            }
-            logger.info("updateInfo", updateInfo)
+    if (caId == 0) {
 
-            // let newChatrooms = Object.assign([], support.chatrooms, updateInfo.chatrooms)
-            let newChatAdmin = Object.assign({}, support, updateInfo)
-            newChatAdmin.chatrooms = updateInfo.chatrooms
+        mongo.editChatAdminChatroom(updateInfo, updateInfo.value, (result)=> {
+            if (result == -1) {
+                cb(-1)
+            }
+            else if (result == 0) {
+                cb(0)
+            }
+            else if (result == -2) {
+                cb(-2)
+            }
+            else {
+                cb(result)
+            }
+        })
 
-            logger.info("newChatAdmin", newChatAdmin)
-            logger.info("caId", caId)
-            module.exports.updateMessage(newChatAdmin, 0, (updatedMsg)=> {
-                // logger.info("updatedeMsg", updatedMsg)
-                mongo.editChatAdmin(newChatAdmin, caId, (result)=> {
-                    if (result == -1) {
-                        cb(-1)
-                    }
-                    else if (result == 0) {
-                        cb(0)
-                    }
-                    else {
-                        cb(result)
-                    }
+    }
+    else{
+        module.exports.getChatAdminById(caId, (support)=> {
+            if (support == -1) {
+                cb(-1)
+            }
+            else if (support == 0) {
+                cb(0)
+            }
+            else {
+                if (typeof support.chatrooms == "string") {
+                    support.chatrooms = JSON.parse(support.chatrooms)
+                }
+                if (typeof updateInfo.chatrooms == "string") {
+                    updateInfo.chatrooms = JSON.parse(updateInfo.chatrooms)
+                }
+                logger.info("updateInfo", updateInfo)
+
+                // let newChatrooms = Object.assign([], support.chatrooms, updateInfo.chatrooms)
+                let newChatAdmin = Object.assign({}, support, updateInfo)
+                newChatAdmin.chatrooms = updateInfo.chatrooms
+
+                logger.info("newChatAdmin", newChatAdmin)
+                logger.info("caId", caId)
+                module.exports.updateMessage(newChatAdmin, 0, (updatedMsg)=> {
+                    // logger.info("updatedeMsg", updatedMsg)
+                    mongo.editChatAdmin(newChatAdmin, caId, (result)=> {
+                        if (result == -1) {
+                            cb(-1)
+                        }
+                        else if (result == 0) {
+                            cb(0)
+                        }
+                        else {
+                            cb(result)
+                        }
+                    })
                 })
-            })
-        }
-    })
+            }
+        })
+
+    }
 
 };
 
@@ -2107,23 +2132,30 @@ module.exports.addView = (viewInfo, cb)=> {
 };
 
 module.exports.getCertificatePermission = (usrId, cb)=> {
-    module.exports.getResultByUsr(usrId, (resultOfUser)=> {
+    module.exports.getViewOfUsr(usrId, (resultOfUser)=> {
         if (resultOfUser == -1 || resultOfUser == 0) {
             cb(false)
         }
         else {
-            module.exports.getLastExam((lastExam)=> {
-                if (lastExam == -1 || lastExam == 0) {
+            module.exports.getResultByLsnUsr(usrId , resultOfUser[0].lsnId , (lastRes)=>{
+                if (resultOfUser == -1 || resultOfUser == 0) {
                     cb(false)
                 }
-                else {
-                    logger.info("resultOfUser" , resultOfUser)
-                    if (resultOfUser[0].exam.exId == lastExam._id) {
-                        cb(true)
-                    }
-                    else {
-                        cb(false)
-                    }
+                else{
+                    module.exports.getLastExam((lastExam)=> {
+                        if (lastExam == -1 || lastExam == 0) {
+                            cb(false)
+                        }
+                        else {
+                            if (lastRes.exam.exId.equals(lastExam._id) && lastRes.exam.getScore !=0 ) {
+                                cb(true)
+                            }
+                            else {
+                                cb(false)
+                            }
+                        }
+                    })
+
                 }
             })
         }
@@ -2365,21 +2397,22 @@ module.exports.unblockUsers = ()=> {
 module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     //for editting studentChatroom
     if (stdId == 0) {
-        // mongo.getStudentChatroom(updateInfo._id ,  )
-        mongo.editStudentChatroom(updateInfo, updateInfo._id, (result)=> {
-            if (result == -1) {
-                cb(-1)
-            }
-            else if (result == 0) {
-                cb(0)
-            }
-            else if (result == -2) {
-                cb(-2)
-            }
-            else {
-                cb(result)
-            }
-        })
+      
+                mongo.editStudentChatroom(updateInfo, updateInfo._id, (result)=> {
+                    if (result == -1) {
+                        cb(-1)
+                    }
+                    else if (result == 0) {
+                        cb(0)
+                    }
+                    else if (result == -2) {
+                        cb(-2)
+                    }
+                    else {
+                        cb(result)
+                    }
+                })
+           
     }
     else {
         if (updateInfo.warned) {
@@ -5108,6 +5141,9 @@ module.exports.updateChatroom = (updateInfo, chId, cb)=> {
         }
         else {
             let newChatroom = Object.assign({}, chatroom, updateInfo)
+            newChatroom.warned = 0;
+            newChatroom.blocked = 0;
+            newChatroom.blockedTime = ""
             module.exports.updateStudent(newChatroom, 0, (updatedChatroom)=> {
                 mongo.editChatRoom(newChatroom, chId, (result)=> {
                     if (result == -1) {
@@ -5117,7 +5153,18 @@ module.exports.updateChatroom = (updateInfo, chId, cb)=> {
                         cb(0)
                     }
                     else {
-                        cb(result)
+                        if(updateInfo.title){
+                            let chatAdminChatroom ={}
+                            chatAdminChatroom.label = updateInfo.title
+                            chatAdminChatroom.value = chId
+                            module.exports.updateChatAdmin(chatAdminChatroom , 0 , (updatedChatAdmin)=>{
+                                cb(result)
+                            })
+                        }
+                        else{
+                            cb(result)
+
+                        }
                     }
                 })
 
@@ -5288,8 +5335,6 @@ module.exports.addChatroom = (data, cb)=> {
 
                 module.exports.addCurrentLessonChatRoom(data, (addedChatroom)=> {
                     module.exports.getFirstLesson((firstLesson)=>{
-logger.info("firstLesson" , firstLesson)
-                        logger.info("firstLesson" , data.lesson.value)
 
                         if(firstLesson._id.equals(data.lesson.value)){
                             cb(added)

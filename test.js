@@ -17,11 +17,11 @@ let mongo = require('./database/mongo')
 //
 // console.log(9<=  moment().format(
 // 'HH') &&  moment().format('HH') <= 14)
-let usrId ={level:{value:"5ca048d7d4f46f731bfa2b79"}}
+let usrId ="5ca81385d4f46f731bfa2b97"
 let lvlId = "5ca048f8d4f46f731bfa2b7a"
 // db.addCurrentLevelChatRoom( usrId ,(level)=>{
 // })
-mongo.getStuByPassedLesson(lvlId , (stus) =>{
+db.getCertificatePermission(usrId , (stus) =>{
     console.log(stus)
 })
 // let student = {}

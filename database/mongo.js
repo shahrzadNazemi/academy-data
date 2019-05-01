@@ -459,6 +459,38 @@ module.exports.editStudentChatroom = (updateInfo, chId, cb)=> {
     })
 };
 
+module.exports.editChatAdminChatroom = (updateInfo, chId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            chId = new ObjectID(chId)
+            updateInfo.value = new ObjectID(updateInfo.value)
+            var con = db.db('englishAcademy')
+            con.collection("chatAdmin").updateMany({'chatrooms.value': chId},
+                {$set: {'chatrooms.$': updateInfo}}
+                , (err, result)=> {
+                    if (err) {
+                        console.log(err)
+                        cb(-1)
+                    }
+                    else if (result != null) {
+                        cb(result)
+
+                    }
+                    else {
+                        cb(0)
+                    }
+                })
+
+
+        }
+    })
+};
+
+
 
 module.exports.deleteStudentChatroom = (chId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
