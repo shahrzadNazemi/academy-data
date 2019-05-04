@@ -2533,7 +2533,7 @@ module.exports.getAllLevels = (cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("level").find().toArray((err, result) => {
+            con.collection("level").find().sort({order: 1}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
