@@ -3268,7 +3268,11 @@ module.exports.editResultForNewLesson = (usrId, info, cb)=> {
 
 
 module.exports.editResult = (usrId, lsnId, info, cb)=> {
-    logger.info("editResultInfo in mongo file", info)
+    logger.info("editResultInfo in mongo file", info )
+    logger.info("editResultInfo in mongo file", usrId )
+    logger.info("editResultInfo in mongo file", lsnId )
+
+
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)

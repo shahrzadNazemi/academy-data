@@ -4904,6 +4904,8 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                 }
                 else {
                     console.log("herein=0", lastResult)
+                    console.log("updateInfo", updateInfo)
+
                     module.exports.getExamByLessonId(updateInfo.lsnId, (exam)=> {
                         if (exam == -1) {
                             cb(-1)
