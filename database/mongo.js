@@ -491,7 +491,6 @@ module.exports.editChatAdminChatroom = (updateInfo, chId, cb)=> {
 };
 
 
-
 module.exports.deleteStudentChatroom = (chId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -3268,9 +3267,9 @@ module.exports.editResultForNewLesson = (usrId, info, cb)=> {
 
 
 module.exports.editResult = (usrId, lsnId, info, cb)=> {
-    logger.info("editResultInfo in mongo file", info )
-    logger.info("editResultInfo usrId in mongo file", usrId )
-    logger.info("editResultInfo lsnId in mongo file", lsnId )
+    logger.info("editResultInfo in mongo file", info)
+    logger.info("editResultInfo usrId in mongo file", usrId)
+    logger.info("editResultInfo lsnId in mongo file", lsnId)
 
 
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -3343,11 +3342,13 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
 
             }
             else if (lsnId == 0) {
-                console.log("hey in lsnId =0" , new ObjectID(usrId))
-
+                logger.info("hey in lsnId =0", typeof  lsnId)
+                if (typeof lsnId == "string") {
+                    lsnId = parseInt(lsnId)
+                }
                 con.collection("result").findOneAndUpdate({
                         "lsnId": lsnId,
-                        "usrId": new ObjectID(usrId)
+                        "usrId": new ObjectID(`${usrId}`)
                     }, {
                         $set: {
                             "usrId": info.usrId,
@@ -3369,7 +3370,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                         else if (result.lastErrorObject.n == 0) {
                             con.collection("result").findOneAndUpdate({
                                     "lsnId": new ObjectID(info.lsnId),
-                                    "usrId": new ObjectID(usrId)
+                                    "usrId": new ObjectID(`${usrId}`)
                                 }, {
                                     $set: {
                                         "usrId": info.usrId,
@@ -3388,6 +3389,10 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                                         console.log(err)
                                         cb(-1)
                                     }
+                                    else if (result.lastErrorObject.n == 0) {
+                                        logger.info("result", result)
+                                        cb(0)
+                                    }
                                     else {
 
                                         cb(result)
@@ -3400,6 +3405,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                         }
                     })
             }
+
             else {
                 console.log("hey in else")
                 con.collection("result").findOneAndUpdate({
@@ -4022,12 +4028,12 @@ module.exports.getPackagesByTheirIds = (pgIds, cb)=> {
             cb(-1)
         }
         else {
-            for(var i=0;i<pgIds.length;i++){
-                pgIds[i]= new ObjectID(`${pgIds[i]}`)
+            for (var i = 0; i < pgIds.length; i++) {
+                pgIds[i] = new ObjectID(`${pgIds[i]}`)
 
             }
             var con = db.db('englishAcademy')
-            con.collection("package").find({"_id" : {"$in" : pgIds}}).toArray((err, result) => {
+            con.collection("package").find({"_id": {"$in": pgIds}}).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -4216,21 +4222,22 @@ module.exports.getStudentByLesson = (lsnId, cb)=> {
                         as: "student"
                     }
 
-                },{
+                }, {
                     $unwind: "$student"
                 },
-                
+
                 {
                     $lookup: {
                         from: "lesson",
                         localField: "lsnId",
                         foreignField: "_id",
                         as: "lesson"
-                    }},{
+                    }
+                }, {
                     $replaceRoot: {newRoot: "$student"}
                 }
 
-                ]).toArray((err, result) => {
+            ]).toArray((err, result) => {
                 if (err) {
                     cb(-1)
                 }
@@ -4282,13 +4289,13 @@ module.exports.postCurrentLevelCharoom = (students, chatroom, cb)=> {
         else {
             var con = db.db('englishAcademy')
             let bulkArray = []
-            if(students != 0){
-                students.forEach((d, i , students)=> {
-                    logger.info("student.length" , d)
+            if (students != 0) {
+                students.forEach((d, i, students)=> {
+                    logger.info("student.length", d)
                     bulkArray.push({
                         updateOne: {
                             filter: {_id: new ObjectID(d._id)},
-                            update: {$push: {chatrooms: chatroom}},upsert:true
+                            update: {$push: {chatrooms: chatroom}}, upsert: true
                         }
                     })
                 })
@@ -4296,7 +4303,7 @@ module.exports.postCurrentLevelCharoom = (students, chatroom, cb)=> {
                 cb(chatroom)
 
             }
-            else{
+            else {
                 cb(chatroom)
             }
 
@@ -4305,7 +4312,7 @@ module.exports.postCurrentLevelCharoom = (students, chatroom, cb)=> {
 };
 
 module.exports.postCurrentLessonCharoom = (students, chatroom, cb)=> {
-    logger.info("student.length" , students)
+    logger.info("student.length", students)
 
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
@@ -4315,27 +4322,25 @@ module.exports.postCurrentLessonCharoom = (students, chatroom, cb)=> {
         else {
             var con = db.db('englishAcademy')
             let bulkArray = []
-            if(students != 0){
-                students.forEach((d, i , students)=> {
+            if (students != 0) {
+                students.forEach((d, i, students)=> {
                     bulkArray.push({
                         updateOne: {
                             filter: {_id: new ObjectID(d._id)},
-                            update: {$push: {chatrooms: chatroom}},upsert:true
+                            update: {$push: {chatrooms: chatroom}}, upsert: true
                         }
                     })
                 })
                 con.collection("student").bulkWrite(bulkArray, {ordered: true, w: 1});
                 cb(chatroom)
             }
-            else{
+            else {
                 cb(chatroom)
             }
 
         }
     })
 };
-
-
 
 
 module.exports.getCertById = (certId, cb)=> {
@@ -4483,7 +4488,7 @@ module.exports.getAllStudents = (cb)=> {
 };
 
 module.exports.editStudent = (stuInfo, stdId, cb)=> {
-    logger.info("studInfo" , stuInfo)
+    logger.info("studInfo", stuInfo)
     if (stuInfo.setAvatar == true) {
         MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
             if (err) {
@@ -4517,15 +4522,21 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
             else {
                 var con = db.db('englishAcademy')
                 if (stuInfo.purchaseStatus[0] != undefined) {
-                    for(var i=0;i<stuInfo.purchaseStatus.length;i++){
-                        stuInfo.purchaseStatus[i].pgId= new ObjectID(stuInfo.purchaseStatus[i].pgId)
+                    for (var i = 0; i < stuInfo.purchaseStatus.length; i++) {
+                        stuInfo.purchaseStatus[i].pgId = new ObjectID(stuInfo.purchaseStatus[i].pgId)
                     }
                 }
                 if (stuInfo.pgId != undefined) {
-                        stuInfo.pgId= new ObjectID(stuInfo.pgId)
+                    stuInfo.pgId = new ObjectID(stuInfo.pgId)
                     con.collection("student").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
 
-                            $addToSet:{ "purchaseStatus": {"pgId":stuInfo.pgId, "date":stuInfo.date , "refId":stuInfo.refId}}
+                            $addToSet: {
+                                "purchaseStatus": {
+                                    "pgId": stuInfo.pgId,
+                                    "date": stuInfo.date,
+                                    "refId": stuInfo.refId
+                                }
+                            }
                         },
                         {returnOriginal: false}
                         , (err, result)=> {
@@ -4545,7 +4556,7 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                             }
                         })
                 }
-                else{
+                else {
                     con.collection("student").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
                             $set: {
                                 "username": stuInfo.username,
@@ -5166,7 +5177,7 @@ module.exports.getAllExams = (usrId, cb)=> {
                         ,
 
                     },
-                    {$unwind:"$lesson"}
+                    {$unwind: "$lesson"}
                 ]).toArray((err, result) => {
                     if (err) {
                         console.log(err)
@@ -5188,14 +5199,14 @@ module.exports.getAllExams = (usrId, cb)=> {
 };
 
 module.exports.getStudentByLevel = (lvlId, cb)=> {
-    logger.info("levelId" , lvlId)
+    logger.info("levelId", lvlId)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
             cb(-1)
         }
         else {
-            var con = db.db('englishAcademy')  
+            var con = db.db('englishAcademy')
             if (lvlId == 0) {
                 lvlId = 0
             }
@@ -5219,16 +5230,16 @@ module.exports.getStudentByLevel = (lvlId, cb)=> {
                         as: "student"
                     }
 
-                },{
+                }, {
                     $unwind: "$student"
                 },
                 {
-                    $replaceRoot: { newRoot: "$student" }
+                    $replaceRoot: {newRoot: "$student"}
                 }
 
             ]).toArray((err, result) => {
                 if (err) {
-                    logger.error("err" , err)
+                    logger.error("err", err)
                     cb(-1)
                 }
                 else if (result == null) {

@@ -26,6 +26,6 @@ db.getCertificatePermission(usrId , (stus) =>{
 })
 // let student = {}
 // let chatroom = {}
-// mongo.postCurrentLessonCharoom("5c768b5e4c8a2011c7119a24" , (del)=>{
-//     console.log(del)
-// })
+mongo.editResult("5cce3c04a685207160e9a8e8" , 0  ,usrId, (del)=>{
+    console.log(del)
+})
