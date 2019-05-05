@@ -3020,6 +3020,7 @@ module.exports.getStuByUsername = (username, cb)=> {
 }
 
 module.exports.stuPlacement = (placeInfo, cb)=> {
+    logger.info("placeInfo" , placeInfo)
     if (placeInfo.lsnId == 0) {
         module.exports.getFirstLesson((result)=> {
             if (result == -1) {
