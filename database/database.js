@@ -4049,7 +4049,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                 updateInfo.exam.newScore = 0
                                 updateInfo.examTimePassed = new Date().getTime()
                                 updateInfo.exam.questionTrue = 0
-
+                                updateInfo.passedTime = info.passedTime
                                 module.exports.editResultForAnswerQ(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                                     if (updatedResult == -1) {
                                         cb(-1)
@@ -4084,6 +4084,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                         updateInfo.exam.permission = true
                                         // updateInfo.answer = true
                                         updateInfo.type = info.type
+                                        updateInfo.passedTime = info.passedTime
                                         module.exports.editResultForAnswerQ(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                                             if (updatedResult == -1) {
                                                 cb(-1)
@@ -4210,6 +4211,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                         // updateInfo.answer = true
                                         updateInfo.exam.newScore = info.score
                                         updateInfo.examTimePassed = new Date().getTime()
+                                        updateInfo.passedTime = info.passedTime
                                         module.exports.editResultForAnswerQ(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                                             if (updatedResult == -1) {
                                                 cb(-1)
@@ -4244,6 +4246,7 @@ module.exports.answerQuestion = (info, cb)=> {
             updateInfo.type = info.type
             updateInfo.timePassed = new Date().getTime()
             updateInfo.Score = true
+            updateInfo.passedTime = info.passedTime
             module.exports.editResultForAnswerQ(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                 if (updatedResult == -1) {
                     cb(-1)
@@ -4397,6 +4400,8 @@ module.exports.answerQuestion = (info, cb)=> {
                             // updateInfo.answer = true
                             updateInfo.quiz.newScore = 0
                             updateInfo.timePassed = new Date().getTime()
+                            updateInfo.passedTime = info.passedTime
+
                             module.exports.editResultForAnswerQ(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                                 if (updatedResult == -1) {
                                     cb(-1)
@@ -4429,6 +4434,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                         updateInfo.exam.permission = true
                                         // updateInfo.answer = true
                                         updateInfo.type = info.type
+                                        updateInfo.passedTime = info.passedTime
                                         module.exports.editResultForAnswerQ(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                                             if (updatedResult == -1) {
                                                 cb(-1)
@@ -4568,6 +4574,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                         updateInfo.answer = true
                                         updateInfo.quiz.newScore = info.score
                                         updateInfo.timePassed = new Date().getTime()
+                                        updateInfo.passedTime = info.passedTime
                                         module.exports.editResultForAnswerQ(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                                             if (updatedResult == -1) {
                                                 cb(-1)
@@ -4601,12 +4608,15 @@ module.exports.answerQuestion = (info, cb)=> {
         }
         else {
             let updateInfo = {}
+            updateInfo.passedTime = info.passedTime
+
             updateInfo.quiz = {}
             // updateInfo.answer = true
             updateInfo.quiz.newScore = 0
             updateInfo.questionTrue = 0
             updateInfo.type = info.type
             updateInfo.timePassed = new Date().getTime()
+            updateInfo.passedTime = info.passedTime
             module.exports.editResultForAnswerQ(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                 if (updatedResult == -1) {
                     cb(-1)
