@@ -4254,6 +4254,7 @@ module.exports.answerQuestion = (info, cb)=> {
             // updateInfo.answer = true
             updateInfo.timePassed = new Date().getTime()
             updateInfo.questionTrue = 1
+            updateInfo.passedTime = info.passedTime
             module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
                 if (result == -1) {
                     cb(-1)
@@ -4271,6 +4272,8 @@ module.exports.answerQuestion = (info, cb)=> {
                         updateInfo.quiz.newScore = 0
                         if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
                             let updateInf = {}
+                            updateInf.passedTime = info.passedTime
+
                             updateInf.quiz = {}
                             // updateInf.answer = true
                             updateInf.exam = {}
@@ -4394,7 +4397,7 @@ module.exports.answerQuestion = (info, cb)=> {
                     else {
                         updateInfo.quiz = {}
                         updateInfo.quiz.newScore = info.score
-                        updateInfo.quiz.questionTrue = 1
+                        updateInfo.questionTrue = 1
                         // updateInfo.answer = true
                         updateInfo.type = info.type
                         module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
@@ -4587,9 +4590,10 @@ module.exports.answerQuestion = (info, cb)=> {
             updateInfo.quiz = {}
             // updateInfo.answer = true
             updateInfo.quiz.newScore = 0
-            updateInfo.quiz.questionTrue = 0
+            updateInfo.questionTrue = 0
             updateInfo.type = info.type
             updateInfo.timePassed = new Date().getTime()
+            updateInfo.passedTime = info.passedTime
             module.exports.editResultForAnswerQ(info.usrId, info.lsnId, updateInfo, (updatedResult)=> {
                 if (updatedResult == -1) {
                     cb(-1)
