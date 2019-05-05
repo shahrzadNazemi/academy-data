@@ -4566,6 +4566,9 @@ module.exports.editStudent = (stuInfo, stdId, cb)=> {
                         })
                 }
                 else {
+                    if(stuInfo.lastPassedLesson && stuInfo.lastPassedLesson != 0){
+                        stuInfo.lastPassedLesson = new ObjectID(stuInfo.lastPassedLesson)
+                    }
                     con.collection("student").findOneAndUpdate({"_id": new ObjectID(stdId)}, {
                             $set: {
                                 "username": stuInfo.username,
