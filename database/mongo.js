@@ -3366,7 +3366,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             console.log(err)
                             cb(-1)
                         }
-                        else if (result.lastErrorObject.n == 0) {
+                        else if (result.value == null) {
                             con.collection("result").findOneAndUpdate({
                                     "lsnId": new ObjectID(info.lsnId),
                                     "usrId": new ObjectID(usrId)
