@@ -3187,13 +3187,14 @@ module.exports.editNote = (info, ntId, cb)=> {
 };
 
 module.exports.editResultForAnswerQuestion = (usrId, lsnId, info, cb)=> {
-    logger.info("info getting in editRessultForAnswerQ", info)
     if(info.type == "quiz"){
         info.quiz.passedTime = info.passedTime
     }
     if(info.type == "exam"){
         info.exam.passedTime = info.passedTime
     }
+    logger.info("info getting in editRessultForAnswerQ", info)
+
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
