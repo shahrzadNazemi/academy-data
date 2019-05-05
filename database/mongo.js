@@ -3269,8 +3269,8 @@ module.exports.editResultForNewLesson = (usrId, info, cb)=> {
 
 module.exports.editResult = (usrId, lsnId, info, cb)=> {
     logger.info("editResultInfo in mongo file", info )
-    logger.info("editResultInfo in mongo file", usrId )
-    logger.info("editResultInfo in mongo file", lsnId )
+    logger.info("editResultInfo usrId in mongo file", usrId )
+    logger.info("editResultInfo lsnId in mongo file", lsnId )
 
 
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -3343,7 +3343,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
 
             }
             else if (lsnId == 0) {
-                console.log("hey in lsnId =0")
+                console.log("hey in lsnId =0" , new ObjectID(usrId))
 
                 con.collection("result").findOneAndUpdate({
                         "lsnId": lsnId,
@@ -3366,7 +3366,7 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                             console.log(err)
                             cb(-1)
                         }
-                        else if (result.value == null) {
+                        else if (result.lastErrorObject.n == 0) {
                             con.collection("result").findOneAndUpdate({
                                     "lsnId": new ObjectID(info.lsnId),
                                     "usrId": new ObjectID(usrId)
