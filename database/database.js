@@ -3644,7 +3644,7 @@ module.exports.getNextLesson = (lsnId, cb)=> {
         else {
             module.exports.getLessonByLvlId(lesson[0].lvlId, (lessonsOfLevel)=> {
                 if (lessonsOfLevel == 0) {
-                    cb(lesson)
+                    cb(lesson[0])
                 }
                 else if (lessonsOfLevel == -1) {
                     cb(-1)
@@ -3670,7 +3670,7 @@ module.exports.getNextLesson = (lsnId, cb)=> {
 
                                 module.exports.getLessonByLvlId(newLevel._id, (lessons)=> {
                                     if (lessons == 0) {
-                                        cb(lesson)
+                                        cb(lesson[0])
                                     }
                                     else if (lessons == -1) {
                                         cb(-1)
@@ -3694,6 +3694,7 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                         });
                         let newLesson = lessonsOfLevel[index + 1]
                         if (newLesson) {
+                            logger.info("here" , newLesson)
                             newLesson.level = lesson[0].level
                             cb(newLesson)
                         }
@@ -4960,7 +4961,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                                         updateInfo.quiz.quizScore = data[0].totalScore
                                         updateInfo.quiz.quizCount = data[0].count
                                     }
-                                    console.log("here in lsnId", updateInfo)
+                                    logger.info("here in lsnId", updateInfo)
                                     mongo.editResult(usrId, lsnId, updateInfo, (updatedInfo)=> {
                                         if (updatedInfo == -1) {
                                             cb(-1)

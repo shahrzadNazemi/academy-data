@@ -21,11 +21,11 @@ let usrId ="5ca81385d4f46f731bfa2b97"
 let lvlId = "5ca048f8d4f46f731bfa2b7a"
 // db.addCurrentLevelChatRoom( usrId ,(level)=>{
 // })
-db.getCertificatePermission(usrId , (stus) =>{
-    console.log(stus)
-})
+// db.getCertificatePermission(usrId , (stus) =>{
+//     console.log(stus)
+// })
 // let student = {}
 // let chatroom = {}
-mongo.editResult("5cce3c04a685207160e9a8e8" , 0  ,usrId, (del)=>{
-    console.log(del)
+db.getNextLesson("5ccd2c194b2f09491c513ffb" , (del)=>{
+    console.log("del",del)
 })
