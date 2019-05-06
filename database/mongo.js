@@ -1418,8 +1418,8 @@ module.exports.postResult = (info, cb)=> {
             if (info.lsnId != 0) {
                 info.lsnId = new ObjectID(info.lsnId)
             }
-            info.quiz.passedTime = ""
-            info.exam.passedTime = ""
+            info.quiz.passedTime = "0"
+            info.exam.passedTime = "0"
 
 
             var con = db.db('englishAcademy')
