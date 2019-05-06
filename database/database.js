@@ -330,6 +330,7 @@ module.exports.getStuPlacement = (usrId, cb)=> {
 };
 
 module.exports.addExam = (exInfo, cb)=> {
+    
     mongo.postExam(exInfo, (result)=> {
         if (result == -1) {
             cb(-1)
@@ -2147,12 +2148,18 @@ module.exports.getCertificatePermission = (usrId, cb)=> {
                             cb(false)
                         }
                         else {
-                            if (lastRes.exam.exId.equals(lastExam._id) && lastRes.exam.getScore !=0 ) {
+                            if(lastRes.exam.exId != 0){
+                                if (lastRes.exam.exId.equals(lastExam._id) && lastRes.exam.getScore !=0 ) {
+                                    cb(true)
+                                }
+                                else {
+                                    cb(false)
+                                }
+                            }
+                            else{
                                 cb(true)
                             }
-                            else {
-                                cb(false)
-                            }
+                           
                         }
                     })
 
