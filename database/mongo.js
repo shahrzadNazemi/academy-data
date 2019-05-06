@@ -1406,6 +1406,7 @@ module.exports.postCategory = (info, cb)=> {
 };
 
 module.exports.postResult = (info, cb)=> {
+    logger.info("postResult" , info)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)

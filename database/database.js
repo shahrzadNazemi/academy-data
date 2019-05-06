@@ -3446,7 +3446,7 @@ module.exports.addResult = (resultInfo, cb)=> {
                         resultInfo.exam.time = 0
                         resultInfo.exam.questionTrue = 0;
                         resultInfo.exam.getScore = 0
-                        resultInfo.exam._id = 0
+                        resultInfo.exam.exId = 0
                         resultInfo.exam.permission = false
                         resultInfo.exam.examScore = 0
                         resultInfo.exam.examCount = 0
@@ -3464,6 +3464,12 @@ module.exports.addResult = (resultInfo, cb)=> {
                         })
                     }
                     else {
+                        resultInfo.exam = {}
+                        resultInfo.exam.time =0
+                        resultInfo.exam.questionTrue = 0;
+                        resultInfo.exam.getScore = 0
+                        resultInfo.exam.exId = 0
+                        resultInfo.exam.permission = false
                         if (data.length > 1) {
                             resultInfo.exam.examScore = data[0].totalScore
                             resultInfo.exam.examCount = data[0].count
@@ -3477,7 +3483,6 @@ module.exports.addResult = (resultInfo, cb)=> {
                             resultInfo.quiz.quizCount = data[0].count
                         }
                         module.exports.getQuestionsScoreCountByLesson(resultInfo.lsnId, (data)=> {
-
                             if (data == -1) {
                                 cb(-1)
                             }
@@ -3529,7 +3534,7 @@ module.exports.addResult = (resultInfo, cb)=> {
                 resultInfo.exam.time = exam.time
                 resultInfo.exam.questionTrue = 0;
                 resultInfo.exam.getScore = 0
-                resultInfo.exam._id = exam._id
+                resultInfo.exam.exId = exam._id
                 resultInfo.exam.permission = false
                 module.exports.getQuestionsScoreCountByLesson(resultInfo.lsnId, (data)=> {
 
@@ -4284,7 +4289,6 @@ module.exports.answerQuestion = (info, cb)=> {
                         updateInfo.quiz.newScore = 0
                         if ((result.quiz.questionTrue + 1) / result.quiz.quizCount > 0.6) {
                             let updateInf = {}
-                            updateInf.passedTime = info.passedTime
 
                             updateInf.quiz = {}
                             // updateInf.answer = true
@@ -4295,6 +4299,7 @@ module.exports.answerQuestion = (info, cb)=> {
                             updateInf.quiz.newScore = 0
                             updateInf.quiz.questionTrue = 1
                             updateInf.questionTrue = 1
+                            updateInf.passedTime = info.passedTime
 
                             module.exports.editResultForAnswerQ(info.usrId, info.lsnId, updateInf, (res)=> {
                                 module.exports.getNextLesson(info.lsnId, (newLesson)=> {
@@ -4367,6 +4372,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                     newResult.exam = {}
                                                                     newResult.timePassed = ""
                                                                     newResult.passedLesson = false
+
                                                                     module.exports.getResultByLsnUsr(info.usrId, newLesson._id, (existingResult)=> {
                                                                         if (existingResult == -1 || existingResult != 0) {
                                                                             cb(newLesson)
