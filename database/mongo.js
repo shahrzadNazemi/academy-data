@@ -4264,18 +4264,35 @@ module.exports.getStudentByLesson = (lsnId, cb)=> {
 };
 
 module.exports.getStuByPassedLesson = (lsnId, cb)=> {
+    
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
             cb(-1)
         }
         else {
-            // if (typeof lsnId == 'number') {
+            // if (typeof lsnId == 'number') {9
             //     lsnId = parseInt(lsnId)
             // }
             var con = db.db('englishAcademy')
-            con.collection("student").find({"lastPassedLesson": new ObjectID(`${lsnId}`)}).toArray((err, result) => {
+            con.collection("student").aggregate([
+                {$match: {"lastPassedLesson": new ObjectID(lsnId)}},
+                {
+                    $lookup: {
+                        from: "view",
+                        localField: "_id",
+                        foreignField: "usrId",
+                        as: "view"
+                    },
+              
+                },  {$unwind:"$view"},
+                {$match: {"view.lsnId":{$ne:new ObjectID(lsnId)}} }
+                
+                
+
+            ]).toArray((err, result) => {
                 if (err) {
+                    logger.error("db eror" , err)
                     cb(-1)
                 }
                 else if (result == null) {

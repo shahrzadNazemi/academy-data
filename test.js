@@ -26,6 +26,6 @@ let lvlId = "5ca048f8d4f46f731bfa2b7a"
 // })
 // let student = {}
 // let chatroom = {}
-db.getNextLesson("5ccd2c194b2f09491c513ffb" , (del)=>{
+db.getStudentByPassedLesson("5ccd2c194b2f09491c513ffb" , (del)=>{
     console.log("del",del)
 })

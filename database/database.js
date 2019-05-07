@@ -5409,15 +5409,12 @@ module.exports.addChatroom = (data, cb)=> {
                 module.exports.addCurrentLessonChatRoom(data, (addedChatroom)=> {
                     module.exports.getFirstLesson((firstLesson)=> {
 
-                        if (firstLesson._id.equals(data.lesson.value)) {
-                            cb(added)
-                        }
-                        else {
+
                             module.exports.addPastLessonChatRoom(data, (add)=> {
                                 cb(added)
-                            })
 
-                        }
+
+                        
 
                     })
                 })
@@ -5447,20 +5444,22 @@ module.exports.addCurrentLessonChatRoom = (data, cb)=> {
 
 module.exports.addPastLessonChatRoom = (data, cb)=> {
     data.position = "passedLesson"
-    module.exports.getStudentByPassedLesson(data.lesson.value, (student)=> {
-        mongo.postCurrentLessonCharoom(student, data, (added)=> {
-            if (added == -1) {
-                cb(-1)
-            }
-            else {
-                logger.info("added passed", added)
-                cb(added)
-            }
+        module.exports.getStudentByPassedLesson(data.lesson.value, (student)=> {
+            mongo.postCurrentLessonCharoom(student, data, (added)=> {
+                if (added == -1) {
+                    cb(-1)
+                }
+                else {
+                    logger.info("added passed", added)
+                    cb(added)
+                }
+            })
         })
-    })
+
 }
 
 module.exports.getStudentByPassedLesson = (lsnId, cb)=> {
+
     mongo.getStuByPassedLesson(lsnId, (added)=> {
         if (added == -1) {
             cb(-1)
