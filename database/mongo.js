@@ -4692,7 +4692,9 @@ module.exports.getSupById = (supId, cb)=> {
                 supId = 0
             }
             else {
-                supId = new ObjectID(`${supId}`)
+                if(supId != 0){
+                    supId = new ObjectID(`${supId}`)
+                }
             }
             var con = db.db('englishAcademy')
             con.collection("supporter").find(
