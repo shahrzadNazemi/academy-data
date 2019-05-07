@@ -5410,12 +5410,11 @@ module.exports.addChatroom = (data, cb)=> {
                     module.exports.getFirstLesson((firstLesson)=> {
 
 
-                            module.exports.addPastLessonChatRoom(data, (add)=> {
-                                cb(added)
+                        module.exports.addPastLessonChatRoom(data, (add)=> {
+                            cb(added)
 
 
-                        
-
+                        })
                     })
                 })
             }

@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f0bf0fa1-bb0c-4322-86b6-038bccef4534" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/database.js" afterPath="$PROJECT_DIR$/database/database.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database/mongo.js" afterPath="$PROJECT_DIR$/database/mongo.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.js" afterPath="$PROJECT_DIR$/test.js" />
     </list>
     <ignored path="analyze.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,10 +35,10 @@
       <file leaf-file-name="database.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/database/database.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="28">
-              <caret line="5412" column="0" selection-start-line="5412" selection-start-column="0" selection-end-line="5412" selection-end-column="0" />
+            <state relative-caret-position="168">
+              <caret line="5416" column="24" selection-start-line="5416" selection-start-column="24" selection-end-line="5416" selection-end-column="24" />
               <folding>
-                <element signature="e#203216#203518#0" expanded="false" />
+                <element signature="e#202902#203204#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -3300,12 +3297,12 @@
       <workItem from="1557030930803" duration="23730000" />
       <workItem from="1557120676779" duration="9065000" />
       <workItem from="1557203691419" duration="1171000" />
-      <workItem from="1557207832635" duration="8228000" />
+      <workItem from="1557207832635" duration="8325000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1303166000" />
+    <option name="totallyTimeSpent" value="1303263000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -3318,7 +3315,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991454" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -3328,7 +3325,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4068376" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290469" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.61538464" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37264958" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15506808" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -6037,10 +6034,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/database/database.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="5412" column="0" selection-start-line="5412" selection-start-column="0" selection-end-line="5412" selection-end-column="0" />
+        <state relative-caret-position="168">
+          <caret line="5416" column="24" selection-start-line="5416" selection-start-column="24" selection-end-line="5416" selection-end-column="24" />
           <folding>
-            <element signature="e#203216#203518#0" expanded="false" />
+            <element signature="e#202902#203204#0" expanded="false" />
           </folding>
         </state>
       </provider>
