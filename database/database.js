@@ -5405,16 +5405,9 @@ module.exports.addChatroom = (data, cb)=> {
             data.blocked = 0;
             data.blockedTime = ""
             if (!Object.keys(data.lesson).length == 0) {
-
                 module.exports.addCurrentLessonChatRoom(data, (addedChatroom)=> {
-                    module.exports.getFirstLesson((firstLesson)=> {
-
-
                         module.exports.addPastLessonChatRoom(data, (add)=> {
                             cb(added)
-
-
-                        })
                     })
                 })
             }
@@ -5443,6 +5436,7 @@ module.exports.addCurrentLessonChatRoom = (data, cb)=> {
 
 module.exports.addPastLessonChatRoom = (data, cb)=> {
     data.position = "passedLesson"
+    logger.info("data" , data)
         module.exports.getStudentByPassedLesson(data.lesson.value, (student)=> {
             mongo.postCurrentLessonCharoom(student, data, (added)=> {
                 if (added == -1) {
