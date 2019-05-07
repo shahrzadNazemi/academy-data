@@ -307,7 +307,7 @@ module.exports.getAllTickets = (supId, cb)=> {
         }
         else {
             logger.info("supporter", supporter)
-            mongo.getTkts(supporter.department._id, (ticket)=> {
+            mongo.getTkts(supporter.department[0].value, (ticket)=> {
                 if (ticket == -1) {
                     cb(-1)
                 }
