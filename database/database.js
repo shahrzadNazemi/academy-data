@@ -102,12 +102,42 @@ module.exports.addLevel = (levelInfo, cb)=> {
 };
 
 module.exports.addTicket = (tktInfo, cb)=> {
-    mongo.postTicket(tktInfo, (result)=> {
-        if (result == -1) {
+    mongo.postTicket(tktInfo, (ticket)=> {
+        if (ticket == -1) {
             cb(-1)
         }
         else {
-            cb(result)
+            module.exports.getTicketTypeById(tktInfo.depId, (department)=> {
+                if (department == 0 || department == -1) {
+                    ticket.department = {}
+
+                }
+                else {
+                    ticket.department = {}
+                    ticket.department.value = department._id
+                    ticket.department.label = department.title
+                }
+                module.exports.getStuById(ticket.usrId, (student)=> {
+                    if (student == -1 || student == 0) {
+                        ticket.student = {}
+                    }
+                    else {
+                        logger.info("student", ticket)
+                        ticket.student = student
+                        module.exports.getSupportById(ticket.supId, (supporter)=> {
+                            if (supporter == -1 || supporter == 0) {
+                                ticket.supporter = {}
+                            }
+                            else {
+                                ticket.supporter = supporter
+                            }
+                          cb(ticket)
+
+                        })
+                    }
+                })
+            })
+
         }
     })
 };
@@ -801,7 +831,8 @@ module.exports.getTextById = (txtId, cb)=> {
 
 module.exports.updateQuestion = (updateInfo, QId, cb)=> {
 
-    module.exports.getQuestionById(QId, (question)=> {
+    module.exports.getQuestionById(QId, (question)=>
+    {
         if (question == -1) {
             cb(-1)
         }
