@@ -42,7 +42,7 @@ module.exports.loginForStudent = (loginInfo, cb)=> {
             cb(0)
         }
         else {
-            module.exports.getCertificatePermission(result._id , (certificatePermission)=>{
+            module.exports.getCertificatePermission(result._id, (certificatePermission)=> {
                 result.certificatePermission = certificatePermission
                 if (result.purchaseStatus[0] != undefined) {
 
@@ -124,16 +124,13 @@ module.exports.addTicket = (tktInfo, cb)=> {
                     else {
                         logger.info("student", ticket)
                         ticket.student = student
-                        module.exports.getSupportById(ticket.supId, (supporter)=> {
-                            if (supporter == -1 || supporter == 0) {
-                                ticket.supporter = {}
-                            }
-                            else {
-                                ticket.supporter = supporter
-                            }
-                          cb(ticket)
 
-                        })
+
+                        ticket.supporter = {}
+
+                        cb(ticket)
+
+
                     }
                 })
             })
@@ -360,7 +357,7 @@ module.exports.getStuPlacement = (usrId, cb)=> {
 };
 
 module.exports.addExam = (exInfo, cb)=> {
-    
+
     mongo.postExam(exInfo, (result)=> {
         if (result == -1) {
             cb(-1)
@@ -831,8 +828,7 @@ module.exports.getTextById = (txtId, cb)=> {
 
 module.exports.updateQuestion = (updateInfo, QId, cb)=> {
 
-    module.exports.getQuestionById(QId, (question)=>
-    {
+    module.exports.getQuestionById(QId, (question)=> {
         if (question == -1) {
             cb(-1)
         }
@@ -1585,7 +1581,7 @@ module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
         })
 
     }
-    else{
+    else {
         module.exports.getChatAdminById(caId, (support)=> {
             if (support == -1) {
                 cb(-1)
@@ -2169,28 +2165,28 @@ module.exports.getCertificatePermission = (usrId, cb)=> {
             cb(false)
         }
         else {
-            module.exports.getResultByLsnUsr(usrId , resultOfUser[0].lsnId , (lastRes)=>{
+            module.exports.getResultByLsnUsr(usrId, resultOfUser[0].lsnId, (lastRes)=> {
                 if (resultOfUser == -1 || resultOfUser == 0) {
                     cb(false)
                 }
-                else{
+                else {
                     module.exports.getLastExam((lastExam)=> {
                         if (lastExam == -1 || lastExam == 0) {
                             cb(false)
                         }
                         else {
-                            if(lastRes.exam.exId != 0){
-                                if (lastRes.exam.exId.equals(lastExam._id) && lastRes.exam.getScore !=0 ) {
+                            if (lastRes.exam.exId != 0) {
+                                if (lastRes.exam.exId.equals(lastExam._id) && lastRes.exam.getScore != 0) {
                                     cb(true)
                                 }
                                 else {
                                     cb(false)
                                 }
                             }
-                            else{
+                            else {
                                 cb(true)
                             }
-                           
+
                         }
                     })
 
@@ -2435,22 +2431,22 @@ module.exports.unblockUsers = ()=> {
 module.exports.updateStudent = (updateInfo, stdId, cb)=> {
     //for editting studentChatroom
     if (stdId == 0) {
-      
-                mongo.editStudentChatroom(updateInfo, updateInfo._id, (result)=> {
-                    if (result == -1) {
-                        cb(-1)
-                    }
-                    else if (result == 0) {
-                        cb(0)
-                    }
-                    else if (result == -2) {
-                        cb(-2)
-                    }
-                    else {
-                        cb(result)
-                    }
-                })
-           
+
+        mongo.editStudentChatroom(updateInfo, updateInfo._id, (result)=> {
+            if (result == -1) {
+                cb(-1)
+            }
+            else if (result == 0) {
+                cb(0)
+            }
+            else if (result == -2) {
+                cb(-2)
+            }
+            else {
+                cb(result)
+            }
+        })
+
     }
     else {
         if (updateInfo.warned) {
@@ -2529,21 +2525,22 @@ module.exports.updateStudent = (updateInfo, stdId, cb)=> {
                                 cb(-2)
                             }
                             else {
-                               if(updateInfo.pgId){
-                                   module.exports.getStuById(stdId, (student)=> {
-                                       if (student == -1) {
-                                           cb(-1)
-                                       }
-                                       else if (student == 0) {
-                                           cb(0)
-                                       }
-                                       else {
-                                           cb(student.purchaseStatus)
-                                       }})
-                               }
-                                else{
-                                   cb(result)
-                               }
+                                if (updateInfo.pgId) {
+                                    module.exports.getStuById(stdId, (student)=> {
+                                        if (student == -1) {
+                                            cb(-1)
+                                        }
+                                        else if (student == 0) {
+                                            cb(0)
+                                        }
+                                        else {
+                                            cb(student.purchaseStatus)
+                                        }
+                                    })
+                                }
+                                else {
+                                    cb(result)
+                                }
 
                             }
                         })
@@ -3058,7 +3055,7 @@ module.exports.getStuByUsername = (username, cb)=> {
 }
 
 module.exports.stuPlacement = (placeInfo, cb)=> {
-    logger.info("placeInfo" , placeInfo)
+    logger.info("placeInfo", placeInfo)
     if (placeInfo.lsnId == 0) {
         module.exports.getFirstLesson((result)=> {
             if (result == -1) {
@@ -3149,7 +3146,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                     resultInfo.exam = {}
                                                     resultInfo.timePassed = ""
                                                     resultInfo.passedLesson = false
-                                                    logger.info("result info to go to updateResult in placememnt" , resultInfo)
+                                                    logger.info("result info to go to updateResult in placememnt", resultInfo)
                                                     module.exports.updateResult(student[0]._id, 0, resultInfo, (addedResult)=> {
                                                         cb(lesson)
                                                     })
@@ -3503,7 +3500,7 @@ module.exports.addResult = (resultInfo, cb)=> {
                     }
                     else {
                         resultInfo.exam = {}
-                        resultInfo.exam.time =0
+                        resultInfo.exam.time = 0
                         resultInfo.exam.questionTrue = 0;
                         resultInfo.exam.getScore = 0
                         resultInfo.exam.exId = 0
@@ -3737,7 +3734,7 @@ module.exports.getNextLesson = (lsnId, cb)=> {
                         });
                         let newLesson = lessonsOfLevel[index + 1]
                         if (newLesson) {
-                            logger.info("here" , newLesson)
+                            logger.info("here", newLesson)
                             newLesson.level = lesson[0].level
                             cb(newLesson)
                         }
@@ -3965,7 +3962,7 @@ module.exports.answerQuestion = (info, cb)=> {
             updateInfo.answer = true
             updateInfo.examTimePassed = new Date().getTime()
             updateInfo.questionTrue = 1
-            updateInfo.passedTime  = info.passedTime
+            updateInfo.passedTime = info.passedTime
 
             module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
                 if (result == -1) {
@@ -3986,7 +3983,7 @@ module.exports.answerQuestion = (info, cb)=> {
 
                             if ((result.exam.questionTrue + 1) / result.exam.examCount > 0.6) {
                                 let updateInf = {}
-                                updateInf.passedTime  = info.passedTime
+                                updateInf.passedTime = info.passedTime
 
                                 updateInf.quiz = {}
                                 updateInfo.exam.questionTrue = 0
@@ -4184,7 +4181,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                             let newView = {}
                                                                             newView.video = []
                                                                             newView.sound = []
-                                                                            if(lessonDEtails[0].video) {
+                                                                            if (lessonDEtails[0].video) {
                                                                                 for (var i = 0; i < lessonDEtails[0].video.length; i++) {
                                                                                     newView.video[i] = {}
                                                                                     newView.video[i]._id = lessonDEtails[0].video[i]._id
@@ -4193,7 +4190,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                                 }
 
                                                                             }
-                                                                            if(lessonDEtails[0].sound){
+                                                                            if (lessonDEtails[0].sound) {
                                                                                 for (var i = 0; i < lessonDEtails[0].sound.length; i++) {
                                                                                     newView.sound[i] = {}
                                                                                     newView.sound[i]._id = lessonDEtails[0].sound[i]._id
@@ -4372,7 +4369,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                             let newView = {}
                                                             newView.video = []
                                                             newView.sound = []
-                                                            if(lessonDEtails[0].video){
+                                                            if (lessonDEtails[0].video) {
                                                                 for (var i = 0; i < lessonDEtails[0].video.length; i++) {
                                                                     newView.video[i] = {}
                                                                     newView.video[i]._id = lessonDEtails[0].video[i]._id
@@ -4381,7 +4378,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                 }
 
                                                             }
-                                                            if(lessonDEtails[0].sound){
+                                                            if (lessonDEtails[0].sound) {
                                                                 for (var i = 0; i < lessonDEtails[0].sound.length; i++) {
                                                                     newView.sound[i] = {}
                                                                     newView.sound[i]._id = lessonDEtails[0].sound[i]._id
@@ -4554,7 +4551,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                                         newView.lsnId = lesson[0]._id
                                                                                         newView.video = []
                                                                                         newView.sound = []
-                                                                                        if(lesson[0].video){
+                                                                                        if (lesson[0].video) {
                                                                                             for (var i = 0; i < lesson[0].video.length; i++) {
                                                                                                 newView.video[i] = {}
                                                                                                 newView.video[i]._id = lesson[0].video[i]._id
@@ -4562,7 +4559,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                                             }
 
                                                                                         }
-                                                                                        if(lesson[0].sound){
+                                                                                        if (lesson[0].sound) {
                                                                                             for (var i = 0; i < lesson[0].sound.length; i++) {
                                                                                                 newView.sound[i] = {}
                                                                                                 newView.sound[i]._id = lesson[0].sound[i]._id
@@ -5229,15 +5226,15 @@ module.exports.updateChatroom = (updateInfo, chId, cb)=> {
                         cb(0)
                     }
                     else {
-                        if(updateInfo.title){
-                            let chatAdminChatroom ={}
+                        if (updateInfo.title) {
+                            let chatAdminChatroom = {}
                             chatAdminChatroom.label = updateInfo.title
                             chatAdminChatroom.value = chId
-                            module.exports.updateChatAdmin(chatAdminChatroom , 0 , (updatedChatAdmin)=>{
+                            module.exports.updateChatAdmin(chatAdminChatroom, 0, (updatedChatAdmin)=> {
                                 cb(result)
                             })
                         }
-                        else{
+                        else {
                             cb(result)
 
                         }
@@ -5410,12 +5407,12 @@ module.exports.addChatroom = (data, cb)=> {
             if (!Object.keys(data.lesson).length == 0) {
 
                 module.exports.addCurrentLessonChatRoom(data, (addedChatroom)=> {
-                    module.exports.getFirstLesson((firstLesson)=>{
+                    module.exports.getFirstLesson((firstLesson)=> {
 
-                        if(firstLesson._id.equals(data.lesson.value)){
+                        if (firstLesson._id.equals(data.lesson.value)) {
                             cb(added)
                         }
-                        else{
+                        else {
                             module.exports.addPastLessonChatRoom(data, (add)=> {
                                 cb(added)
                             })
@@ -5456,7 +5453,7 @@ module.exports.addPastLessonChatRoom = (data, cb)=> {
                 cb(-1)
             }
             else {
-                logger.info("added passed" , added)
+                logger.info("added passed", added)
                 cb(added)
             }
         })
@@ -5464,14 +5461,14 @@ module.exports.addPastLessonChatRoom = (data, cb)=> {
 }
 
 module.exports.getStudentByPassedLesson = (lsnId, cb)=> {
-        mongo.getStuByPassedLesson(lsnId, (added)=> {
-            if (added == -1) {
-                cb(-1)
-            }
-            else {
-                cb(added)
-            }
-        })
+    mongo.getStuByPassedLesson(lsnId, (added)=> {
+        if (added == -1) {
+            cb(-1)
+        }
+        else {
+            cb(added)
+        }
+    })
 }
 
 
