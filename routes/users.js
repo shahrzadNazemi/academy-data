@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var database = require('../database/database');
 let logger = require('../util/logger');
+let smsPanel = require('../util/smsPanel')
 
 
 router.post('/admin/login', (req, res) => {
@@ -445,6 +446,37 @@ router.post('/student/resendVerification', (req, res)=> {
     })
 });
 
+router.post('/student/forgetPassVerify', (req, res)=> {
+    console.log("body in resend" , req.body)
+    database.verifyStu(req.body, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == -2) {
+            res.status(403).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
+router.post('/student/forgetPass', (req, res)=> {
+    console.log("body in forgetPass" , req.body)
+    let data = {}
+    data.usrId = req.body._id
+    data.createdTime = new Date().getTime()
+    data.mobile = req.body.mobile
+    data.verifyCode = Math.floor(1000 + Math.random() * 9000)
+    module.exports.updateVerifyStu(data, (verified)=> {
+        smsPanel.sendVerificationSMS(data, (sent)=> {
+            res.json(verified)
+        })
+    })
+});
+
+
+
 
 router.post('/student/login', (req, res) => {
     database.loginForStudent(req.body, (result)=> {
@@ -638,6 +670,21 @@ router.get('/student/:stdId', (req, res) => {
         }
     })
 });
+
+router.get('/student/mobile/:mobile', (req, res) => {
+    database.getStuByMobile(req.params.mobile, (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+});
+
 
 
 router.delete('/student/:stuId', (req, res) => {

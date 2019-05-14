@@ -2175,6 +2175,9 @@ module.exports.getCertificatePermission = (usrId, cb)=> {
                             cb(false)
                         }
                         else {
+                            logger.info("lastExam" , lastExam)
+                            logger.info("lastRes" , lastRes)
+
                             if (lastRes.exam.exId != 0) {
                                 if (lastRes.exam.exId.equals(lastExam._id) && lastRes.exam.getScore != 0) {
                                     cb(true)
@@ -2263,6 +2266,22 @@ module.exports.getStuById = (stdId, cb)=> {
         }
     })
 };
+
+module.exports.getStuByMobile = (mobile, cb)=> {
+    mongo.getStudentByMobile(mobile, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+
+        }
+    })
+};
+
 
 module.exports.getCertificationById = (certId, cb)=> {
     mongo.getCertById(certId, (result)=> {
@@ -5109,7 +5128,7 @@ module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
                             updateInfo.quiz.questionTrue = 0;
                             updateInfo.quiz.getScore = 0
                             updateInfo.quiz.permission = false
-                            updateInfo.quiz.time = lastResult.quiz.time
+                            updateInfo.quiz.time = lastResult.value.quiz.time
 
                             module.exports.getQuestionsScoreCountByLesson(lsnId, (data)=> {
                                 if (data == -1) {

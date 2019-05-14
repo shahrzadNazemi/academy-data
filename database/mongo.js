@@ -4171,13 +4171,37 @@ module.exports.getStudentById = (stdId, cb)=> {
     })
 };
 
+module.exports.getStudentByMobile = (mobile, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("student").findOne({"mobile": mobile}, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result == null) {
+                    cb(0)
+                }
+                else {
+                    cb(result)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.getVerifyStu = (data, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
             cb(-1)
         }
-
         else {
             if (typeof data.verifyCode == "string") {
                 data.verifyCode = parseInt(data.verifyCode)
@@ -4353,7 +4377,7 @@ module.exports.postCurrentLessonCharoom = (students, chatroom, cb)=> {
                 students.forEach((d, i, students)=> {
                     bulkArray.push({
                         updateOne: {
-                            filter: {_id: new ObjectID(d._id)},
+                            // filter: {_id: new ObjectID(d._id)},Zً
                             update: {$push: {chatrooms: chatroom}}, upsert: true
                         }
                     })
