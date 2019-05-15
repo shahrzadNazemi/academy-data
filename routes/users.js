@@ -468,7 +468,7 @@ router.post('/student/forgetPass', (req, res)=> {
     data.createdTime = new Date().getTime()
     data.mobile = req.body.mobile
     data.verifyCode = Math.floor(1000 + Math.random() * 9000)
-    module.exports.updateVerifyStu(data, (verified)=> {
+    database.addVerifyStu(data, (verified)=> {
         smsPanel.sendVerificationSMS(data, (sent)=> {
             res.json(verified)
         })
@@ -541,6 +541,7 @@ router.get('/student/username/:username', (req, res) => {
 
 
 router.put('/student/:stuId', (req, res) => {
+    logger.info("updateStu body" , req.body)
     database.getStuById(req.params.stuId, (student)=> {
         if (student == -1) {
             res.status(500).end('')
