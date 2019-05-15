@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var database = require('../database/database');
 let logger = require('../util/logger');
+let config = require('../util/config')
 
 
 router.post('/', (req, res)=> {
@@ -148,3 +149,4 @@ router.get('/', (req, res)=> {
 });
 
 module.exports = router
+

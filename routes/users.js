@@ -476,8 +476,6 @@ router.post('/student/forgetPass', (req, res)=> {
 });
 
 
-
-
 router.post('/student/login', (req, res) => {
     database.loginForStudent(req.body, (result)=> {
         if (result == -1) {
