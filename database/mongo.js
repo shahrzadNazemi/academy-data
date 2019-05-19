@@ -268,6 +268,31 @@ module.exports.postExam = (info, cb)=> {
     })
 };
 
+module.exports.postDictData = (info, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("dictionary").insertMany(info, (err, result) => {
+                if (err) {
+                    cb(-1)
+                }
+                else if (result.length == 0) {
+                    cb(0)
+                }
+                else {
+                    cb(result.insertedId)
+                }
+            })
+
+        }
+    })
+};
+
+
 module.exports.editExam = (info, exId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {

@@ -3982,7 +3982,6 @@ module.exports.answerQuestion = (info, cb)=> {
             updateInfo.examTimePassed = new Date().getTime()
             updateInfo.questionTrue = 1
             updateInfo.passedTime = info.passedTime
-
             module.exports.getResultByLsnUsr(info.usrId, info.lsnId, (result)=> {
                 if (result == -1) {
                     cb(-1)
@@ -5439,6 +5438,18 @@ module.exports.addChatroom = (data, cb)=> {
     })
 }
 
+module.exports.addDictData = (data, cb)=> {
+    mongo.postDictData(data, (added)=> {
+        if (added == -1) {
+            cb(-1)
+        }
+        else {
+          cb(added)
+        }
+    })
+}
+
+
 module.exports.addCurrentLessonChatRoom = (data, cb)=> {
     data.position = "currentLesson"
     module.exports.getStuByLessonLsnId(data.lesson.value, (student)=> {
@@ -6023,7 +6034,6 @@ module.exports.delPackage = (pgId, cb)=> {
     })
 };
 
-
 module.exports.getAllPackages = (cb)=> {
     mongo.getAllPackges((addedAdmin)=> {
         if (addedAdmin == -1) {
@@ -6034,7 +6044,6 @@ module.exports.getAllPackages = (cb)=> {
         }
     })
 };
-
 
 module.exports.updatePackage = (updateInfo, pgId, cb)=> {
     module.exports.getPackageById(pgId, (support)=> {
@@ -6064,7 +6073,6 @@ module.exports.updatePackage = (updateInfo, pgId, cb)=> {
     })
 
 };
-
 
 module.exports.addFile = (data, cb)=> {
     mongo.postFile(data, (addedAdmin)=> {
