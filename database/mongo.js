@@ -17,6 +17,7 @@ module.exports.adminLogin = (loginInfo, cb)=> {
                 username: loginInfo.username
             }).toArray((err, result) => {
                 if (err) {
+                    logger.error("adminLoginErr" , err)
                     cb(-1)
                 }
                 else if (result.length == 0) {
