@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 let config = require('../util/config')
-mongoose.connect(`${config.mongoURL}/englishAcademy`,  {useNewUrlParser: true});
+mongoose.connect(`${config.mongoURL}`,  {useNewUrlParser: true});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
