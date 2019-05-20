@@ -170,6 +170,7 @@ module.exports.postNotification = (info, cb)=> {
             cb(-1)
         }
         else {
+            
             var con = db.db('englishAcademy')
             con.collection("notification").insertOne({
                 "text": info.text,
@@ -3941,7 +3942,8 @@ module.exports.editSound = (info, sndId, cb)=> {
                     "lsnId": info.lsnId,
                     "lvlId": info.lvlId,
                     "order": info.order,
-                    "coverUrl": info.coverUrl
+                    "coverUrl": info.coverUrl,
+                    "text":info.text
 
                 }
             }, (err, result)=> {
