@@ -4461,7 +4461,7 @@ module.exports.postCurrentLessonCharoom = (students, chatroom, cb)=> {
                 students.forEach((d, i, students)=> {
                     bulkArray.push({
                         updateOne: {
-                            // filter: {_id: new ObjectID(d._id)},Zً
+                            filter: {_id: new ObjectID(d._id)},
                             update: {$push: {chatrooms: chatroom}}, upsert: true
                         }
                     })
