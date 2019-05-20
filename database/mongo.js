@@ -90,6 +90,7 @@ module.exports.adminLogin = (loginInfo, cb)=> {
 };
 
 module.exports.studentLogin = (loginInfo, cb)=> {
+    logger.info("loginInfo" , loginInfo)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
