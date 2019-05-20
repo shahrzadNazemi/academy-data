@@ -90,7 +90,6 @@ module.exports.adminLogin = (loginInfo, cb)=> {
 };
 
 module.exports.studentLogin = (loginInfo, cb)=> {
-    logger.info("loginInfo" , loginInfo)
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -4449,7 +4448,7 @@ module.exports.postCurrentLevelCharoom = (students, chatroom, cb)=> {
 };
 
 module.exports.postCurrentLessonCharoom = (students, chatroom, cb)=> {
-    logger.info("student.length", chatroom)
+    logger.info("postCurrentLessonCharoom", chatroom)
 
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {

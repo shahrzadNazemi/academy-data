@@ -5452,6 +5452,8 @@ module.exports.addDictData = (data, cb)=> {
 
 module.exports.addCurrentLessonChatRoom = (data, cb)=> {
     data.position = "currentLesson"
+    logger.info("data addCurrentLessonChatRoom" , data)
+
     module.exports.getStuByLessonLsnId(data.lesson.value, (student)=> {
         mongo.postCurrentLessonCharoom(student, data, (added)=> {
             if (added == -1) {
@@ -5465,8 +5467,8 @@ module.exports.addCurrentLessonChatRoom = (data, cb)=> {
 }
 
 module.exports.addPastLessonChatRoom = (data, cb)=> {
-    data.position = "passedLesson"
-    logger.info("data" , data)
+    data.position = "lastLesson"
+    logger.info("data addPastLessonChatRoom" , data)
         module.exports.getStudentByPassedLesson(data.lesson.value, (student)=> {
             mongo.postCurrentLessonCharoom(student, data, (added)=> {
                 if (added == -1) {
