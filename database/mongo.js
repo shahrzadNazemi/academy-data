@@ -4436,34 +4436,10 @@ module.exports.postCurrentLevelCharoom = (students, chatroom, cb)=> {
                     })
                 })
                 con.collection("student").bulkWrite(bulkArray, {ordered: true, w: 1});
-                module.exports.deleteChatroomIfEmptyMoreThan3 = (students)=>{
-                    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
-                        if (err) {
-                            console.log("Err", err)
-                            cb(-1)
-                        }
-                        else {
-                            var con = db.db('englishAcademy')
-                            let bulkArray = []
-                            if (students != 0) {
-                                students.forEach((d, i, students)=> {
-                                    bulkArray.push({
-                                        updateOne: {
-                                            filter: {_id: new ObjectID(d._id)},
-                                            update:  { $pull: { "chatrooms": { "element": { "$exists": false }, $size:4 } } }
+                module.exports.deleteChatroomIfEmptyMoreThan3(students , ()=>{
+                    cb(chatroom)
 
-                                        }
-                                    })
-                                })
-                                con.collection("student").bulkWrite(bulkArray, {ordered: true, w: 1});
-
-                            }
-                        }
-                    })
-
-                }
-
-
+                })
             }
             else {
                 cb(chatroom)
