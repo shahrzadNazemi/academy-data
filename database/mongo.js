@@ -17,7 +17,7 @@ module.exports.adminLogin = (loginInfo, cb)=> {
                 username: loginInfo.username
             }).toArray((err, result) => {
                 if (err) {
-                    logger.error("adminLoginErr" , err)
+                    logger.error("adminLoginErr", err)
                     cb(-1)
                 }
                 else if (result.length == 0) {
@@ -170,7 +170,7 @@ module.exports.postNotification = (info, cb)=> {
             cb(-1)
         }
         else {
-            
+
             var con = db.db('englishAcademy')
             con.collection("notification").insertOne({
                 "text": info.text,
@@ -1322,10 +1322,10 @@ module.exports.postType = (info, cb)=> {
             cb(-1)
         }
         else {
-            if(info.title == "note"){
+            if (info.title == "note") {
                 info.order = 100
             }
-            if(info.title == "quiz"){
+            if (info.title == "quiz") {
                 info.order = 101
             }
             var con = db.db('englishAcademy')
@@ -1345,7 +1345,7 @@ module.exports.postType = (info, cb)=> {
             con.collection("type").insertOne({
                 "title": info.title,
                 "category": info.category,
-                "order":info.order
+                "order": info.order
             }, (err, result) => {
                 if (err != null) {
                     if (err.code == 11000) {
@@ -3943,7 +3943,7 @@ module.exports.editSound = (info, sndId, cb)=> {
                     "lvlId": info.lvlId,
                     "order": info.order,
                     "coverUrl": info.coverUrl,
-                    "text":info.text
+                    "text": info.text
 
                 }
             }, (err, result)=> {
@@ -4151,83 +4151,83 @@ module.exports.postStudent = (stuInfo, cb)=> {
 };
 
 module.exports.postVerifyStu = (data, cb)=> {
-    data.usrId= new ObjectID(data.usrId),
-    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
-        if (err) {
-            console.log("Err", err)
-            cb(-1)
-        }
-        else {
-            var con = db.db('englishAcademy')
+    data.usrId = new ObjectID(data.usrId),
+        MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+            if (err) {
+                console.log("Err", err)
+                cb(-1)
+            }
+            else {
+                var con = db.db('englishAcademy')
 
-            con.collection("verifyStudent").findOneAndUpdate({
-                    "usrId": new ObjectID(data.usrId),
-                    "mobile": data.mobile
-                }, {
+                con.collection("verifyStudent").findOneAndUpdate({
+                        "usrId": new ObjectID(data.usrId),
+                        "mobile": data.mobile
+                    }, {
 
-                    $set: {
-                        "usrId": data.usrId,
-                        "mobile": data.mobile,
-                        "verifyCode": data.verifyCode,
-                        "createdTime": data.createdTime
+                        $set: {
+                            "usrId": data.usrId,
+                            "mobile": data.mobile,
+                            "verifyCode": data.verifyCode,
+                            "createdTime": data.createdTime
 
-                    }
-                },
-                {returnOriginal: false}
-                , (err, result)=> {
+                        }
+                    },
+                    {returnOriginal: false}
+                    , (err, result)=> {
 
 
-                     if (err) {
-                        console.log(err)
-                        cb(-1)
-                    }
-                   else if (result.value == null) {
-                         MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
-                             if (err) {
-                                 console.log("Err", err)
-                                 cb(-1)
-                             }
-                             else {
-                                 var con = db.db('englishAcademy')
+                        if (err) {
+                            console.log(err)
+                            cb(-1)
+                        }
+                        else if (result.value == null) {
+                            MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+                                if (err) {
+                                    console.log("Err", err)
+                                    cb(-1)
+                                }
+                                else {
+                                    var con = db.db('englishAcademy')
 
-                                 con.collection("verifyStudent").insertOne({
-                                     "usrId": data.usrId,
-                                     "mobile": data.mobile,
-                                     "verifyCode": data.verifyCode,
-                                     "createdTime": data.createdTime
+                                    con.collection("verifyStudent").insertOne({
+                                        "usrId": data.usrId,
+                                        "mobile": data.mobile,
+                                        "verifyCode": data.verifyCode,
+                                        "createdTime": data.createdTime
 
-                                 }, (err, result) => {
-                                     if (err != null) {
-                                         if (err.code == 11000) {
-                                             cb(-2)
-                                         }
-                                     }
+                                    }, (err, result) => {
+                                        if (err != null) {
+                                            if (err.code == 11000) {
+                                                cb(-2)
+                                            }
+                                        }
 
-                                     else if (err) {
-                                         console.log(err)
-                                         cb(-1)
-                                     }
-                                     else if (result.length == 0) {
-                                         cb(0)
-                                     }
-                                     else {
-                                         cb(result.insertedId)
-                                     }
-                                 })
+                                        else if (err) {
+                                            console.log(err)
+                                            cb(-1)
+                                        }
+                                        else if (result.length == 0) {
+                                            cb(0)
+                                        }
+                                        else {
+                                            cb(result.insertedId)
+                                        }
+                                    })
 
-                             }
-                         })
+                                }
+                            })
 
-                     }
-                    else {
-                        console.log(result.value)
-                        cb(result.value)
-                    }
-                })
+                        }
+                        else {
+                            console.log(result.value)
+                            cb(result.value)
+                        }
+                    })
 
-        }
+            }
 
-    })
+        })
 }
 
 module.exports.getStudentById = (stdId, cb)=> {
@@ -4462,7 +4462,7 @@ module.exports.postCurrentLessonCharoom = (students, chatroom, cb)=> {
                     bulkArray.push({
                         updateOne: {
                             filter: {_id: new ObjectID(d._id)},
-                            update: {$push: {chatrooms: chatroom}}, upsert: true
+                            update: {$push: {chatrooms: chatroom} , $pull:{chatrooms:{"element": {"$exists": false}},$where: "this.chatrooms.length > 3"}}, upsert: true
                         }
                     })
                 })
