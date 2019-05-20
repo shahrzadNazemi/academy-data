@@ -4448,7 +4448,6 @@ module.exports.postCurrentLevelCharoom = (students, chatroom, cb)=> {
 };
 
 module.exports.postCurrentLessonCharoom = (students, chatroom, cb)=> {
-    logger.info("postCurrentLessonCharoom", chatroom)
 
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
