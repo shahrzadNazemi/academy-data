@@ -270,7 +270,7 @@ module.exports.postExam = (info, cb)=> {
     })
 };
 
-module.exports.postDictData = (info, cb)=> {
+module.exports.getDictData = (info, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
             console.log("Err", err)
@@ -278,15 +278,15 @@ module.exports.postDictData = (info, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("dictionary").insertMany(info, (err, result) => {
+            con.collection("dictionary").findOne({"en":info.search}, (err, result) => {
                 if (err) {
                     cb(-1)
                 }
-                else if (result.length == 0) {
+                else if (result == null) {
                     cb(0)
                 }
                 else {
-                    cb(result.insertedId)
+                    cb(result)
                 }
             })
 

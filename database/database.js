@@ -5438,8 +5438,8 @@ module.exports.addChatroom = (data, cb)=> {
     })
 }
 
-module.exports.addDictData = (data, cb)=> {
-    mongo.postDictData(data, (added)=> {
+module.exports.searchDictionary = (data, cb)=> {
+    mongo.getDictData(data, (added)=> {
         if (added == -1) {
             cb(-1)
         }

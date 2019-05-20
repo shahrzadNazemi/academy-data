@@ -24,6 +24,8 @@ var cron = require('./util/cronJobHelper')
 let chatroom = require('./routes/chatroom')
 let message = require('./routes/message')
 let package = require('./routes/package')
+let dictionary = require('./routes/dictionary')
+
 
 
 
@@ -44,6 +46,8 @@ app.use('/api/ticket', ticket);
 app.use('/api/chatroom', chatroom);
 app.use('/api/message', message);
 app.use('/api/package', package);
+app.use('/api/dictionary', dictionary);
+
 
 
 

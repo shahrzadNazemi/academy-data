@@ -6,12 +6,12 @@ let config = require('../util/config')
 
 
 router.post('/', (req, res)=> {
-    database.addDictData(req.body, (addResult)=> {
-        if (addResult == -1) {
+    database.searchDictionary(req.body, (result)=> {
+        if (result == -1) {
             res.status(500).end('')
         }
         else {
-            res.json(addResult)
+            res.json(result)
         }
     })
 
