@@ -432,7 +432,6 @@ router.post('/student/verification', (req, res)=> {
 });
 
 router.post('/student/resendVerification', (req, res)=> {
-    console.log("body in resend" , req.body)
     database.resendVerifyStu(req.body, (result)=> {
         if (result == -1) {
             res.status(500).end('')
@@ -447,7 +446,6 @@ router.post('/student/resendVerification', (req, res)=> {
 });
 
 router.post('/student/forgetPassVerify', (req, res)=> {
-    console.log("body in resend" , req.body)
     database.verifyStu(req.body, (result)=> {
         if (result == -1) {
             res.status(500).end('')
@@ -462,7 +460,6 @@ router.post('/student/forgetPassVerify', (req, res)=> {
 });
 
 router.post('/student/forgetPass', (req, res)=> {
-    console.log("body in forgetPass" , req.body)
     let data = {}
     data.usrId = req.body._id
     data.createdTime = new Date().getTime()
@@ -499,7 +496,6 @@ router.post('/student/placement', (req, res) => {
             res.status(404).end('')
         }
         else {
-            console.log("result", result)
 
             res.json(result)
         }
@@ -515,7 +511,6 @@ router.get('/student/placement/:usrId', (req, res) => {
             res.status(404).end('')
         }
         else {
-            console.log("result", result)
 
             res.json(result)
         }
@@ -549,7 +544,6 @@ router.put('/student/:stuId', (req, res) => {
         }
         else {
             let newStu = Object.assign({}, student, req.body)
-            console.log(newStu, student)
             database.updateStudent(newStu, req.params.stuId, (result)=> {
                 if (result == -1) {
                     res.status(500).end('')
@@ -687,7 +681,6 @@ router.get('/student/mobile/:mobile', (req, res) => {
 
 
 router.delete('/student/:stuId', (req, res) => {
-    console.log(req.params.stuId)
     database.delStudent(req.params.stuId, (result)=> {
         if (result == -1) {
             res.status(500).end('')

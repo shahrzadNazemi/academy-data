@@ -5413,7 +5413,6 @@ module.exports.delChatroom = (chId, cb)=> {
 };
 
 module.exports.addChatroom = (data, cb)=> {
-    logger.info("data in addChatRoom" , data)
     mongo.postChatRoom(data, (added)=> {
         if (added == -1) {
             cb(-1)
@@ -5432,9 +5431,9 @@ module.exports.addChatroom = (data, cb)=> {
             }
             else {
                 module.exports.addCurrentLevelChatRoom(data, (addedChatLevel)=> {
-                    cb(added)
                 })
             }
+            
         }
     })
 }
