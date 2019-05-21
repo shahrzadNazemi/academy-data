@@ -23,6 +23,9 @@ router.post('/type', (req, res)=> {
         if (addResult == -1) {
             res.status(500).end('')
         }
+            else if(addResult == -2){
+            res.status(402).end('')
+        }
         else {
             res.json(addResult)
         }
@@ -33,6 +36,9 @@ router.put('/type/:depId', (req, res)=> {
     database.updateTypeOfTicket(req.body, req.params.depId, (addResult)=> {
         if (addResult == -1) {
             res.status(500).end('')
+        }
+        else if(addResult == -2){
+            res.status(402).end('')
         }
         else {
             res.json(addResult)

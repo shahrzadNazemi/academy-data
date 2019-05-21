@@ -69,6 +69,10 @@ router.post('/admin', (req, res)=> {
         if (addedAdmin == -1) {
             res.status(500).end('')
         }
+        if (addedAdmin == -2) {
+            res.status(402).end('')
+        }
+
         else {
             res.json(addedAdmin)
         }
@@ -94,6 +98,9 @@ router.put('/supporter/:supId', (req, res) => {
     database.updateSupporter(req.body, req.params.supId, (result)=> {
         if (result == -1) {
             res.status(500).end('')
+        }
+        else if (result == -2) {
+            res.status(402).end('')
         }
         else if (result == 0) {
             res.status(404).end('')
@@ -137,6 +144,10 @@ router.post('/supporter', (req, res)=> {
         if (addedSupport == -1) {
             res.status(500).end('')
         }
+       else if (addedSupport == -2) {
+            res.status(402).end('')
+        }
+
         else {
             res.json(addedSupport)
         }
@@ -166,6 +177,10 @@ router.put('/chatAdmin/:caId', (req, res) => {
         else if (result == 0) {
             res.status(404).end('')
         }
+        else if (result == -2) {
+            res.status(402).end('')
+        }
+
         else {
             res.json(result)
         }
@@ -205,6 +220,10 @@ router.post('/chatAdmin', (req, res)=> {
         if (addedSupport == -1) {
             res.status(500).end('')
         }
+        else if (addedSupport == -2) {
+            res.status(402).end('')
+        }
+
         else {
             res.json(addedSupport)
         }
@@ -703,6 +722,11 @@ router.put('/cp/:cpId', (req, res) => {
         else if (result == 0) {
             res.status(404).end('')
         }
+        else if (result == -2) {
+            res.status(402).end('')
+        }
+
+
         else {
             res.json(result)
         }
@@ -744,6 +768,9 @@ router.post('/cp', (req, res)=> {
     database.addCp(req.body, (addedAdmin)=> {
         if (addedAdmin == -1) {
             res.status(500).end('')
+        }
+        else if (addedAdmin == -2) {
+            res.status(402).end('')
         }
         else {
             res.json(addedAdmin)

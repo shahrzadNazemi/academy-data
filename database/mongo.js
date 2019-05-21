@@ -1195,9 +1195,13 @@ module.exports.editTypeOfTicket = (info, depId, cb)=> {
                     }
                 }, {returnOriginal: false}
                 , (err, result)=> {
-                    if (err) {
-                        console.log("updateView db Error", err);
-                        cb(-1)
+                    if (err != null) {
+                        if (err.code == 11000) {
+                            cb(-2)
+                        }
+                        else{
+                            cb(-1)
+                        }
                     }
                     else if (result.value != null) {
                         cb(result.value)
@@ -2691,7 +2695,15 @@ module.exports.postAdmin = (adminInfo, cb)=> {
                 "password": adminInfo.password
             }, (err, result) => {
                 if (err) {
-                    cb(-1)
+
+                    if (err.code == 11000) {
+                        console.log(err)
+                        cb(-2)
+                    }
+                    else {
+                        cb(-1)
+                    }
+
                 }
                 else if (result.length == 0) {
                     cb(0)

@@ -646,6 +646,9 @@ module.exports.addTypeOfTicket = (typeInfo, cb)=> {
         else if (result == 0) {
             cb(0)
         }
+            else if(result == -2){
+            cb(-2)
+        }
         else {
             cb(result)
         }
@@ -1330,6 +1333,9 @@ module.exports.addAdmin = (adminData, cb)=> {
         if (addedAdmin == -1) {
             cb(-1)
         }
+            else if(addedAdmin == -2) {
+            cb(-2)
+        }
         else {
             cb(addedAdmin)
         }
@@ -1613,6 +1619,10 @@ module.exports.updateChatAdmin = (updateInfo, caId, cb)=> {
                         else if (result == 0) {
                             cb(0)
                         }
+                        else if (result == -2) {
+                            cb(-2)
+                        }
+
                         else {
                             cb(result)
                         }
@@ -1672,6 +1682,10 @@ module.exports.addChatAdmin = (data, cb)=> {
         if (added == -1) {
             cb(-1)
         }
+        if (added == -2) {
+            cb(-2)
+        }
+
         else {
             cb(added)
         }
