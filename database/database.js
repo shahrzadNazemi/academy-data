@@ -171,6 +171,7 @@ module.exports.addQuestion = (QInfo, cb)=> {
                     }
                     else {
                         module.exports.getExamById(QInfo.exam.value, (exam)=> {
+                            logger.info("exam in add Q" , exam)
                             if (exam == 0 || exam == -1) {
                                 cb(result)
                             }
@@ -306,7 +307,6 @@ module.exports.getAllTickets = (supId, cb)=> {
             cb(0)
         }
         else {
-            logger.info("supporter", supporter)
             mongo.getTkts(supporter.department[0].value, (ticket)=> {
                 if (ticket == -1) {
                     cb(-1)
@@ -315,6 +315,8 @@ module.exports.getAllTickets = (supId, cb)=> {
                     cb(0)
                 }
                 else {
+                    logger.info("ticket", ticket)
+
                     for (var i = 0; i < ticket.length; i++) {
                         ticket[i].student = ticket[i].student[0]
                         delete ticket[i].student[0]
@@ -357,7 +359,6 @@ module.exports.getStuPlacement = (usrId, cb)=> {
 };
 
 module.exports.addExam = (exInfo, cb)=> {
-
     mongo.postExam(exInfo, (result)=> {
         if (result == -1) {
             cb(-1)

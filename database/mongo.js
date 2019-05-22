@@ -1474,12 +1474,12 @@ module.exports.postResult = (info, cb)=> {
                 "usrId": new ObjectID(info.usrId),
                 "lsnId": info.lsnId,
                 "passedLesson": info.passedLesson,
-                "timePassed": "",
+                "timePassed": "0",
                 "quiz": info.quiz,
                 "exam": info.exam,
                 "round": false,
                 "examRound": info.examRound,
-                "examTimePassed": info.examTimePassed
+                "examTimePassed": "0"
 
             }, (err, result) => {
 
