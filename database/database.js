@@ -3178,7 +3178,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                     resultInfo.quiz.getScore = 0
                                                     resultInfo.quiz.permission = true
                                                     resultInfo.exam = {}
-                                                    resultInfo.timePassed = ""
+                                                    resultInfo.timePassed = "0"
                                                     resultInfo.passedLesson = false
                                                     logger.info("result info to go to updateResult in placememnt", resultInfo)
                                                     module.exports.updateResult(student[0]._id, 0, resultInfo, (addedResult)=> {
@@ -3311,7 +3311,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                                 resultInfo.quiz.getScore = 0
                                                                                 resultInfo.quiz.permission = true
                                                                                 resultInfo.exam = {}
-                                                                                resultInfo.timePassed = ""
+                                                                                resultInfo.timePassed = "0"
                                                                                 resultInfo.passedLesson = false
 
                                                                                 module.exports.updateResult(student[0]._id, lesson._id, resultInfo, (addedResult)=> {
@@ -3447,7 +3447,7 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                     resultInfo.quiz.getScore = 0
                                                                     resultInfo.quiz.permission = true
                                                                     resultInfo.exam = {}
-                                                                    resultInfo.timePassed = ""
+                                                                    resultInfo.timePassed = "0"
                                                                     resultInfo.passedLesson = false
                                                                     module.exports.updateResult(student[0]._id, lesson._id, resultInfo, (addedResult)=> {
                                                                         cb(lesson)
@@ -3499,7 +3499,7 @@ module.exports.addResult = (resultInfo, cb)=> {
     logger.info("result Info in add result in testing placement", resultInfo)
     resultInfo.round = false
     resultInfo.examRound = false
-    resultInfo.examTimePassed = ""
+    resultInfo.examTimePassed = "0"
     if (resultInfo.lsnId != 0) {
         module.exports.getExamByLessonId(resultInfo.lsnId, (exam)=> {
             if (exam == -1) {
@@ -4090,7 +4090,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                         newResult.quiz.getScore = 0
                                                                         newResult.quiz.permission = true
                                                                         newResult.exam = {}
-                                                                        newResult.timePassed = ""
+                                                                        newResult.timePassed = "0"
                                                                         newResult.passedLesson = false
                                                                         module.exports.addResult(newResult, (addedResult)=> {
                                                                             if (addedResult == -1) {
@@ -4251,7 +4251,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                                     newResult.quiz.getScore = 0
                                                                                     newResult.quiz.permission = true
                                                                                     newResult.exam = {}
-                                                                                    newResult.timePassed = ""
+                                                                                    newResult.timePassed = "0"
                                                                                     newResult.passedLesson = false
                                                                                     module.exports.addResult(newResult, (addedResult)=> {
                                                                                         if (addedResult == -1) {
@@ -4438,7 +4438,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                     newResult.quiz.getScore = 0
                                                                     newResult.quiz.permission = true
                                                                     newResult.exam = {}
-                                                                    newResult.timePassed = ""
+                                                                    newResult.timePassed = "0"
                                                                     newResult.passedLesson = false
 
                                                                     module.exports.getResultByLsnUsr(info.usrId, newLesson._id, (existingResult)=> {
@@ -4610,10 +4610,10 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                                             resultInfo.quiz.getScore = 0
                                                                                             resultInfo.quiz.permission = true
                                                                                             resultInfo.exam = {}
-                                                                                            resultInfo.timePassed = ""
+                                                                                            resultInfo.timePassed = "0"
                                                                                             resultInfo.passedLesson = false
                                                                                             resultInfo.examRound = false
-                                                                                            resultInfo.examTimePassed = ""
+                                                                                            resultInfo.examTimePassed = "0"
                                                                                             module.exports.getResultByLsnUsr(info.usrId, lesson[0]._id, (existingResult)=> {
                                                                                                 if (existingResult == -1 || existingResult != 0) {
                                                                                                     cb(lesson)
@@ -4787,7 +4787,7 @@ module.exports.editResultForAnswerQ = (usrId, lsnId, updateInfo, cb)=> {
 module.exports.updateResult = (usrId, lsnId, updateInfo, cb)=> {
     updateInfo.round = false
     updateInfo.examRound = false
-    updateInfo.examTimePassed = ""
+    updateInfo.examTimePassed = "0"
     logger.info("updateInfo in updateResult", updateInfo)
     if (!updateInfo.answer) {
         if (lsnId != 0) {
