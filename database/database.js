@@ -5629,6 +5629,21 @@ module.exports.delMessageOfChatRoom = (chId, cb)=> {
     })
 };
 
+module.exports.deleteResultNotLessonUsrId = (usrId , lsnId, cb)=> {
+    mongo.deleteResOfUsrNotLesson(usrId , lsnId, (result)=> {
+        if (result == -1) {
+            cb(-1)
+        }
+        else if (result == 0) {
+            cb(0)
+        }
+        else {
+            cb(result)
+        }
+    })
+};
+
+
 module.exports.getMsgOfChatroom = (chId, cb)=> {
     mongo.getMessagOfChatroom(chId, (result)=> {
         if (result == -1) {

@@ -74,6 +74,23 @@ router.put('/:stdId/:lsnId', (req, res)=> {
 
 });
 
+router.delete('/:lsnId/:usrId', (req, res)=> {
+
+    database.deleteResultNotLessonUsrId(req.params.usrId , req.params.lsnId , (result)=> {
+        if (result == -1) {
+            res.status(500).end('')
+        }
+        else if (result == 0) {
+            res.status(404).end('')
+        }
+        else {
+            res.json(result)
+        }
+    })
+
+});
+
+
 
 
 module.exports = router

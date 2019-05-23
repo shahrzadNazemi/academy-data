@@ -4884,6 +4884,34 @@ module.exports.deleteVideo = (vdId, cb)=> {
     })
 };
 
+module.exports.deleteResOfUsrNotLesson = (usrId , lsnId, cb)=> {
+    MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+        if (err) {
+            console.log("Err", err)
+            cb(-1)
+        }
+        else {
+            var con = db.db('englishAcademy')
+            con.collection("result").deleteMany({"usrId": new ObjectID(`${usrId}`) ,  "lsnId": {$ne:  new ObjectID(`${lsnId}`)}}, (err, result)=> {
+                if (err) {
+                    console.log(err)
+                    cb(-1)
+                }
+                else if (result.deletedCount != 0) {
+                    let result1 = "row deleted"
+                    cb(result1)
+                }
+                else {
+                    cb(0)
+                }
+            })
+
+
+        }
+    })
+};
+
+
 module.exports.deleteText = (txtId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
