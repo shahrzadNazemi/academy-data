@@ -3455,8 +3455,35 @@ module.exports.editResult = (usrId, lsnId, info, cb)=> {
                                         cb(-1)
                                     }
                                     else if (result.lastErrorObject.n == 0) {
-                                        logger.info("result", result)
-                                        cb(0)
+                                        con.collection("result").findOneAndUpdate({
+                                                "usrId": new ObjectID(`${usrId}`)
+                                            }, {
+                                                $set: {
+                                                    "usrId": info.usrId,
+                                                    "lsnId": info.lsnId,
+                                                    "passedLesson": info.passedLesson,
+                                                    "timePassed": info.timePassed,
+                                                    "quiz": info.quiz,
+                                                    "exam": info.exam,
+                                                    "round": info.round,
+                                                    "examRound": info.examRound,
+                                                    "examTimePassed": info.examTimePassed
+                                                }
+                                            },
+                                            {returnOriginal: false}, (err, result)=> {
+                                                if (err) {
+                                                    console.log(err)
+                                                    cb(-1)
+                                                }
+                                                else if (result.lastErrorObject.n == 0) {
+                                                    logger.info("result2git ", result)
+                                                    cb(0)
+                                                }
+                                                else {
+
+                                                    cb(result)
+                                                }
+                                            })
                                     }
                                     else {
 

@@ -3313,6 +3313,8 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                                 resultInfo.exam = {}
                                                                                 resultInfo.timePassed = "0"
                                                                                 resultInfo.passedLesson = false
+                                                                                logger.info("lesson" , lesson)
+                                                                                logger.info("resultInfo" , resultInfo)
 
                                                                                 module.exports.updateResult(student[0]._id, lesson._id, resultInfo, (addedResult)=> {
                                                                                     cb(lesson)
