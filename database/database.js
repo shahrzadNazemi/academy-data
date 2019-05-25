@@ -2406,7 +2406,14 @@ module.exports.getExamPassedCount = (usrId, cb)=> {
             cb(0)
         }
         else {
-            cb(result)
+            let temp = []
+            for(var i=0;i<result.length;i++){
+                if(result[i].examTimePassed !="0"){
+                    temp.push(result[i])
+                }
+            }
+            
+            cb(temp)
         }
     })
 };
