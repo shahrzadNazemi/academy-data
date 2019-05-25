@@ -2402,7 +2402,7 @@ module.exports.getExamPassedCount = (usrId, cb)=> {
         if (result == -1) {
             cb(-1)
         }
-        else if (result == 0) {
+            else if(result == 0){
             cb(0)
         }
         else {

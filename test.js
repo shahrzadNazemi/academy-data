@@ -60,3 +60,7 @@ let config = require('./util/config')
 //
 //     }
 // })
+let usrId = "5ce100405d280d5d083795fb"
+mongo.getStudentById( usrId ,(lessons)=>{
+    console.log(lessons)
+})

@@ -2424,9 +2424,18 @@ module.exports.getUsrByUsrname = (username, cb)=> {
         }
         else {
             var con = db.db('englishAcademy')
-            con.collection("student").find({"username": username}).toArray((err, result) => {
-                console.log("result", result)
+            con.collection("student").aggregate([
+                {$match:{"username": username}},
+                {$lookup: {
+                    from: "view",
+                    localField: "_id",
+                    foreignField: "usrId",
+                    as: "view"
+                }},
+                {$unwind:"$view"},
+            ]).toArray((err, result) => {
                 if (err) {
+                    console.log(err)
                     cb(-1)
                 }
                 else if (result.length == 0) {
@@ -2436,7 +2445,6 @@ module.exports.getUsrByUsrname = (username, cb)=> {
                     cb(result)
                 }
             })
-
         }
     })
 };
@@ -4280,17 +4288,28 @@ module.exports.getStudentById = (stdId, cb)=> {
                 stdId = parseInt(stdId)
             }
             var con = db.db('englishAcademy')
-            con.collection("student").findOne({"_id": new ObjectID(`${stdId}`)}, (err, result) => {
+            con.collection("student").aggregate([
+                {$match:{"_id":  new ObjectID(`${stdId}`)}},
+                {$lookup: {
+                    from: "view",
+                    localField: "_id",
+                    foreignField: "usrId",
+                    as: "view"
+                }},
+                {$unwind:"$view"},
+            ]).toArray((err, result) => {
                 if (err) {
+                    console.log(err)
                     cb(-1)
                 }
-                else if (result == null) {
+                else if (result.length == 0) {
                     cb(0)
                 }
                 else {
-                    cb(result)
+                    cb(result[0])
                 }
             })
+
 
         }
     })
@@ -4622,10 +4641,17 @@ module.exports.getAllStudents = (cb)=> {
 
             var con = db.db('englishAcademy')
             con.collection("student").aggregate([
+                {$lookup: {
+                    from: "view",
+                    localField: "_id",
+                    foreignField: "usrId",
+                    as: "view"
+                }},
+                {$unwind:"$view"},
                 {
                     $lookup: {
                         from: "lesson",
-                        let: {lsnId: "$lastPassedLesson"},
+                        let: {lsnId: "$view.lsnId"},
                         pipeline: [
                             {
                                 "$match": {
