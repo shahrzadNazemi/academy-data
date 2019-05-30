@@ -42,6 +42,18 @@ router.get('/:usrId/:lsnId', (req, res)=> {
     });
 });
 
+router.get('/:usrId', (req, res)=> {
+    database.getResultByUsr(req.params.usrId, (getResult)=> {
+        if (getResult == -1) {
+            res.status(500).end('')
+        }
+        else {
+            res.json(getResult)
+        }
+    });
+});
+
+
 
 router.post('/answerQuestion', (req, res)=> {
     database.answerQuestion(req.body, (result)=> {
