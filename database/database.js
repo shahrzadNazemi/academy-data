@@ -3898,7 +3898,7 @@ module.exports.getPrCrNxtLesson = (lsnId, cb)=> {
                     delete lesson[0].text
                     if (!prLesson._id.equals(lesson[0]._id)) {
                         prLesson.position = "previous"
-                        prCrNextLesson.push(prLesson)
+                        prCrNextLesson.push(prLesson)   
 
                     }
                     lesson[0].position = "current"
@@ -4629,7 +4629,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                                                 }
                                                                                                 else {
                                                                                                     module.exports.addResult(resultInfo, (addedResult)=> {
-                                                                                                        cb(lesson)
+                                                                                                        cb(lesson[0])
                                                                                                     })
                                                                                                 }
                                                                                             })
