@@ -4625,7 +4625,7 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                                             resultInfo.examTimePassed = "0"
                                                                                             module.exports.getResultByLsnUsr(info.usrId, lesson[0]._id, (existingResult)=> {
                                                                                                 if (existingResult == -1 || existingResult != 0) {
-                                                                                                    cb(lesson)
+                                                                                                    cb(lesson[0])
                                                                                                 }
                                                                                                 else {
                                                                                                     module.exports.addResult(resultInfo, (addedResult)=> {
