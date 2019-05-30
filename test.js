@@ -6,9 +6,19 @@ let mongo = require('./database/mongo')
 // db.getPreviousLesson(lsnId , (lesson)=>{
 //     console.log("lesson",lesson)
 // })
-// // var moment = require('moment-jalaali')
-// 1548760739576
-// 1548829586210
+var moment = require('moment-jalaali')
+let pass = moment(1559218059144).add(1, 'h').format('x')
+console.log("pass" , moment(1559218059144).add(600, 's').format('x'))
+let currentTime = new Date().getTime()
+console.log("currentTime" , currentTime)
+
+//if currently doing the exam
+if (currentTime < moment(1559218059144).add(600, 's').format('x')) {
+    console.log("here")
+}
+if(currentTime<pass){
+    console.log("there")
+}
 // // moment().subtract(3, 'days'
 // // let pass = moment(1548757139576.0).subtract(3, 'days')
 // // let now = new Date().getTime()
@@ -29,7 +39,7 @@ let mongo = require('./database/mongo')
 // db.getCertificatePermission("5cda93c045ec050d73901801" , (del)=>{
 //     console.log("del",del)
 // })
-let MongoClient = require('mongodb').MongoClient;
+// let MongoClient = require('mongodb').MongoClient;
 let config = require('./util/config')
 
 // MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
@@ -60,7 +70,7 @@ let config = require('./util/config')
 //
 //     }
 // })
-let usrId = "5cefab35cc55804906a883e0"
-db.getResultByUsr( usrId ,(lessons)=>{
-    console.log(lessons)
-})
+// let usrId = "5cefab35cc55804906a883e0"
+// db.getResultByUsr( usrId ,(lessons)=>{
+//     console.log(lessons)
+// })
