@@ -3261,6 +3261,10 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                 stu.chatrooms.push({})
                                                             }
                                                             else {
+                                                                // lessonChat.position = "currentLesson"
+                                                                lessonChat.blocked = 0
+                                                                lessonChat.warned = 0
+                                                                lessonChat.blockedTime = ""
                                                                 lessonChat.position = "lastLesson"
                                                                 stu.chatrooms.push(lessonChat)
 
@@ -3271,6 +3275,10 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                 }
                                                                 else {
                                                                     lessonChat.position = "currentLesson"
+                                                                    lessonChat.blocked = 0
+                                                                    lessonChat.warned = 0
+                                                                    lessonChat.blockedTime = ""
+                                                                    // lessonChat.position = "currentLesson"
                                                                     stu.chatrooms.push(lessonChat)
 
                                                                 }
@@ -3280,6 +3288,10 @@ module.exports.stuPlacement = (placeInfo, cb)=> {
                                                                     }
                                                                     else {
                                                                         lessonChat.position = "currentLevel"
+                                                                        // lessonChat.position = "currentLesson"
+                                                                        lessonChat.blocked = 0
+                                                                        lessonChat.warned = 0
+                                                                        lessonChat.blockedTime = ""
                                                                         stu.chatrooms.push(lessonChat)
 
                                                                     }
@@ -4262,16 +4274,28 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                     studentUpdateInfo.chatrooms = []
                                                                     module.exports.getChatRoomByLessonId(info.lsnId, (lessonChat)=> {
                                                                         if (lessonChat != 0 && lessonChat != -1) {
+                                                                            lessonChat.position = "lastLesson"
+                                                                            lessonChat.blocked = 0
+                                                                            lessonChat.warned = 0
+                                                                            lessonChat.blockedTime = ""
                                                                             studentUpdateInfo.chatrooms.push(lessonChat)
                                                                         }
                                                                         module.exports.getChatRoomByLessonId(newLesson._id, (lessonChat1)=> {
 
                                                                             if (lessonChat1 != 0 && lessonChat1 != -1) {
+                                                                                lessonChat1.position = "currentLesson"
+                                                                                lessonChat1.blocked = 0
+                                                                                lessonChat1.warned = 0
+                                                                                lessonChat1.blockedTime = ""
                                                                                 studentUpdateInfo.chatrooms.push(lessonChat1)
                                                                             }
                                                                             module.exports.getChatRoomByLevelId(newLesson.lvlId, (lessonChat2)=> {
 
                                                                                 if (lessonChat2 != 0 && lessonChat2 != -1) {
+                                                                                    lessonChat2.position = "currentLesson"
+                                                                                    lessonChat2.blocked = 0
+                                                                                    lessonChat2.warned = 0
+                                                                                    lessonChat2.blockedTime = ""
                                                                                     studentUpdateInfo.chatrooms.push(lessonChat2)
                                                                                 }
                                                                                 module.exports.updateStudent(studentUpdateInfo, info.usrId, (std)=> {
@@ -4470,16 +4494,28 @@ module.exports.answerQuestion = (info, cb)=> {
                                                     studentUpdateInfo.chatrooms = []
                                                     module.exports.getChatRoomByLessonId(info.lsnId, (lessonChat)=> {
                                                         if (lessonChat != 0 && lessonChat != -1) {
+                                                            lessonChat.position = "lastLesson"
+                                                            lessonChat.blocked = 0
+                                                            lessonChat.warned = 0
+                                                            lessonChat.blockedTime = ""
                                                             studentUpdateInfo.chatrooms.push(lessonChat)
                                                         }
                                                         module.exports.getChatRoomByLessonId(newLesson._id, (lessonChat1)=> {
 
                                                             if (lessonChat1 != 0 && lessonChat1 != -1) {
+                                                                lessonChat1.position = "currentLesson"
+                                                                lessonChat1.blocked = 0
+                                                                lessonChat1.warned = 0
+                                                                lessonChat1.blockedTime = ""
                                                                 studentUpdateInfo.chatrooms.push(lessonChat1)
                                                             }
                                                             module.exports.getChatRoomByLevelId(newLesson.lvlId, (lessonChat2)=> {
 
                                                                 if (lessonChat2 != 0 && lessonChat2 != -1) {
+                                                                    lessonChat2.position = "currentLevel"
+                                                                    lessonChat2.blocked = 0
+                                                                    lessonChat2.warned = 0
+                                                                    lessonChat2.blockedTime = ""
                                                                     studentUpdateInfo.chatrooms.push(lessonChat2)
                                                                 }
                                                                 module.exports.updateStudent(studentUpdateInfo, info.usrId, (result)=> {
@@ -4655,16 +4691,28 @@ module.exports.answerQuestion = (info, cb)=> {
                                                                     studentUpdateInfo.chatrooms = []
                                                                     module.exports.getChatRoomByLessonId(info.lsnId, (lessonChat)=> {
                                                                         if (lessonChat != 0 && lessonChat != -1) {
+                                                                            lessonChat.position = "lastLesson"
+                                                                            lessonChat.blocked = 0
+                                                                            lessonChat.warned = 0
+                                                                            lessonChat.blockedTime = ""
                                                                             studentUpdateInfo.chatrooms.push(lessonChat)
                                                                         }
                                                                         module.exports.getChatRoomByLessonId(newLesson._id, (lessonChat1)=> {
 
                                                                             if (lessonChat1 != 0 && lessonChat1 != -1) {
+                                                                                lessonChat1.position = "currentLesson"
+                                                                                lessonChat1.blocked = 0
+                                                                                lessonChat1.warned = 0
+                                                                                lessonChat1.blockedTime = ""
                                                                                 studentUpdateInfo.chatrooms.push(lessonChat1)
                                                                             }
                                                                             module.exports.getChatRoomByLevelId(newLesson.lvlId, (lessonChat2)=> {
 
                                                                                 if (lessonChat2 != 0 && lessonChat2 != -1) {
+                                                                                    lessonChat2.position = "currentLevel"
+                                                                                    lessonChat2.blocked = 0
+                                                                                    lessonChat2.warned = 0
+                                                                                    lessonChat2.blockedTime = ""
                                                                                     studentUpdateInfo.chatrooms.push(lessonChat2)
                                                                                 }
                                                                                 module.exports.updateStudent(studentUpdateInfo, info.usrId, (result)=> {
