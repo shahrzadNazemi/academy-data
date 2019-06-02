@@ -1767,12 +1767,13 @@ module.exports.addLesson = (lsnInfo, cb)=> {
 
         }
         else {
-            let order = []
             let forbidden = false
             let forbidden1 = false
             for (var i = 0; i < lesson.length; i++) {
-                order.push(lesson[i].order )
-                if (lesson[i].title == lsnInfo.title) {
+                if (lesson[i].order == lsnInfo.order) {
+                    forbidden = true
+                }
+                else if (lesson[i].title == lsnInfo.title) {
                     forbidden1 = true
                 }
 
@@ -1784,9 +1785,7 @@ module.exports.addLesson = (lsnInfo, cb)=> {
                 cb(-2)
             }
             else {
-               order.sort()
-                logger.info("lessonOrder" , order)
-                lsnInfo.order = order[order.length -1]+1
+
                 mongo.postLesson(lsnInfo, (result)=> {
                     if (result == -1) {
                         cb(-1)
@@ -5586,7 +5585,6 @@ module.exports.searchDictionary = (data, cb)=> {
 module.exports.addCurrentLessonChatRoom = (data, cb)=> {
     data.position = "currentLesson"
     logger.info("data addCurrentLessonChatRoom", data)
-
     module.exports.getStuByLessonLsnId(data.lesson.value, (student)=> {
         mongo.postCurrentLessonCharoom(student, data, (added)=> {
             if (added == -1) {

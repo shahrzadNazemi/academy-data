@@ -6055,6 +6055,84 @@ module.exports.getchatAdminBychatRoom = (chId, cb)=> {
     })
 };
 
+// module.exports.getChatRoomByChtAdmn = (caId, cb)=> {
+//     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
+//         if (err) {
+//             console.log("Err", err)
+//             cb(-1)
+//         }
+//         else {
+//             if (typeof caId == 'number') {
+//                 caId = JSON.stringify(caId)
+//             }
+//             if (caId == 0) {
+//                 caId = 0
+//             }
+//             else {
+//                 caId = new ObjectID(`${caId}`)
+//             }
+//             var con = db.db('englishAcademy')
+//             con.collection("chatAdmin").find({chatrooms: {$elemMatch: {"value": chId}}}).toArray((err, result) => {
+//                 if (err) {
+//                     cb(-1)
+//                 }
+//                 else if (result.length == 0) {
+//                     cb(0)
+//                 }
+//                 else {
+//                     logger.info("result", result)
+//                     // result = result[0]
+//                     // result.department = result.department[0]
+//
+//
+//                     cb(result)
+//                 }
+//             })
+//             con.collection("chatRoom").aggregate([
+//                 // {$match: {"_id": new ObjectID(`${caId}`)}},
+//                 {
+//                     "$match": {
+//                         "chatrooms":{$elemMatch: {"value": caId}}
+//                     }
+//                 },
+//            
+//                 {
+//                     $lookup: {
+//                         from: "chatAdmin",
+//                         localField: "_id",
+//                         foreignField: "chatrooms.value",
+//                         as: "chatAdmin"
+//                     }
+//
+//                 },
+//                 {$unwind: "$lesson"},
+//
+//                 {
+//                     $lookup: {
+//                         from: "type",
+//                         localField: "typeId",
+//                         foreignField: "_id",
+//                         as: "type"
+//                     }
+//
+//                 }, {$unwind: "$type"},
+//             ]).toArray((err, result) => {
+//                 if (err) {
+//                     cb(-1)
+//                 }
+//                 else if (result == null) {
+//                     cb(0)
+//                 }
+//                 else {
+//                     cb(result[0])
+//                 }
+//             })
+//
+//
+//         }
+//     })
+// };
+
 module.exports.editMessage = (info, msgId, cb)=> {
     MongoClient.connect(config.mongoURL, {useNewUrlParser: true}, (err, db)=> {
         if (err) {
